@@ -9,10 +9,14 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    file.cpp \
+    filearchivio.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
+    file.h \
+    filearchivio.h \
     mainwindow.h
 
 # Default rules for deployment.
