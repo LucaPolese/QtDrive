@@ -11,15 +11,25 @@ CONFIG += c++11
 SOURCES += \
     file.cpp \
     filearchivio.cpp \
+    fileaudio.cpp \
+    fileimmagine.cpp \
+    filemedia.cpp \
+    filetesto.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     file.h \
     filearchivio.h \
+    fileaudio.h \
+    fileimmagine.h \
+    filemedia.h \
+    filetesto.h \
     mainwindow.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RC_ICONS = icon.ico

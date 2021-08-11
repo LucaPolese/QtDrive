@@ -4,6 +4,8 @@ File::File(QString nome_, QString estensione_, unsigned int dimensione_, QDate d
 nome(nome_), estensione(estensione_), dimensione(dimensione_), dataCreazione(dataCreazione_), dataCaricamento(dataCaricamento_), descrizione(descrizione_){
 }
 
+File::~File(){}
+
 const QString &File::getNome() const {
     return nome;
 }

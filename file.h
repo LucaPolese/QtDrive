@@ -1,7 +1,6 @@
 #ifndef FILE_H
 #define FILE_H
 
-#include <string>
 #include <QString>
 #include <QDate>
 
@@ -16,9 +15,8 @@ class File {
 
     public:
         File(QString, QString, unsigned int, QDate, QDate, QString);
+        virtual ~File();
 
-        virtual ~File() =0;
-        virtual std::string getInfo() =0;
 
         const QString &getNome() const;
         const QString &getEstensione() const;
@@ -27,6 +25,7 @@ class File {
         QDate getDataCreazione() const;
         QDate getDataCaricamento() const;
 
+        virtual QString getInformazioniFile() const =0;
         virtual File* clone() const =0;
 };
 

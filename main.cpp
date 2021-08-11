@@ -1,7 +1,8 @@
 #include "mainwindow.h"
 
 #include <QApplication>
-
+#include <fileimmagine.h>
+#include <QDebug>
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);

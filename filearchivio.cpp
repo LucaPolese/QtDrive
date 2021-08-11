@@ -4,6 +4,8 @@ FileArchivio::FileArchivio(QString nome_, QString estensione_, unsigned int dime
 File(nome_, estensione_, dimensione_, dataCreazione_, dataCaricamento_, descrizione_), dimensioneOriginale(dimensioneOriginale_), numeroDiFile(numeroDiFile_), protetto(protetto_){
 }
 
+FileArchivio::~FileArchivio() = default;
+
 unsigned int FileArchivio::getDimensioneOriginale() const {
     return dimensioneOriginale;
 }
@@ -14,4 +16,12 @@ unsigned int FileArchivio::getNumeroDiFile() const {
 
 bool FileArchivio::getProtetto() const {
     return protetto;
+}
+
+QString FileArchivio::getInformazioniFile() const {
+    return "File archivio";
+}
+
+FileArchivio* FileArchivio::clone() const {
+    return new FileArchivio(*this);
 }

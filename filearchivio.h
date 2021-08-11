@@ -2,9 +2,6 @@
 #define FILEARCHIVIO_H
 
 #include <file.h>
-#include <string>
-
-#include <QDate>
 
 class FileArchivio: public File {
     private:
@@ -13,9 +10,14 @@ class FileArchivio: public File {
         bool protetto; // True sse archivio protetto da password
     public:
         FileArchivio(QString, QString, unsigned int, QDate, QDate, QString descrizione_, unsigned int dimensioneOriginale_, unsigned int numeroDiFile_, bool protetto_);
+        ~FileArchivio();
+
         unsigned int getDimensioneOriginale() const;
         unsigned int getNumeroDiFile() const;
         bool getProtetto() const;
+
+        QString getInformazioniFile() const override;
+        FileArchivio* clone() const override;
 };
 
 #endif // FILEARCHIVIO_H
