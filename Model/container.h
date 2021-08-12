@@ -94,8 +94,8 @@ public:
     //Funzioni di ridimensionamento
     void resize(unsigned int contatore);
     void resize(unsigned int contatore, T valore = T());
-    //Operatore di
-    T& operator[](int idx) const;
+    //Operatore di subscripting
+    T& operator[](int pos) const;
     //Funzioni di ritorno degli iteratori (inizio e fine)
     iterator begin();
     const_iterator begin() const;
