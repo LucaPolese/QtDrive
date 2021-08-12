@@ -102,7 +102,6 @@ public:
     const_iterator end() const;
 };
 
-#include "container.h"
 /**------ Funzioni della classe Nodo ------**/
 
 //Costruttore a 0,1,2,3 parametri di Nodo
@@ -196,7 +195,7 @@ Container<T>::const_iterator::const_iterator() : nodo(nullptr), pastTheEnd(false
 template <class T>
 Container<T>::const_iterator::const_iterator(const const_iterator& i) : nodo(i.nodo), pastTheEnd(i.pastTheEnd) {}
 
-//Operatori di redeferenziazione
+//Operatori di dereferenziazione
 template <class T>
 const T& Container<T>::const_iterator::operator*() const{
     return nodo->info;
@@ -218,7 +217,7 @@ bool Container<T>::const_iterator::operator!=(const const_iterator& i) const{
     return !(this == i);
 }
 
-//Operatori di Incremento
+//Operatori di incremento
 template <class T>
 typename Container<T>::const_iterator& Container<T>::const_iterator::operator++(){
     if(nodo) {
@@ -236,7 +235,7 @@ typename Container<T>::const_iterator Container<T>::const_iterator::operator++(i
     return app;
 }
 
-//Operatori di Decremento
+//Operatori di decremento
 template <class T>
 typename Container<T>::const_iterator& Container<T>::const_iterator::operator--(){
     if(nodo) {
