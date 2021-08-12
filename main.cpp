@@ -1,7 +1,7 @@
-#include "mainwindow.h"
+#include "Model/mainwindow.h"
 
 #include <QApplication>
-#include <fileimmagine.h>
+#include "Model/fileimmagine.h"
 #include <QDebug>
 int main(int argc, char *argv[])
 {

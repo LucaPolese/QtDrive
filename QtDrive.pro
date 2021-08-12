@@ -9,25 +9,27 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    deepptr.cpp \
-    file.cpp \
-    filearchivio.cpp \
-    fileaudio.cpp \
-    fileimmagine.cpp \
-    filemedia.cpp \
-    filetesto.cpp \
     main.cpp \
-    mainwindow.cpp
+    Model/deepptr.cpp \
+    Model/file.cpp \
+    Model/filearchivio.cpp \
+    Model/fileaudio.cpp \
+    Model/fileimmagine.cpp \
+    Model/filemedia.cpp \
+    Model/filetesto.cpp \
+    Model/filevideo.cpp \
+    Model/mainwindow.cpp
 
 HEADERS += \
-    deepptr.h \
-    file.h \
-    filearchivio.h \
-    fileaudio.h \
-    fileimmagine.h \
-    filemedia.h \
-    filetesto.h \
-    mainwindow.h
+    Model/deepptr.h \
+    Model/file.h \
+    Model/filearchivio.h \
+    Model/fileaudio.h \
+    Model/fileimmagine.h \
+    Model/filemedia.h \
+    Model/filetesto.h \
+    Model/filevideo.h \
+    Model/mainwindow.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
