@@ -11,8 +11,6 @@ CONFIG += c++11
 SOURCES += \
     Control/controller.cpp \
     Model/account.cpp \
-    main.cpp \
-    Model/deepptr.cpp \
     Model/file.cpp \
     Model/filearchivio.cpp \
     Model/fileaudio.cpp \
@@ -20,7 +18,8 @@ SOURCES += \
     Model/filemedia.cpp \
     Model/filetesto.cpp \
     Model/filevideo.cpp \
-    Model/mainwindow.cpp
+    Model/mainwindow.cpp \
+    main.cpp
 
 HEADERS += \
     Control/controller.h \
@@ -41,4 +40,4 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-RC_ICONS = res/icons/icon.ico
+# RC_ICONS = res/icons/icon.ico
