@@ -6,7 +6,7 @@
 class FileAudio: public FileMedia {
     private:
         unsigned int bitrate;
-        unsigned int durata;
+        unsigned durata;
         QString genere;
         QString autore;
         QString album;

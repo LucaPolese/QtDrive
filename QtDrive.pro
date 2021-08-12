@@ -9,6 +9,8 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Control/controller.cpp \
+    Model/account.cpp \
     main.cpp \
     Model/deepptr.cpp \
     Model/file.cpp \
@@ -21,6 +23,8 @@ SOURCES += \
     Model/mainwindow.cpp
 
 HEADERS += \
+    Control/controller.h \
+    Model/account.h \
     Model/deepptr.h \
     Model/file.h \
     Model/filearchivio.h \
@@ -36,4 +40,4 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-RC_ICONS = icon.ico
+RC_ICONS = res/icons/icon.ico
