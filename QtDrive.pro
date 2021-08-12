@@ -25,6 +25,7 @@ SOURCES += \
 HEADERS += \
     Control/controller.h \
     Model/account.h \
+    Model/container.h \
     Model/deepptr.h \
     Model/file.h \
     Model/filearchivio.h \

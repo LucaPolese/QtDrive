@@ -2,6 +2,9 @@
 #define ACCOUNT_H
 
 #include <QString>
+#include "container.h"
+#include "deepptr.h"
+#include "file.h"
 
 class Account {
     private:
@@ -10,10 +13,10 @@ class Account {
         QString password;
         servizio host;
         unsigned int spazioFornito;
-        //CONTAINER FILE
+        Container<Deepptr<File>> listaFile;
 
     public:
-        Account();
+        Account(QString, QString, servizio, unsigned int);
 };
 
 #endif // ACCOUNT_H
