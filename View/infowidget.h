@@ -6,6 +6,10 @@
 #include <QLabel>
 #include <QMenuBar>
 #include <QTextLayout>
+#include <QTextEdit>
+#include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QGraphicsPixmapItem>
 
 class InfoWidget : public QMainWindow{
     Q_OBJECT

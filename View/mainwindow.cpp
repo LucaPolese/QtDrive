@@ -4,6 +4,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
     setWindowTitle("QtDrive");
     setMinimumSize(1024, 720);
 
+
     // Menubar
     QMenuBar *menu = new QMenuBar();
         // File
@@ -34,7 +35,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
     });
 }
 
-
+void MainWindow::closeEvent (QCloseEvent *event) {
+    QMessageBox messageBox(QMessageBox::Question, tr("QtDrive"), tr("Uscire  dall'applicazione?"), QMessageBox::Yes | QMessageBox::No, this);
+    messageBox.setButtonText(QMessageBox::Yes, tr("Sì"));
+    messageBox.setButtonText(QMessageBox::No, tr("No"));
+    int ret = messageBox.exec();
+    if(ret == QMessageBox::Yes)
+        event->accept();
+    else event->ignore();
+}
 
 MainWindow::~MainWindow(){
 }

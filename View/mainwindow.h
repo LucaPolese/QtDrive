@@ -5,6 +5,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QMenuBar>
+#include <QMessageBox>
 #include "infowidget.h"
 
 class MainWindow : public QMainWindow{
@@ -13,6 +14,8 @@ class MainWindow : public QMainWindow{
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    void closeEvent (QCloseEvent *event);
 };
 
 #endif

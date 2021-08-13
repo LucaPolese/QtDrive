@@ -4,13 +4,17 @@ InfoWidget::InfoWidget(QWidget *parent) : QMainWindow(parent){
     setWindowTitle("Informazioni su QtDrive");
     this->setFixedSize(QSize(300,250));
 
-    QVBoxLayout* mainLayout = new QVBoxLayout;
-        mainLayout->setSpacing(0);
-        mainLayout->setContentsMargins(0,0,0,0);
-        mainLayout->setAlignment(Qt::AlignCenter);
-        QLabel* creato = new QLabel("Applicazione creata da Alessandro Poloni e Luca Polese\n per il corso di Programmazione ad Oggetti.");
-        mainLayout->addWidget(creato);
-        setCentralWidget(creato);
+    QVBoxLayout* layout = new QVBoxLayout;
+    layout->setSpacing(0);
+    layout->setContentsMargins(0,0,0,0);
+    layout->setAlignment(Qt::AlignCenter);
+
+
+    QLabel* testo = new QLabel("Applicazione creata da\nLuca Polese matricola 1225425\n Alessandro Poloni matricola 1224444\n per il corso di Programmazione ad Oggetti\nAnno accademico 2020-2021");
+    testo->setAlignment(Qt::AlignCenter);
+
+    layout->addWidget(testo);
+    setCentralWidget(testo);
 }
 
 
