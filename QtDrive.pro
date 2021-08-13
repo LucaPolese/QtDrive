@@ -11,6 +11,7 @@ CONFIG += c++11
 SOURCES += \
     Control/controller.cpp \
     Model/account.cpp \
+    Model/container.cpp \
     Model/file.cpp \
     Model/filearchivio.cpp \
     Model/fileaudio.cpp \

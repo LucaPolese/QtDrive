@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QVBoxLayout>
+#include <QMenuBar>
 
 class MainWindow : public QMainWindow{
     Q_OBJECT
