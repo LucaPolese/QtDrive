@@ -12,8 +12,8 @@ private:
         Nodo(const T& i = T(), Nodo* n = nullptr, Nodo*p = nullptr);
     };
     Nodo *first, *last;
-    static Nodo* copia(Nodo* n, Nodo*f, Nodo*& l);
-
+    static void copia(Nodo*, Nodo*&, Nodo*&);
+    static void distruggi(Nodo*);
 public:
     //Iteratore (non const)
     class iterator{
@@ -79,27 +79,25 @@ public:
     //Distruttore
     ~Container();
 
-    //Funzioni di dimensione
+    //Funzioni di ritorno degli iteratori (inizio e fine)
+    iterator begin();
+    const_iterator begin() const;
+    iterator end();
+    const_iterator end() const;
+    //Funzione di dimensione
     unsigned int size() const;
+    bool empty() const;
     //Funzioni di push
     void push_front(const T& t);
     void push_back(const T& t);
     //Funzioni di pop
     void pop_front();
     void pop_back();
-    void erase(int pos);
+    void erase(int posizione);
     void erase(const iterator& it);
     void clear();
-    //Funzioni di ridimensionamento
-    void resize(unsigned int contatore);
-    void resize(unsigned int contatore, T valore = T());
     //Operatore di subscripting
     T& operator[](int pos) const;
-    //Funzioni di ritorno degli iteratori (inizio e fine)
-    iterator begin();
-    const_iterator begin() const;
-    iterator end();
-    const_iterator end() const;
 };
 
 /**------ Funzioni della classe Nodo ------**/
@@ -250,46 +248,213 @@ typename Container<T>::const_iterator Container<T>::const_iterator::operator--(i
     if(nodo) {
         nodo->prev ? nodo=nodo->prev: pastTheEnd=false;
     }
-    return *this;
+    return app;
 }
 
 
 /**------ Funzioni della classe Container ------**/
 
 //Funzione di copia
-template <class T>
-typename Container<T>::Nodo* Container<T>::copia(Nodo* nodo, Nodo* last, Nodo*& prev){
-    /*//Se non ho un nodo oppure sono arrivato in fondo alla lista,
-    //non devo creare altri nodi
-    if(!nodo) {
-        last = prev;
-        return nullptr;
+template<typename T>
+void Container<T>::copia(Nodo* nodo, Nodo*& first, Nodo*& last) {
+    if(!nodo){
+        first = last = nullptr;
     }else{
-        Container<T>::Nodo* app;
-        app = new Container<T>::Nodo();
-        return copia(nodo->next,app,nodo->info);
-    }*/
+        first = last = new Nodo(nodo->info);
+        Nodo* successivo = nodo->next;
+        while (successivo){
+            last = new Nodo(successivo->info, last);
+            last->prev->next = last;
+            successivo = successivo->next;
+        }
+    }
+}
+
+//Funzione di distruzione
+template <typename T>
+void Container<T>::distruggi(Container<T>::Nodo* nodo) {
+    if (nodo != nullptr) {
+        distruggi(nodo->next);
+        delete nodo;
+    }
 }
 
 //Costruttore
 template <class T>
 Container<T>::Container() : first(nullptr), last(nullptr){}
 
-/*//Costruttore di copia
+//Costruttore di copia
 template <class T>
-Container<T>::Container(const Container& c) : first(copia(c.first)), last(copia(c.last)) {}
-
-Container(const Container&& c);
-
-const_iterator begin() const {
-    return first;
+Container<T>::Container(const Container& c){
+    copia(c.first, first, last);
 }
 
-const_iterator end() const {
-    if(!last) return nullptr;
-    return const_iterator(last+1,true);
-}*/
+//Costruttore di spostamento
+template <class T>
+Container<T>::Container(const Container&& c) : first(c.first), last(c.last){
+    first = last = nullptr;
+}
 
+//Operatore di assegnazione
+template <class T>
+Container<T>& Container<T>::operator=(const Container& c){
+    if(this != &c){
+        distruggi(first);
+        copia(c.first,first,last);
+    }
+    return *this;
+}
 
+//Operatori di assegnazione di spostamento
+template <class T>
+Container<T>& Container<T>::operator=(const Container&& c){
+    if(this != &c){
+        distruggi(first);
+        first = c.first;
+        last = c.last;
+        c.first = c.last = nullptr;
+    }
+    return *this;
+}
+
+//Distruttore
+template <class T>
+Container<T>::~Container(){
+    distruggi(first);
+}
+
+//Funzioni di ritorno degli iteratori (inizio e fine)
+template<class T>
+typename Container<T>::iterator Container<T>::begin() {
+    return iterator(first, !first);
+}
+
+template<class T>
+typename Container<T>::const_iterator Container<T>::begin() const {
+    return const_iterator(first, !first);
+}
+
+template<class T>
+typename Container<T>::iterator Container<T>::end() {
+    return iterator(last, true);
+}
+
+template<class T>
+typename Container<T>::const_iterator Container<T>::end() const {
+    return const_iterator(last, true);
+}
+
+//Funzione di dimensione
+template<class T>
+unsigned int Container<T>::size() const {
+    int counter = 0;
+    if (!first){
+        return 0;
+    }else{
+        Nodo* app = first;
+        while(app->next != nullptr){
+            counter++;
+            app = app->next;
+        }
+        return counter;
+    }
+}
+
+template <typename T>
+bool Container<T>::empty() const {
+    return size() == 0;
+}
+
+//Funzioni di push
+template<class T>
+void Container<T>::push_front(const T& t) {
+    if (first != nullptr) {
+        first->prev = new Nodo(t,first);
+        first = first->prev_;
+    } else {
+        first = last = new Nodo(t);
+    }
+}
+
+template<class T>
+void Container<T>::push_back(const T& t) {
+    if (last != nullptr) {
+        last->next = new Nodo(t,0,last);
+        last = last->next;
+    } else {
+        first = last = new Nodo(t);
+    }
+}
+
+//Funzioni di pop
+template<class T>
+void Container<T>::pop_front(){
+    if(!this->empty()) {
+        if (first == last) {
+            delete first;
+            first = last = nullptr;
+        }else{
+            Nodo* app = first;
+            first = first->next;
+            delete app;
+        }
+    }
+}
+
+template<class T>
+void Container<T>::pop_back(){
+    if(!this->empty()) {
+        if (first == last) {
+            delete first;
+            first = last = nullptr;
+        }else{
+            Nodo* app = last->prev;
+            delete last;
+            last = app;
+        }
+    }
+}
+
+template<class T>
+void Container<T>::erase(int posizione) {
+    Nodo* app = first;
+    if(posizione == 0) this->pop_front();
+    else{
+        for (int i = 0; i < posizione; ++i) app = app->next;
+
+        if (app->next) app->next->prev = app->prev;
+        else last = app->prev;
+
+        if (app->prev) app->prev->next = app->next;
+        else first = app->next;
+
+        delete app;
+    }
+}
+
+template<class T>
+void Container<T>::erase(const iterator& it) {
+    Nodo* app = it.nodo;
+    if (app->next) app->next->prev = app->prev;
+    else last = app->prev;
+
+    if (app->prev_) app->prev->next = app->next;
+    else first = app->next;
+
+    delete app;
+}
+
+template<class T>
+void Container<T>::clear() {
+    distruggi(first);
+}
+
+//Operatore di subscripting
+template<class T>
+T& Container<T>::operator[](int posizione) const {
+    Nodo* app = first;
+    for (int i = 0; i < posizione; ++i) app = app->next;
+    return app->info;
+}
 
 #endif // CONTAINTER_H
