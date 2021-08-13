@@ -3,7 +3,9 @@
 
 #include <QMainWindow>
 #include <QVBoxLayout>
+#include <QLabel>
 #include <QMenuBar>
+#include "infowidget.h"
 
 class MainWindow : public QMainWindow{
     Q_OBJECT

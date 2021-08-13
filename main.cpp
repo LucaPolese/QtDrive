@@ -1,4 +1,4 @@
-#include "Model/mainwindow.h"
+#include "View/mainwindow.h"
 
 #include <QApplication>
 #include "Model/filevideo.h"
