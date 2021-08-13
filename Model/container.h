@@ -17,7 +17,7 @@ private:
 public:
     //Iteratore (non const)
     class iterator{
-        friend class Container;
+        friend class Container<T>;
     private:
         Nodo* nodo;
         bool pastTheEnd;
