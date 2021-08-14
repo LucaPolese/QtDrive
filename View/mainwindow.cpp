@@ -10,8 +10,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
         // File
         QMenu *menuFile = new QMenu("File", menu);
             QAction *apriFile = new QAction("Apri", menuFile); apriFile->setShortcut(Qt::CTRL | Qt::Key_O);
+            apriFile->setIcon(QIcon(":/res/icons/menubar/apri.png"));
             QAction *salvaFile = new QAction("Salva", menuFile); salvaFile->setShortcut(Qt::CTRL | Qt::Key_S);
+            salvaFile->setIcon(QIcon(":/res/icons/menubar/salva.png"));
             QAction *chiudiApplicazione = new QAction("Esci", menuFile); chiudiApplicazione->setShortcut(Qt::CTRL | Qt::Key_Q);
+            chiudiApplicazione->setIcon(QIcon(":/res/icons/menubar/esci.png"));
             menu->addMenu(menuFile);
                 menuFile->addAction(apriFile);
                 menuFile->addAction(salvaFile);
@@ -20,23 +23,33 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
         // Aiuto
         QMenu *menuAiuto = new QMenu("Aiuto", menu);
             QAction *guida = new QAction("Guida", menuAiuto); guida->setShortcut(Qt::CTRL | Qt::Key_H);
+            guida->setIcon(QIcon(":/res/icons/menubar/guida.png"));
             QAction *info = new QAction("Informazioni su QtDrive", menuAiuto); info->setShortcut(Qt::CTRL | Qt::Key_I);
+            info->setIcon(QIcon(":/res/icons/menubar/info.png"));
             menu->addMenu(menuAiuto);
                 menuAiuto->addAction(guida);
                 menuAiuto->addAction(info);
     this->layout()->setMenuBar(menu);
 
-                // https://medium.com/genymobile/how-c-lambda-expressions-can-improve-your-qt-code-8cd524f4ed9f
-    // Connessione a "Informazionii su QtDrive"
+    // Connessione a "Guida"
+    connect(guida, &QAction::triggered, [=]() {
+        InfoWidget* infoWidget = new InfoWidget();
+        infoWidget->setAttribute(Qt::WA_DeleteOnClose);
+        infoWidget->show();
+    });
+
+    // https://medium.com/genymobile/how-c-lambda-expressions-can-improve-your-qt-code-8cd524f4ed9f
+    // Connessione a "Informazioni su QtDrive"
     connect(info, &QAction::triggered, [=]() {
         InfoWidget* infoWidget = new InfoWidget();
+        infoWidget->setWindowModality(Qt::ApplicationModal); // Quando la finestra è aperta, le altre non possono essere selezionate
         infoWidget->setAttribute(Qt::WA_DeleteOnClose);
         infoWidget->show();
     });
 }
 
 void MainWindow::closeEvent (QCloseEvent *event) {
-    QMessageBox messageBox(QMessageBox::Question, tr("QtDrive"), tr("Uscire  dall'applicazione?"), QMessageBox::Yes | QMessageBox::No, this);
+    QMessageBox messageBox(QMessageBox::Question, tr("QtDrive"), tr("Uscire dall'applicazione?"), QMessageBox::Yes | QMessageBox::No, this);
     messageBox.setButtonText(QMessageBox::Yes, tr("Sì"));
     messageBox.setButtonText(QMessageBox::No, tr("No"));
     int ret = messageBox.exec();

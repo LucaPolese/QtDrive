@@ -1,0 +1,9 @@
+<!DOCTYPE RCC><RCC version="1.0">
+ <qresource>
+     <file>res/icons/menubar/salva.png</file>
+     <file>res/icons/menubar/apri.png</file>
+     <file>res/icons/menubar/esci.png</file>
+     <file>res/icons/menubar/info.png</file>
+     <file>res/icons/menubar/guida.png</file>
+ </qresource>
+ </RCC>

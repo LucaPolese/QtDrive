@@ -10,6 +10,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QGraphicsPixmapItem>
+#include <QMessageBox>
 
 class InfoWidget : public QMainWindow{
     Q_OBJECT
