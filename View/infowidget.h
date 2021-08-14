@@ -11,6 +11,7 @@
 #include <QGraphicsView>
 #include <QGraphicsPixmapItem>
 #include <QMessageBox>
+#include <QStackedWidget>
 
 class InfoWidget : public QMainWindow{
     Q_OBJECT
