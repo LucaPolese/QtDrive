@@ -18,11 +18,13 @@ SOURCES += \
     Model/filemedia.cpp \
     Model/filetesto.cpp \
     Model/filevideo.cpp \
+    View/guidawidget.cpp \
     View/infowidget.cpp \
     View/mainwindow.cpp \
     main.cpp
 
 HEADERS += \
+    View/guidawidget.h \
     View/infowidget.h \
     View/mainwindow.h \
     Control/controller.h \

@@ -12,6 +12,7 @@
 #include <QGraphicsPixmapItem>
 #include <QMessageBox>
 #include <QStackedWidget>
+#include <QTextBrowser>
 
 class InfoWidget : public QMainWindow{
     Q_OBJECT

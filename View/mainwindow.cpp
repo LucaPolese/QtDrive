@@ -4,7 +4,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
     setWindowTitle("QtDrive");
     setMinimumSize(1024, 720);
 
-
     // Menubar
     QMenuBar *menu = new QMenuBar();
         // File
@@ -31,11 +30,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
                 menuAiuto->addAction(info);
     this->layout()->setMenuBar(menu);
 
+    // Connessione a "Esci"
+    connect(chiudiApplicazione, &QAction::triggered,  [=]() {
+        close();
+    });
+
     // Connessione a "Guida"
     connect(guida, &QAction::triggered, [=]() {
-        InfoWidget* infoWidget = new InfoWidget();
-        infoWidget->setAttribute(Qt::WA_DeleteOnClose);
-        infoWidget->show();
+        GuidaWidget* guidaWidget = new GuidaWidget();
+        guidaWidget->setAttribute(Qt::WA_DeleteOnClose);
+        guidaWidget->setWindowModality(Qt::ApplicationModal);
+        guidaWidget->show();
     });
 
     // https://medium.com/genymobile/how-c-lambda-expressions-can-improve-your-qt-code-8cd524f4ed9f

@@ -6,6 +6,7 @@
 #include <QLabel>
 #include <QMenuBar>
 #include <QMessageBox>
+#include "guidawidget.h"
 #include "infowidget.h"
 
 class MainWindow : public QMainWindow{
