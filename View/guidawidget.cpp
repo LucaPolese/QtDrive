@@ -2,7 +2,8 @@
 
 GuidaWidget::GuidaWidget(QWidget *parent) : QWidget(parent){
     setWindowTitle("Guida");
-    setFixedSize(QSize(400, 200));
+    setMinimumSize(QSize(400, 200));
+    setMaximumSize(QSize(1024, 720));
 
     QTextBrowser* testo = new QTextBrowser();
     testo->setText(tr(

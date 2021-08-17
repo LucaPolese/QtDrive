@@ -2,7 +2,6 @@
 
 NuovoFileWidget::NuovoFileWidget(QWidget *parent) : QWidget(parent) {
     setWindowTitle("Inserisci nuovo file");
-   // setFixedSize(QSize(300, 200));
 
     layout = new QVBoxLayout;
     formLayout = new QFormLayout;
@@ -94,7 +93,6 @@ NuovoFileWidget::NuovoFileWidget(QWidget *parent) : QWidget(parent) {
     audioWidget->setLayout(layoutAudio);
     layoutInfo->addWidget(audioWidget);
 
-
     // Immagine
     QWidget* immagineWidget = new QWidget;
     layoutImmagine = new QFormLayout;
@@ -114,23 +112,49 @@ NuovoFileWidget::NuovoFileWidget(QWidget *parent) : QWidget(parent) {
     layoutImmagine->addRow("", vettoriale);
 
     altezzaI = new QSpinBox;
+    altezzaI->setAlignment(Qt::AlignRight);
     layoutImmagine->addRow(tr("Altezza (px):"), altezzaI);
 
     larghezzaI = new QSpinBox;
+    larghezzaI->setAlignment(Qt::AlignRight);
     layoutImmagine->addRow(tr("Larghezza (px):"), larghezzaI);
 
     immagineWidget->setLayout(layoutImmagine);
     layoutInfo->addWidget(immagineWidget);
 
-
-
-
-
     // Video
+    QWidget* videoWidget = new QWidget;
+    layoutVideo = new QFormLayout;
 
+    compressioneV = new QButtonGroup;
+    nessunaV = new QRadioButton("Nessuna"); nessunaV->setChecked(true); compressioneV->addButton(nessunaV);
+    losslessV = new QRadioButton("Lossless"); compressioneV->addButton(losslessV);
+    lossyV = new QRadioButton("Lossy"); compressioneV->addButton(lossyV);
+    layoutVideo->addRow(tr("Compressione:"), nessunaV);
+    layoutVideo->addRow(tr(""), losslessV);
+    layoutVideo->addRow(tr(""), lossyV);
 
+    codec = new QLineEdit;
+    layoutVideo->addRow(tr("Codec:"), codec);
 
+    durataV = new QSpinBox;
+    durataV->setAlignment(Qt::AlignRight);
+    layoutVideo->addRow(tr("Durata (minuti):"), durataV);
 
+    altezzaV = new QSpinBox;
+    altezzaV->setAlignment(Qt::AlignRight);
+    layoutVideo->addRow(tr("Altezza (px):"), altezzaV);
+
+    larghezzaV = new QSpinBox;
+    larghezzaV->setAlignment(Qt::AlignRight);
+    layoutVideo->addRow(tr("Larghezza (px):"), larghezzaV);
+
+    fps = new QSpinBox;
+    fps->setAlignment(Qt::AlignRight);
+    layoutVideo->addRow(tr("Frame al secondo:"), fps);
+
+    videoWidget->setLayout(layoutVideo);
+    layoutInfo->addWidget(videoWidget);
 
 
     layout->addLayout(layoutInfo);
@@ -143,6 +167,7 @@ NuovoFileWidget::NuovoFileWidget(QWidget *parent) : QWidget(parent) {
     layout->addLayout(buttonLayout);
     setLayout(layout);
 
+    setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);
 
     // Form dinamici
     connect(tipo, QOverload<int>::of(&QComboBox::activated), [=](int index){
@@ -151,6 +176,7 @@ NuovoFileWidget::NuovoFileWidget(QWidget *parent) : QWidget(parent) {
             case 1: layoutInfo->setCurrentIndex(1); break; // Testo
             case 2: layoutInfo->setCurrentIndex(2); break; // Audio
             case 3: layoutInfo->setCurrentIndex(3); break; // Immagine
+            case 4: layoutInfo->setCurrentIndex(4); break; // Video
         }
     });
 
