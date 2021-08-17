@@ -8,5 +8,26 @@
     <file>res/icons/menubar/esci.png</file>
     <file>res/icons/menubar/info.png</file>
     <file>res/icons/menubar/guida.png</file>
+
+    <!-- ICONE SERVIZI CLOUD -->
+    <file>res/icons/AmazonDrive.ico</file>
+    <file>res/icons/Box.ico</file>
+    <file>res/icons/Dropbox.ico</file>
+    <file>res/icons/GDrive.ico</file>
+    <file>res/icons/iCloud.ico</file>
+    <file>res/icons/Mediafire.ico</file>
+    <file>res/icons/Mega.ico</file>
+    <file>res/icons/Next.ico</file>
+    <file>res/icons/OneDrive.ico</file>
+    <file>res/icons/Qihoo360.ico</file>
+
+    <!-- ICONE SERVIZI CLOUD -->
+    <file>res/icons/file/archivio.png</file>
+    <file>res/icons/file/audio.png</file>
+    <file>res/icons/file/canzone.png</file>
+    <file>res/icons/file/file.png</file>
+    <file>res/icons/file/immagine.png</file>
+    <file>res/icons/file/testo.png</file>
+    <file>res/icons/file/video.png</file>
 </qresource>
 </RCC>

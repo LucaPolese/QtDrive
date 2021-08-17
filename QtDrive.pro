@@ -18,12 +18,15 @@ SOURCES += \
     Model/filemedia.cpp \
     Model/filetesto.cpp \
     Model/filevideo.cpp \
+    View/accountwidget.cpp \
     View/guidawidget.cpp \
     View/infowidget.cpp \
     View/mainwindow.cpp \
+    View/nuovofilewidget.cpp \
     main.cpp
 
 HEADERS += \
+    View/accountwidget.h \
     View/guidawidget.h \
     View/infowidget.h \
     View/mainwindow.h \
@@ -38,6 +41,7 @@ HEADERS += \
     Model/filemedia.h \
     Model/filetesto.h \
     Model/filevideo.h \
+    View/nuovofilewidget.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -1,6 +1,6 @@
 #include "guidawidget.h"
 
-GuidaWidget::GuidaWidget() {
+GuidaWidget::GuidaWidget(QWidget *parent) : QWidget(parent){
     setWindowTitle("Guida");
     setFixedSize(QSize(400, 200));
 
@@ -14,5 +14,13 @@ GuidaWidget::GuidaWidget() {
 
     ));
 
-    setCentralWidget(testo);
+    QVBoxLayout* layout = new QVBoxLayout();
+    layout->addWidget(testo);
+    setLayout(layout);
+
+    // Shortcut Ctrl+H per chiudere il widget
+    QShortcut* shortcut = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_H), this);
+    connect(shortcut, &QShortcut::activated, [=]{
+        emit this->close();
+    });
 }

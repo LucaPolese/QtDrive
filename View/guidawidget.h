@@ -1,12 +1,15 @@
 #ifndef GUIDAWIDGET_H
 #define GUIDAWIDGET_H
 
-#include <QMainWindow>
 #include <QTextBrowser>
+#include <QVBoxLayout>
+#include <QShortcut>
 
-class GuidaWidget: public QMainWindow {
+class GuidaWidget: public QWidget {
+    Q_OBJECT
+
 public:
-    GuidaWidget();
+    GuidaWidget(QWidget *parent = nullptr);
 };
 
 #endif // GUIDAWIDGET_H

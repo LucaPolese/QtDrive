@@ -44,9 +44,19 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
     });
 
     // https://medium.com/genymobile/how-c-lambda-expressions-can-improve-your-qt-code-8cd524f4ed9f
+    // https://stackoverflow.com/questions/21105169/is-there-any-difference-betwen-and-in-lambda-functions
     // Connessione a "Informazioni su QtDrive"
     connect(info, &QAction::triggered, [=]() {
         InfoWidget* infoWidget = new InfoWidget();
+        infoWidget->setWindowModality(Qt::ApplicationModal); // Quando la finestra è aperta, le altre non possono essere selezionate
+        infoWidget->setAttribute(Qt::WA_DeleteOnClose);
+        infoWidget->show();
+    });
+
+
+    //CONNESSIONE DI PROVA PER INSERIMENTO ACCOUNT
+    connect(info, &QAction::triggered, [=]() {
+        NuovoFileWidget* infoWidget = new NuovoFileWidget();
         infoWidget->setWindowModality(Qt::ApplicationModal); // Quando la finestra è aperta, le altre non possono essere selezionate
         infoWidget->setAttribute(Qt::WA_DeleteOnClose);
         infoWidget->show();

@@ -11,10 +11,9 @@ class FileVideo: public FileMedia {
         unsigned int larghezza;
         unsigned int altezza;
         unsigned int fps;
-        FileAudio tracciaAudio;
 
     public:
-        FileVideo(QString, QString, unsigned int, QDate, QDate, QString, FileMedia::compressione, QString, unsigned int, unsigned int, unsigned int, unsigned int, FileAudio);
+        FileVideo(QString, QString, unsigned int, QDate, QDate, QString, FileMedia::compressione, QString, unsigned int, unsigned int, unsigned int, unsigned int);
         ~FileVideo();
 
         const QString &getCodec() const;
@@ -22,7 +21,6 @@ class FileVideo: public FileMedia {
         unsigned int getLarghezza() const;
         unsigned int getAltezza() const;
         unsigned int getFps() const;
-        const FileAudio &getTracciaAudio() const;
 
         QString getInformazioniFile() const override;
         FileVideo* clone() const override;

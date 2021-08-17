@@ -1,7 +1,6 @@
 #ifndef INFOWIDGET_H
 #define INFOWIDGET_H
 
-#include <QMainWindow>
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QMenuBar>
@@ -13,8 +12,9 @@
 #include <QMessageBox>
 #include <QStackedWidget>
 #include <QTextBrowser>
+#include <QShortcut>
 
-class InfoWidget : public QMainWindow{
+class InfoWidget: public QWidget{
     Q_OBJECT
 
 public:

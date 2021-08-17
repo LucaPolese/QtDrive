@@ -8,6 +8,8 @@
 #include <QMessageBox>
 #include "guidawidget.h"
 #include "infowidget.h"
+#include "accountwidget.h"
+#include "nuovofilewidget.h"
 
 class MainWindow : public QMainWindow{
     Q_OBJECT
