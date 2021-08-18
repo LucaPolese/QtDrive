@@ -29,5 +29,8 @@
     <file>res/icons/file/immagine.png</file>
     <file>res/icons/file/testo.png</file>
     <file>res/icons/file/video.png</file>
+
+    <!-- GIF PER LO SPLASH -->
+    <file>res/icons/Intro.gif</file>
 </qresource>
 </RCC>
