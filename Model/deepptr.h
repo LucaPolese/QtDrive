@@ -30,7 +30,7 @@ public:
 
 //Costruttore
 template<class T>
-Deepptr<T>::Deepptr(T* t) : p(t ? new T(*t) : nullptr) {}
+Deepptr<T>::Deepptr(T* t) : p(t) {}
 
 //Costruttore di copia
 template<class T>
