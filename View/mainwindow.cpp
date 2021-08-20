@@ -1,8 +1,45 @@
 #include "mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
+MainWindow::MainWindow(QWidget *parent) : QWidget(parent){
     setWindowTitle("QtDrive");
     setMinimumSize(1024, 720);
+
+    //Layout Pagina Principale
+    QVBoxLayout* pagina = new QVBoxLayout();
+
+    //Layout delle Tabs
+    QWidget* paginaFile = new QWidget;
+    QHBoxLayout* layoutContenitore = new QHBoxLayout;
+    tabellaFile = new QTableWidget;
+    tabellaFile->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    tabellaFile->setRowCount(10);
+    tabellaFile->setColumnCount(4);
+    QStringList headers;
+    headers << "Servizio" << "Email" << "Password" << "Spazio fornito";
+    tabellaFile->setHorizontalHeaderLabels(headers);
+    tabellaFile->verticalHeader()->hide();
+    tabellaFile->setSelectionBehavior(QAbstractItemView::SelectRows);
+    tabellaFile->setSelectionMode(QAbstractItemView::SingleSelection);
+    tabellaFile->setAlternatingRowColors(true);
+    tabellaFile->horizontalHeader()->setSectionsClickable(false);
+    tabellaFile->setSortingEnabled(false);
+    tabellaFile->resizeRowsToContents();
+    tabellaFile->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    QTreeWidget* listaFile = new QTreeWidget;
+    layoutContenitore->addWidget(tabellaFile);
+    layoutContenitore->addWidget(listaFile);
+    paginaFile->setLayout(layoutContenitore);
+    connect(tabellaFile, SIGNAL(cellClicked(int,int)), this, SLOT(visualizzaFile(int)));
+
+    QWidget* paginaAccount = new QWidget();
+    QWidget* paginaRicerca = new QWidget();
+
+
+
+
+
+
+
 
     // Menubar
     QMenuBar *menu = new QMenuBar();
@@ -28,7 +65,24 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
             menu->addMenu(menuAiuto);
                 menuAiuto->addAction(guida);
                 menuAiuto->addAction(info);
-    this->layout()->setMenuBar(menu);
+
+
+    //Tabs
+    QTabWidget* tabs = new QTabWidget();
+    tabs->insertTab(0, paginaAccount, QIcon(":/res/styles/icons/home.svg"), "Account");
+    tabs->insertTab(1, paginaFile, QIcon(":/res/styles/icons/services.svg"), "File per Account");
+    tabs->insertTab(2, paginaRicerca, QIcon(":/res/styles/icons/nodes.svg"), "Ricerca File");
+
+    /*tabs->setTabEnabled(1, false);
+    tabs->setTabEnabled(2, false);*/
+
+    //Aggiunta dei Widget e dei Layout al frame principale
+    //layoutMenu->addWidget(menu);
+
+    pagina->addWidget(menu);
+    pagina->addWidget(tabs);
+
+    tabs->setCurrentIndex(1);
 
     // Connessione a "Apri"
     connect(apriFile, &QAction::triggered,  [=]() {
@@ -36,7 +90,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
         if (fileScelto.isEmpty()) return;
         else{
             QFile file(fileScelto);
-            bool success;
+            //bool success;
             //Caricare le informazione sul widget.
         }
     });
@@ -82,6 +136,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
     QFile file("account.json");
     file.open(QIODevice::ReadWrite | QIODevice::Text);
     file.close();
+
+
+    setLayout(pagina);
 }
 
 void MainWindow::closeEvent (QCloseEvent *event) {
@@ -94,6 +151,10 @@ void MainWindow::closeEvent (QCloseEvent *event) {
     else event->ignore();
 }
 
-MainWindow::~MainWindow() {
+void MainWindow::visualizzaFile(int riga) const{
+    tabellaFile->selectedItems();
+    qDebug() << tabellaFile->selectionModel()->currentIndex().row();
 }
 
+MainWindow::~MainWindow() {
+}
