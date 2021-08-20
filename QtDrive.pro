@@ -23,6 +23,7 @@ SOURCES += \
     View/infowidget.cpp \
     View/mainwindow.cpp \
     View/nuovofilewidget.cpp \
+    View/splash.cpp \
     main.cpp
 
 HEADERS += \
@@ -41,14 +42,13 @@ HEADERS += \
     Model/filemedia.h \
     Model/filetesto.h \
     Model/filevideo.h \
-    View/nuovofilewidget.h
+    View/nuovofilewidget.h \
+    View/splash.h
+
+RESOURCES += \
+    resources.qrc
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
-
- RC_ICONS = res/icons/icon.ico
-
-RESOURCES += \
-    resources.qrc
