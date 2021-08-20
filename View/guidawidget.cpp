@@ -1,8 +1,8 @@
 #include "guidawidget.h"
 
-GuidaWidget::GuidaWidget(QWidget *parent) : QWidget(parent){
+GuidaWidget::GuidaWidget(QWidget *parent): QWidget(parent){
     setWindowTitle("Guida");
-    setMinimumSize(QSize(400, 200));
+    setMinimumSize(QSize(800, 600));
     setMaximumSize(QSize(1024, 720));
 
     QTextBrowser* testo = new QTextBrowser();

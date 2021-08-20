@@ -1,6 +1,6 @@
 #include "nuovofilewidget.h"
 
-NuovoFileWidget::NuovoFileWidget(QWidget *parent) : QWidget(parent) {
+NuovoFileWidget::NuovoFileWidget(QWidget *parent): QWidget(parent) {
     setWindowTitle("Inserisci nuovo file");
 
     layout = new QVBoxLayout;
@@ -21,6 +21,7 @@ NuovoFileWidget::NuovoFileWidget(QWidget *parent) : QWidget(parent) {
 
     dataCreazione = new QCalendarWidget;
     dataCreazione->setFirstDayOfWeek(Qt::DayOfWeek::Monday);
+    dataCreazione->setVerticalHeaderFormat(QCalendarWidget::NoVerticalHeader);
     formLayout->addRow(tr("Data creazione:"), dataCreazione);
 
     tipo = new QComboBox;

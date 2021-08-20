@@ -30,6 +30,22 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
                 menuAiuto->addAction(info);
     this->layout()->setMenuBar(menu);
 
+    // Connessione a "Apri"
+    connect(apriFile, &QAction::triggered,  [=]() {
+        QString fileScelto = QFileDialog::getOpenFileName(this, "Apri account", "./", "Account (*.xml)");
+        if (fileScelto.isEmpty()) return;
+        else{
+            QFile file(fileScelto);
+            bool success;
+            //Caricare le informazione sul widget.
+        }
+    });
+
+    // Connessione a "Salva"
+    connect(salvaFile, &QAction::triggered,  [=]() {
+
+    });
+
     // Connessione a "Esci"
     connect(chiudiApplicazione, &QAction::triggered,  [=]() {
         close();
@@ -56,11 +72,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
 
     //CONNESSIONE DI PROVA PER INSERIMENTO ACCOUNT
     connect(info, &QAction::triggered, [=]() {
-        NuovoFileWidget* infoWidget = new NuovoFileWidget();
+        AccountWidget* infoWidget = new AccountWidget();
         infoWidget->setWindowModality(Qt::ApplicationModal); // Quando la finestra è aperta, le altre non possono essere selezionate
         infoWidget->setAttribute(Qt::WA_DeleteOnClose);
         infoWidget->show();
     });
+
+    // Inizializzazione file di default, se non esiste viene creato
+    QFile file("account.json");
+    file.open(QIODevice::ReadWrite | QIODevice::Text);
+    file.close();
 }
 
 void MainWindow::closeEvent (QCloseEvent *event) {
@@ -73,6 +94,6 @@ void MainWindow::closeEvent (QCloseEvent *event) {
     else event->ignore();
 }
 
-MainWindow::~MainWindow(){
+MainWindow::~MainWindow() {
 }
 

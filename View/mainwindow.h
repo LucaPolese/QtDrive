@@ -10,9 +10,17 @@
 #include "infowidget.h"
 #include "accountwidget.h"
 #include "nuovofilewidget.h"
+#include <QFileDialog>
+#include <QFile>
+#include <QHeaderView>
+#include <QToolButton>
+#include <QTableWidget>
+#include <QTreeWidget>
+#include <QScrollArea>
 
 class MainWindow : public QMainWindow{
     Q_OBJECT
+private:
 
 public:
     MainWindow(QWidget *parent = nullptr);

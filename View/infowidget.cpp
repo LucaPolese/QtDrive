@@ -1,6 +1,6 @@
 #include "infowidget.h"
 
-InfoWidget::InfoWidget(QWidget *parent) : QWidget(parent){
+InfoWidget::InfoWidget(QWidget *parent): QWidget(parent){
     setWindowTitle("Informazioni su QtDrive");
     setFixedSize(QSize(300,250));
 

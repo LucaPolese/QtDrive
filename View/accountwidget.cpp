@@ -1,6 +1,6 @@
 #include "accountwidget.h"
 
-AccountWidget::AccountWidget(QWidget *parent) : QWidget(parent){
+AccountWidget::AccountWidget(QWidget *parent): QWidget(parent){
     setWindowTitle("Aggiungi account");
     setFixedSize(QSize(300,180));
     controller = new Controller;
