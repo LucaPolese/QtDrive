@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QDate>
+#include <QXmlStreamWriter>
 
 class File {
     private:
@@ -27,6 +28,7 @@ class File {
 
         virtual QString getInformazioniFile() const =0;
         virtual File* clone() const =0;
+        virtual void serializza(QXmlStreamWriter& scrittore) const = 0;
 };
 
 #endif // FILE_H

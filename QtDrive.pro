@@ -1,5 +1,4 @@
 QT       += core gui
-QT += charts
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
@@ -18,6 +17,7 @@ SOURCES += \
     Model/filemedia.cpp \
     Model/filetesto.cpp \
     Model/filevideo.cpp \
+    Model/xmlify.cpp \
     View/accountwidget.cpp \
     View/guidawidget.cpp \
     View/infowidget.cpp \
@@ -27,6 +27,7 @@ SOURCES += \
     main.cpp
 
 HEADERS += \
+    Model/xmlify.h \
     View/accountwidget.h \
     View/guidawidget.h \
     View/infowidget.h \

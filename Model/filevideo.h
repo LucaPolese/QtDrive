@@ -24,6 +24,6 @@ class FileVideo: public FileMedia {
 
         QString getInformazioniFile() const override;
         FileVideo* clone() const override;
+        void serializza(QXmlStreamWriter &scrittore) const override;
 };
-
 #endif // FILEVIDEO_H
