@@ -34,7 +34,7 @@ Deepptr<T>::Deepptr(T* t) : p(t) {}
 
 //Costruttore di copia
 template<class T>
-Deepptr<T>::Deepptr(const Deepptr<T>& d) : p(d.p ? d->clone() : nullptr) {}
+Deepptr<T>::Deepptr(const Deepptr<T>& d) : p(d->clone()) {}
 
 //Costruttore di spostamento
 template<class T>

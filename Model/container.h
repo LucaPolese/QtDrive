@@ -12,6 +12,7 @@ private:
         Nodo(const T& i = T(), Nodo* n = nullptr, Nodo*p = nullptr);
     };
     Nodo *first, *last;
+    bool modificato;
     static void copia(Nodo*, Nodo*&, Nodo*&);
     static void distruggi(Nodo*);
 public:
@@ -212,14 +213,18 @@ bool Container<T>::const_iterator::operator==(const const_iterator& i) const{
 
 template <class T>
 bool Container<T>::const_iterator::operator!=(const const_iterator& i) const{
-    return !(this == i);
+    return !(*this == i);
 }
 
 //Operatori di incremento
 template <class T>
 typename Container<T>::const_iterator& Container<T>::const_iterator::operator++(){
     if(nodo) {
-        nodo->next ? nodo=nodo->next : pastTheEnd=true;
+        if(nodo->next){
+            nodo=nodo->next;
+        }else{
+            pastTheEnd=true;
+        }
     }
     return *this;
 }
@@ -281,17 +286,17 @@ void Container<T>::distruggi(Container<T>::Nodo* nodo) {
 
 //Costruttore
 template <class T>
-Container<T>::Container() : first(nullptr), last(nullptr){}
+Container<T>::Container() : first(nullptr), last(nullptr), modificato(false){}
 
 //Costruttore di copia
 template <class T>
-Container<T>::Container(const Container& c){
+Container<T>::Container(const Container& c) : modificato(c.modificato){
     copia(c.first, first, last);
 }
 
 //Costruttore di spostamento
 template <class T>
-Container<T>::Container(const Container&& c) : first(c.first), last(c.last){
+Container<T>::Container(const Container&& c) : first(c.first), last(c.last), modificato(c.modificato){
     first = last = nullptr;
 }
 
@@ -301,6 +306,7 @@ Container<T>& Container<T>::operator=(const Container& c){
     if(this != &c){
         distruggi(first);
         copia(c.first,first,last);
+        modificato = c.modificato;
     }
     return *this;
 }
@@ -312,6 +318,7 @@ Container<T>& Container<T>::operator=(const Container&& c){
         distruggi(first);
         first = c.first;
         last = c.last;
+        modificato = c.modificato;
         c.first = c.last = nullptr;
     }
     return *this;
