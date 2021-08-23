@@ -99,6 +99,8 @@ public:
     void clear();
     //Operatore di subscripting
     T& operator[](int pos) const;
+    //Operatore di conteggio
+    int numeroElementi() const;
 };
 
 /**------ Funzioni della classe Nodo ------**/
@@ -462,6 +464,17 @@ T& Container<T>::operator[](int posizione) const {
     Nodo* app = first;
     for (int i = 0; i < posizione; ++i) app = app->next;
     return app->info;
+}
+
+template<class T>
+int Container<T>::numeroElementi() const{
+    int contatore = 0;
+    Nodo* app = first;
+    while(app){
+        contatore++;
+        app = app->next;
+    }
+    return contatore;
 }
 
 #endif // CONTAINTER_H
