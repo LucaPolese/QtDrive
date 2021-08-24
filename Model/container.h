@@ -76,7 +76,7 @@ public:
     //Operatore di assegnazione
     Container& operator=(const Container& c);
     //Operatori di assegnazione di spostamento
-    Container& operator=(const Container&& c);
+    Container& operator=(Container&& c);
     //Distruttore
     ~Container();
 
@@ -304,7 +304,7 @@ Container<T>::Container(const Container&& c) : first(c.first), last(c.last), mod
 
 //Operatore di assegnazione
 template <class T>
-Container<T>& Container<T>::operator=(const Container& c){
+Container<T>& Container<T>::operator=(const Container<T>& c){
     if(this != &c){
         distruggi(first);
         copia(c.first,first,last);
@@ -315,7 +315,7 @@ Container<T>& Container<T>::operator=(const Container& c){
 
 //Operatori di assegnazione di spostamento
 template <class T>
-Container<T>& Container<T>::operator=(const Container&& c){
+Container<T>& Container<T>::operator=(Container<T>&& c){
     if(this != &c){
         distruggi(first);
         first = c.first;
