@@ -14,6 +14,8 @@
 #include "../Control/controller.h"
 
 class AccountWidget: public QWidget {
+    Q_OBJECT
+
 private:
     QVBoxLayout* layout;
     QFormLayout* formLayout;
@@ -25,8 +27,14 @@ private:
     QPushButton* aggiungiAccount;
     QPushButton* annulla;
     Controller* controller;
+
 public:
-    AccountWidget(QWidget *parent = nullptr);
+    AccountWidget(Controller *controller_, QWidget *parent = nullptr);
+    ~AccountWidget();
+    void closeEvent (QCloseEvent *event);
+
+signals:
+    void accountAggiunto();
 
 public slots:
     void aggiungi();

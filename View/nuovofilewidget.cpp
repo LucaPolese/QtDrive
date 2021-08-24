@@ -1,6 +1,6 @@
 #include "nuovofilewidget.h"
 
-NuovoFileWidget::NuovoFileWidget(QWidget *parent): QWidget(parent) {
+NuovoFileWidget::NuovoFileWidget(Controller *controller_, QWidget *parent): QWidget(parent), controller(controller_) {
     setWindowTitle("Inserisci nuovo file");
 
     layout = new QVBoxLayout;
@@ -191,3 +191,14 @@ NuovoFileWidget::NuovoFileWidget(QWidget *parent): QWidget(parent) {
         emit this->close();
     });
 }
+
+void NuovoFileWidget::closeEvent(QCloseEvent *event) {
+    nome->clear();
+    estensione->clear();
+    descrizione->clear();
+    dimensione->clear();
+    //dataCreazione->;
+    tipo->setCurrentIndex(0);
+}
+
+NuovoFileWidget::~NuovoFileWidget() = default;

@@ -16,10 +16,18 @@
 class Account {
 public:
     enum servizio {AmazonDrive, Box, Dropbox, GDrive, iCloud, Mediafire, Mega, Next, OneDrive, Qihoo360};
+    Account(QString, QString, servizio, unsigned int);
     Account(QString, QString, servizio, unsigned int, Container<Deepptr<File>>);
     Account* clone() const;
     void serializza(QXmlStreamWriter& w) const;
-    static Account* deserializza(QXmlStreamReader & reader);
+static Account* deserializza(QXmlStreamReader & reader);
+ const QString &getPassword() const;
+    void setPassword(QString);
+    servizio getHost() const;
+    unsigned int getSpazioFornito() const;
+    const Container<Deepptr<File> > &getListaFile() const;
+    const QString &getEmail() const;
+    void setEmail(QString);
 private:
     QString email;
     QString password;

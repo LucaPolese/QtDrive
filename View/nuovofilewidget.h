@@ -14,6 +14,7 @@
 #include <QButtonGroup>
 #include <QRadioButton>
 #include <QStackedLayout>
+#include "../Control/controller.h"
 
 class NuovoFileWidget: public QWidget {
 private:
@@ -76,10 +77,14 @@ private:
     QSpinBox* bitrate;
     QSpinBox* durataA;
 
+    Controller* controller;
+
     void resetForm();
 
 public:
-    NuovoFileWidget(QWidget *parent = nullptr);
+    NuovoFileWidget(Controller *controller_, QWidget *parent = nullptr);
+    ~NuovoFileWidget();
+    void closeEvent (QCloseEvent *event);
 };
 
 #endif // NUOVOFILEWIDGET_H

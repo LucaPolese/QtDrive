@@ -1,9 +1,8 @@
 #include "accountwidget.h"
 
-AccountWidget::AccountWidget(QWidget *parent): QWidget(parent){
+AccountWidget::AccountWidget(Controller *controller_, QWidget *parent): QWidget(parent), controller(controller_) {
     setWindowTitle("Aggiungi account");
     setFixedSize(QSize(300,180));
-    controller = new Controller;
     layout = new QVBoxLayout;
     formLayout = new QFormLayout;
 
@@ -41,13 +40,49 @@ AccountWidget::AccountWidget(QWidget *parent): QWidget(parent){
     setLayout(layout);
 
     // Connessione "Aggiungi"
-    connect(aggiungiAccount, &QPushButton::clicked, [=]() {
-            qDebug() << email->text();
-            controller->aggiungiAccount();
-       });
+    connect(aggiungiAccount, &QPushButton::clicked, this, &AccountWidget::aggiungi);
+
 
     // Connessione "Annulla"
     connect(annulla, &QPushButton::clicked, [=]() {
-        emit this->close();
+        // pulisco il form
+        email->clear();
+        password->clear();
+        servizio->setCurrentIndex(0);
+        spazioFornito->setValue(0);
+        emit this->hide();
     });
 }
+
+void AccountWidget::aggiungi() {
+    QString nEmail = email->text(); email->clear();
+    QString nPassword = password->text(); password->clear();
+    Account::servizio nServizio;
+    switch(servizio->currentIndex()){
+        case 0: nServizio = Account::servizio::AmazonDrive; break;
+        case 1: nServizio = Account::servizio::Box; break;
+        case 2: nServizio = Account::servizio::Dropbox; break;
+        case 3: nServizio = Account::servizio::GDrive; break;
+        case 4: nServizio = Account::servizio::iCloud; break;
+        case 5: nServizio = Account::servizio::Mediafire; break;
+        case 6: nServizio = Account::servizio::Mega; break;
+        case 7: nServizio = Account::servizio::Next; break;
+        case 8: nServizio = Account::servizio::OneDrive; break;
+        case 9: nServizio = Account::servizio::Qihoo360; break;
+    }
+    servizio->setCurrentIndex(0);
+    int nSpazioFornito = spazioFornito->value(); spazioFornito->setValue(0);
+    controller->aggiungiAccount(nEmail, nPassword, nServizio, nSpazioFornito);
+    emit this->hide();
+    emit accountAggiunto();
+}
+
+void AccountWidget::closeEvent(QCloseEvent *event) {
+    // Se l'utente chiude il form premendo la X della finestra, il form viene resettato
+    email->clear();
+    password->clear();
+    servizio->setCurrentIndex(0);
+    spazioFornito->setValue(0);
+}
+
+AccountWidget::~AccountWidget() = default;

@@ -1,15 +1,41 @@
 #include "account.h"
 
+std::vector<File*> tipiDiFile;std::vector<File*> tipiDiFile;
+
+Account::Account(QString email_, QString password_, servizio host_, unsigned int spazioFornito_):
+email(email_), password(password_), host(host_), spazioFornito(spazioFornito_), listaFile() {}
+
 std::vector<File*> tipiDiFile;
-
-/*Account::Account(QString email_, QString password_, provider host_, unsigned int spazioFornito_):
-email(email_), password(password_), host(host_), spazioFornito(spazioFornito_), listaFile(){}*/
-
-Account::Account(QString email_, QString password_, servizio host_, unsigned int spazioFornito_, Container<Deepptr<File>> listaFile_):
-    email(email_), password(password_), host(host_), spazioFornito(spazioFornito_), listaFile(listaFile_){}
-
 Account* Account::clone() const{
     return new Account(*this);
+}
+
+const QString &Account::getEmail() const {
+    return email;
+}
+
+void Account::setEmail(QString nuovaEmail) {
+    email = nuovaEmail;
+}
+
+const QString &Account::getPassword() const {
+    return password;
+}
+
+void Account::setPassword(QString nuovaPassword) {
+    password = nuovaPassword;
+}
+
+Account::servizio Account::getHost() const {
+    return host;
+}
+
+unsigned int Account::getSpazioFornito() const {
+    return spazioFornito;
+}
+
+const Container<Deepptr<File> > &Account::getListaFile() const {
+    return listaFile;
 }
 
 void Account::serializza(QXmlStreamWriter &scrittore) const{
