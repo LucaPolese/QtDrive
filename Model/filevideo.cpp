@@ -27,7 +27,7 @@ unsigned int FileVideo::getFps() const {
 }
 
 QString FileVideo::getInformazioniFile() const {
-    return "File video";
+    return "FileVideo";
 }
 
 FileVideo* FileVideo::clone() const {
@@ -69,6 +69,12 @@ void FileVideo::serializza(QXmlStreamWriter &scrittore) const{
         scrittore.writeCharacters(getDescrizione());
         scrittore.writeEndElement();
 
+        //Informazioni specifiche di FileMedia:
+        //Compressione
+        scrittore.writeStartElement("tipoCompressione");
+        scrittore.writeCharacters(QString::number(getTipoCompressione()));
+        scrittore.writeEndElement();
+
         //Informazioni specifiche di FileVideo:
         //Codec
         scrittore.writeStartElement("codec");
@@ -98,4 +104,55 @@ void FileVideo::serializza(QXmlStreamWriter &scrittore) const{
     if (scrittore.hasError()){
         throw QString("Errore in scrittura di un FileVideo");
     }
+}
+
+FileVideo *FileVideo::deserializza(QXmlStreamReader &lettore){
+    //Informazioni per costruire il sottoggetto di tipo File
+    QString _nome;
+    QString _estensione;
+    unsigned int _dimensione;
+    QDate _dataCreazione;
+    QDate _dataCaricamento;
+    QString _descrizione;
+    //Informazioni per copstruire un oggetto di classe FileMedia
+    compressione _tipoCompressione;
+    //Informazioni per costruire un oggetto di classe FileArchivio
+    QString _codec;
+    unsigned int _durata;
+    unsigned int _larghezza;
+    unsigned int _altezza;
+    unsigned int _fps;
+
+    //Lettura Nome File
+    if(lettore.readNextStartElement() && lettore.name() == "nome") _nome = lettore.readElementText();
+    //Lettura Estensione File
+    if(lettore.readNextStartElement() && lettore.name() == "estensione") _estensione = lettore.readElementText();
+    //Lettura Dimensione File
+    if(lettore.readNextStartElement() && lettore.name() == "dimensione") _dimensione = lettore.readElementText().toUInt();
+    //Lettura Data Creazione File
+    if(lettore.readNextStartElement() && lettore.name() == "dataCreazione") _dataCreazione = QDate::fromString(lettore.readElementText());
+    //Lettura Data Caricamento File
+    if(lettore.readNextStartElement() && lettore.name() == "dataCaricamento") _dataCaricamento = QDate::fromString(lettore.readElementText());
+    //Lettura Descrizione File
+    if(lettore.readNextStartElement() && lettore.name() == "descrizione") _descrizione = lettore.readElementText();
+
+    //Lettura Tipo Compressione Media
+    if(lettore.readNextStartElement() && lettore.name() == "tipoCompressione") _tipoCompressione = compressione(lettore.readElementText().toInt());
+
+    //Lettura Codec Video
+    if(lettore.readNextStartElement() && lettore.name() == "codec") _codec = lettore.readElementText().toUInt();
+    //Lettura Durata Video
+    if(lettore.readNextStartElement() && lettore.name() == "durata") _durata = lettore.readElementText().toUInt();
+    //Lettura Larghezza Video
+    if(lettore.readNextStartElement() && lettore.name() == "larghezza") _larghezza = lettore.readElementText().toUInt();
+    //Lettura Altezza Video
+    if(lettore.readNextStartElement() && lettore.name() == "altezza") _altezza = lettore.readElementText().toUInt();
+    //Lettura FPS Video
+    if(lettore.readNextStartElement() && lettore.name() == "fps") _fps = lettore.readElementText().toUInt();
+
+    //Fine della lettura del singolo file
+    lettore.skipCurrentElement();
+    return new FileVideo(_nome, _estensione, _dimensione, _dataCreazione, _dataCaricamento,
+                 _descrizione, _tipoCompressione, _codec, _durata, _larghezza, _altezza, _fps);
+
 }

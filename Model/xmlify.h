@@ -9,8 +9,6 @@
 #include <QMessageBox>
 #include <QXmlStreamWriter>
 
-class ErroreAperturaFile{};
-
 class Xmlify{
 private:
     QString account;

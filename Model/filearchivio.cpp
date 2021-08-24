@@ -19,7 +19,7 @@ bool FileArchivio::getProtetto() const {
 }
 
 QString FileArchivio::getInformazioniFile() const {
-    return "Archivio";
+    return "FileArchivio";
 }
 
 FileArchivio* FileArchivio::clone() const {
@@ -80,4 +80,44 @@ void FileArchivio::serializza(QXmlStreamWriter &scrittore) const{
     if (scrittore.hasError()){
         throw QString("Errore in scrittura di un FileArchivio");
     }
+}
+
+FileArchivio* FileArchivio::deserializza(QXmlStreamReader & lettore){
+    //Informazioni per costruire il sottoggetto di tipo File
+    QString _nome;
+    QString _estensione;
+    unsigned int _dimensione;
+    QDate _dataCreazione;
+    QDate _dataCaricamento;
+    QString _descrizione;
+    //Informazioni per costruire un oggetto di classe FileArchivio
+    unsigned int _dimensioneOriginale;
+    unsigned int _numeroDiFile;
+    bool _protetto = false;
+
+    //Lettura Nome File
+    if(lettore.readNextStartElement() && lettore.name() == "nome") _nome = lettore.readElementText();
+    //Lettura Estensione File
+    if(lettore.readNextStartElement() && lettore.name() == "estensione") _estensione = lettore.readElementText();
+    //Lettura Dimensione File
+    if(lettore.readNextStartElement() && lettore.name() == "dimensione") _dimensione = lettore.readElementText().toUInt();
+    //Lettura Data Creazione File
+    if(lettore.readNextStartElement() && lettore.name() == "dataCreazione") _dataCreazione = QDate::fromString(lettore.readElementText());
+    //Lettura Data Caricamento File
+    if(lettore.readNextStartElement() && lettore.name() == "dataCaricamento") _dataCaricamento = QDate::fromString(lettore.readElementText());
+    //Lettura Descrizione File
+    if(lettore.readNextStartElement() && lettore.name() == "descrizione") _descrizione = lettore.readElementText();
+
+    //Lettura Dimensione File
+    if(lettore.readNextStartElement() && lettore.name() == "dimensioneOriginale") _dimensioneOriginale = lettore.readElementText().toUInt();
+    //Lettura Dimensione File
+    if(lettore.readNextStartElement() && lettore.name() == "numeroDiFile") _numeroDiFile = lettore.readElementText().toUInt();
+    //Lettura Dimensione File
+    if(lettore.readNextStartElement() && lettore.name() == "protetto") _protetto = lettore.readElementText() == "si" ? 1 : 0;
+
+    //Fine della lettura del singolo file
+    lettore.skipCurrentElement();
+    return new FileArchivio(_nome, _estensione, _dimensione, _dataCreazione, _dataCaricamento,
+                 _descrizione, _dimensioneOriginale, _numeroDiFile, _protetto);
+
 }

@@ -1,5 +1,7 @@
 #include "account.h"
 
+std::vector<File*> tipiDiFile;
+
 /*Account::Account(QString email_, QString password_, provider host_, unsigned int spazioFornito_):
 email(email_), password(password_), host(host_), spazioFornito(spazioFornito_), listaFile(){}*/
 
@@ -11,7 +13,7 @@ Account* Account::clone() const{
 }
 
 void Account::serializza(QXmlStreamWriter &scrittore) const{
-    std::string errore;
+    QString errore;
     //Introduzione di ogni account
     scrittore.writeStartElement("account");
         //Aggiunta degli attributi:
@@ -41,10 +43,64 @@ void Account::serializza(QXmlStreamWriter &scrittore) const{
             for(auto cit = listaFile.begin(); cit != listaFile.end(); ++cit){
                 (*cit)->serializza(scrittore);
             }
-        }catch(std::string e){
+        }catch(QString e){
             errore = e;
         }
         scrittore.writeEndElement();
     scrittore.writeEndElement();
 if (scrittore.hasError()) throw errore;
+}
+
+Account* Account::deserializza(QXmlStreamReader & lettore){
+    //Informazioni per costruire un oggetto di classe Account
+    QString _email;
+    QString _password;
+    servizio _host;
+    unsigned int _spazioFornito;
+    Container<Deepptr<File>> _listaFile;
+    riempiTipiDiFile();
+
+    if(lettore.name() != "account") throw QString("Non è presente alcun Account all'interno del file!");
+    else{
+        //Lettura Email Account
+        if(lettore.readNextStartElement() && lettore.name() == "email") _email = lettore.readElementText();
+        //Lettura Password Account
+        if(lettore.readNextStartElement() && lettore.name() == "password") _password = lettore.readElementText();
+        //Lettura Host Account
+        if(lettore.readNextStartElement() && lettore.name() == "host") _host = servizio(lettore.readElementText().toInt());
+        //Lettura Spazio Fornito
+        if(lettore.readNextStartElement() && lettore.name() == "spazioFornito") _spazioFornito = lettore.readElementText().toUInt();
+
+        //Lettura Files
+        if(lettore.readNextStartElement() && lettore.name() == "listaFile"){
+            while(lettore.readNextStartElement() && lettore.name() == "file"){
+                bool trovato= false;
+                QString tipo = lettore.attributes().value("type").toString();
+                if(tipo != ""){
+                    for(auto it = tipiDiFile.begin(); it != tipiDiFile.end() && !trovato ; it++){
+                        if((*it)->getInformazioniFile() == tipo){
+                            try{
+                                _listaFile.push_back((*it)->deserializza(lettore));
+                                trovato = true;
+                            }catch(QString s){
+                                throw s;
+                            }
+                        }
+                    }
+                }else throw QString("Il documento che è stato aperto non è ben formato: un file letto non è di alcun tipo!");
+            }
+        }
+
+    }
+    lettore.skipCurrentElement();
+    return new Account(_email, _password, _host, _spazioFornito, _listaFile);
+}
+
+void Account::riempiTipiDiFile(){
+    //Aggiunta alla creazione dell'account
+    tipiDiFile.push_back(new FileArchivio());
+    tipiDiFile.push_back(new FileAudio());
+    tipiDiFile.push_back(new FileImmagine());
+    tipiDiFile.push_back(new FileTesto());
+    tipiDiFile.push_back(new FileVideo());
 }

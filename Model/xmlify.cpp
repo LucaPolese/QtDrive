@@ -2,93 +2,6 @@
 
 Xmlify::Xmlify(const QString& percorsoFile) : account(percorsoFile){}
 
-/*void Xmlify::salvaAccount(const Container<Deepptr<Account>>& listaAccount) const {
-    file.open(QIODevice::WriteOnly);
-    QXmlStreamWriter w(&file);
-    w.writeStartDocument();
-    w.writeStartElement("partita");
-    w.writeTextElement("seed", QString::number(Controller::getSeed()));
-    w.writeStartElement("tavolo");
-    w.writeTextElement("tipo", QString(QChar(controller_->cartaSulTavoloChar())));
-    if (controller_->cartaSulTavoloColore() != -1) {
-        w.writeTextElement("colore", QString::number(controller_->cartaSulTavoloColore()));
-    } else {
-        w.writeTextElement("colore", "N");
-    }
-    w.writeEndElement();
-    for (int i = 0; i < controller_->getNumeroGiocatori(); ++i) {
-        w.writeStartElement("giocatore");
-        for (int j = 0; j < controller_->getNumeroCarte(i); ++j) {
-            w.writeStartElement("carta");
-            w.writeTextElement("tipo", QString(QChar(controller_->cartaInManoChar(i, j))));
-            if (controller_->cartaInManoColore(i, j) != -1) {
-                w.writeTextElement("colore", QString::number(controller_->cartaInManoColore(i, j)));
-            } else {
-                w.writeTextElement("colore", "N");
-            }
-            w.writeEndElement();
-        }
-        w.writeEndElement();
-    }
-    w.writeEndElement();
-    w.writeEndDocument();
-}
-
-
-Container<Deepptr<Account>> Xmlify::acquisisciAccount() const{
-    Container<Deepptr<Account>> accountLetti;
-    QFile file(account);
-
-    if(!file.open(QIODevice::ReadOnly)){
-        QMessageBox* alert = new QMessageBox(QMessageBox::Warning, "Errore! ","Attenzione: non è possibile leggere il file che hai tentato di aprire.",QMessageBox::Ok);
-        alert->exec();
-        throw ErroreAperturaFile();
-        return accountLetti;
-    }
-
-    QXmlStreamReader reader(&file);
-
-    // Inizio a leggere il file XML
-    if(reader.readNextStartElement() && reader.name() == "serverList")
-    {
-        while(reader.readNextStartElement())
-        {
-            try
-            {
-                qontainer.pushBack(Server::dataUnserialize(reader));
-            }
-            catch(std::string s)
-            {
-                QMessageBox box(QMessageBox::Warning,
-                                "Errore caricamento file",
-                                QString("Non è stato possibile caricare il file a causa di un errore nella lettura. "
-                                "<br><u>Motivo:</u> %1").arg(QString::fromStdString(s)),
-                                QMessageBox::Ok);
-                box.exec();
-                throw 1;
-            }
-        }
-    }
-    else
-    {
-        QMessageBox box(QMessageBox::Warning,
-                        "Errore caricamento file",
-                        "Non è stato possibile leggere il file dal momento che "
-                        "il contenuto non è stato riconosciuto.",
-                        QMessageBox::Ok);
-        box.exec();
-        throw 1;
-    }
-
-    file.close();
-    return qontainer;
-}
-
-bool Xmlify::scriviAccount(const Container<Deepptr<Account> > &) const
-{
-
-}*/
-
 bool Xmlify::salvaAccount(const Container<Deepptr<Account>>& listaAccount) const {
 
     QFile file(account);
@@ -101,20 +14,74 @@ bool Xmlify::salvaAccount(const Container<Deepptr<Account>>& listaAccount) const
 
     scrittore.setAutoFormatting(true);
 
-    //Inizializzazione del contenuto
+    //Inizializzazione del file che conterrà gli account
     scrittore.writeStartDocument();
-    scrittore.writeStartElement("accountList");
+    scrittore.writeStartElement("listaAccount");
 
     //Scrittura del contenuto del Container di Account
     try{
         for(auto cit = listaAccount.begin(); cit != listaAccount.end(); ++cit) (*cit)->serializza(scrittore);
-    }catch(std::string s){
+    }catch(QString s){
+        QMessageBox* alert = new QMessageBox(QMessageBox::Warning, "Errore",
+                                             QString("Attenzione: errore in scrittura"
+                                                     "<br><b>Descrizione:<b> %1").arg(s),
+                                             QMessageBox::Ok);
+        alert->exec();
         return false;
     }
 
+    //Fine della Scrittura
     scrittore.writeEndElement();
+    //Chiusura del File
     scrittore.writeEndDocument();
 
-    //file.commit();
     return true;
+}
+
+Container<Deepptr<Account>> Xmlify::acquisisciAccount() const{
+    Container<Deepptr<Account>> letturaAccount;
+    QFile file(account);
+
+    if(!file.open(QIODevice::ReadOnly)){
+        QMessageBox* alert = new QMessageBox(QMessageBox::Critical, "Errore",
+                                             "Attenzione: il file che hai tentato di aprire non può essere letto",
+                                             QMessageBox::Ok);
+        alert->exec();
+        return letturaAccount;
+    }
+
+    QXmlStreamReader lettore(&file);
+
+    // Inizio a leggere il file XML
+    if(lettore.readNextStartElement() && lettore.name() == "listaAccount"){
+
+        //Inizio lettura di tutti gli account
+        while(lettore.readNextStartElement()){
+            try{
+                //Aggiunta di tutti gli account letti
+                letturaAccount.push_back(Deepptr<Account>(Account::deserializza(lettore)));
+            }catch(QString s){
+                QMessageBox box(QMessageBox::Warning,
+                                "Errore",
+                                QString("Il file che hai scelto non può essere caricato per un errore in lettura. "
+                                "<br><b>Descrizione:</b> %1").arg(s),
+                                QMessageBox::Ok);
+                box.exec();
+                throw 1;
+            }
+        }
+        lettore.skipCurrentElement();
+    }else{
+        QMessageBox box(QMessageBox::Critical,
+                        "Errore",
+                        "Le informazioni contenute in questo file non rispecchiano la struttura originale."
+                        "<br><b>Verificare:</b> "
+                        "<ul><li>Che il contenuto non sia corrotto</li><li>Di aver selezionato il file corretto</li></ul>",
+                        QMessageBox::Ok);
+        box.exec();
+        throw 1;
+    }
+
+    file.close();
+    return letturaAccount;
 }

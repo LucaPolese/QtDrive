@@ -15,7 +15,7 @@ class File {
         QString descrizione;
 
     public:
-        File(QString, QString, unsigned int, QDate, QDate, QString);
+        File(QString = "", QString = "", unsigned int = 0, QDate = QDate(1970,1,1), QDate = QDate(1970,1,1), QString = "");
         virtual ~File();
 
 
@@ -29,6 +29,7 @@ class File {
         virtual QString getInformazioniFile() const =0;
         virtual File* clone() const =0;
         virtual void serializza(QXmlStreamWriter& scrittore) const = 0;
+        virtual File* deserializza(QXmlStreamReader& lettore) = 0;
 };
 
 #endif // FILE_H

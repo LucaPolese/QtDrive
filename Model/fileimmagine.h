@@ -6,7 +6,7 @@
 class FileImmagine: public FileMedia {
     public:
         enum tipo{raster, vettoriale};
-        FileImmagine(QString, QString, unsigned int, QDate, QDate, QString, FileMedia::compressione, tipo, unsigned int, unsigned int);
+        FileImmagine(QString = "", QString = "", unsigned int = 0, QDate = QDate(1970,1,1), QDate = QDate(1970,1,1), QString = "", compressione = compressione(), tipo = tipo(), unsigned int = 0, unsigned int = 0);
         ~FileImmagine();
 
         unsigned int getAltezza() const;
@@ -15,6 +15,7 @@ class FileImmagine: public FileMedia {
         QString getInformazioniFile() const override;
         FileImmagine* clone() const override;
         void serializza(QXmlStreamWriter &scrittore) const override;
+        FileImmagine* deserializza(QXmlStreamReader& lettore) override;
     private:
         tipo tipoImmagine;
         unsigned int larghezza;

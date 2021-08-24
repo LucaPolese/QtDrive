@@ -15,7 +15,7 @@ unsigned int FileAudio::getDurata() const {
 }
 
 QString FileAudio::getInformazioniFile() const {
-    return "File audio";
+    return "FileAudio";
 }
 
 FileAudio* FileAudio::clone() const {
@@ -57,6 +57,12 @@ void FileAudio::serializza(QXmlStreamWriter &scrittore) const{
         scrittore.writeCharacters(getDescrizione());
         scrittore.writeEndElement();
 
+        //Informazioni specifiche di FileMedia:
+        //Compressione
+        scrittore.writeStartElement("tipoCompressione");
+        scrittore.writeCharacters(QString::number(getTipoCompressione()));
+        scrittore.writeEndElement();
+
         //Informazioni specifiche di FileAudio:
         //Dimensione Originale
         scrittore.writeStartElement("bitrate");
@@ -72,3 +78,46 @@ void FileAudio::serializza(QXmlStreamWriter &scrittore) const{
         throw QString("Errore in scrittura di un FileAudio");
     }
 }
+
+FileAudio* FileAudio::deserializza(QXmlStreamReader & lettore){
+    //Informazioni per costruire il sottoggetto di tipo File
+    QString _nome;
+    QString _estensione;
+    unsigned int _dimensione;
+    QDate _dataCreazione;
+    QDate _dataCaricamento;
+    QString _descrizione;
+    //Informazioni per costruire un oggetto di classe FileMedia
+    compressione _tipoCompressione;
+    //Informazioni per costruire un oggetto di classe FileArchivio
+    unsigned int _bitrate;
+    unsigned int _durata;
+
+    //Lettura Nome File
+    if(lettore.readNextStartElement() && lettore.name() == "nome") _nome = lettore.readElementText();
+    //Lettura Estensione File
+    if(lettore.readNextStartElement() && lettore.name() == "estensione") _estensione = lettore.readElementText();
+    //Lettura Dimensione File
+    if(lettore.readNextStartElement() && lettore.name() == "dimensione") _dimensione = lettore.readElementText().toUInt();
+    //Lettura Data Creazione File
+    if(lettore.readNextStartElement() && lettore.name() == "dataCreazione") _dataCreazione = QDate::fromString(lettore.readElementText());
+    //Lettura Data Caricamento File
+    if(lettore.readNextStartElement() && lettore.name() == "dataCaricamento") _dataCaricamento = QDate::fromString(lettore.readElementText());
+    //Lettura Descrizione File
+    if(lettore.readNextStartElement() && lettore.name() == "descrizione") _descrizione = lettore.readElementText();
+
+    //Lettura Tipo Compressione Media
+    if(lettore.readNextStartElement() && lettore.name() == "tipoCompressione") _tipoCompressione = compressione(lettore.readElementText().toInt());
+
+    //Lettura Bitrate Audio
+    if(lettore.readNextStartElement() && lettore.name() == "bitrate") _bitrate = lettore.readElementText().toUInt();
+    //Lettura Durata Audio
+    if(lettore.readNextStartElement() && lettore.name() == "durata") _durata = lettore.readElementText().toUInt();
+
+    //Fine della lettura del singolo file
+    lettore.skipCurrentElement();
+    return new FileAudio(_nome, _estensione, _dimensione, _dataCreazione, _dataCaricamento,
+                 _descrizione, _tipoCompressione, _bitrate, _durata);
+
+}
+

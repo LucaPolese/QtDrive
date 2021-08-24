@@ -13,7 +13,7 @@ class FileVideo: public FileMedia {
         unsigned int fps;
 
     public:
-        FileVideo(QString, QString, unsigned int, QDate, QDate, QString, FileMedia::compressione, QString, unsigned int, unsigned int, unsigned int, unsigned int);
+        FileVideo(QString = "", QString = "", unsigned int = 0, QDate = QDate(1970,1,1), QDate = QDate(1970,1,1), QString = "", compressione = compressione(), QString = "", unsigned int = 0, unsigned int = 0, unsigned int = 0, unsigned int = 0);
         ~FileVideo();
 
         const QString &getCodec() const;
@@ -25,5 +25,6 @@ class FileVideo: public FileMedia {
         QString getInformazioniFile() const override;
         FileVideo* clone() const override;
         void serializza(QXmlStreamWriter &scrittore) const override;
+        FileVideo* deserializza(QXmlStreamReader &lettore) override;
 };
 #endif // FILEVIDEO_H

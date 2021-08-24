@@ -15,7 +15,7 @@ unsigned int FileImmagine::getLarghezza() const {
 }
 
 QString FileImmagine::getInformazioniFile() const {
-    return "File immagine";
+    return "FileImmagine";
 }
 
 FileImmagine* FileImmagine::clone() const {
@@ -57,6 +57,12 @@ void FileImmagine::serializza(QXmlStreamWriter &scrittore) const{
         scrittore.writeCharacters(getDescrizione());
         scrittore.writeEndElement();
 
+        //Informazioni specifiche di FileMedia:
+        //Compressione
+        scrittore.writeStartElement("tipoCompressione");
+        scrittore.writeCharacters(QString::number(getTipoCompressione()));
+        scrittore.writeEndElement();
+
         //Informazioni specifiche di FileImmagine:
         //Tipo di Immagine
         scrittore.writeStartElement("tipoImmagine");
@@ -76,5 +82,50 @@ void FileImmagine::serializza(QXmlStreamWriter &scrittore) const{
     if (scrittore.hasError()){
         throw QString("Errore in scrittura di un FileImmagine");
     }
+}
+
+FileImmagine *FileImmagine::deserializza(QXmlStreamReader &lettore){
+    //Informazioni per costruire il sottoggetto di tipo File
+    QString _nome;
+    QString _estensione;
+    unsigned int _dimensione;
+    QDate _dataCreazione;
+    QDate _dataCaricamento;
+    QString _descrizione;
+    //Informazioni per copstruire un oggetto di classe FileMedia
+    compressione _tipoCompressione;
+    //Informazioni per costruire un oggetto di classe FileArchivio
+    tipo _tipoImmagine;
+    unsigned int _larghezza;
+    unsigned int _altezza;
+
+    //Lettura Nome File
+    if(lettore.readNextStartElement() && lettore.name() == "nome") _nome = lettore.readElementText();
+    //Lettura Estensione File
+    if(lettore.readNextStartElement() && lettore.name() == "estensione") _estensione = lettore.readElementText();
+    //Lettura Dimensione File
+    if(lettore.readNextStartElement() && lettore.name() == "dimensione") _dimensione = lettore.readElementText().toUInt();
+    //Lettura Data Creazione File
+    if(lettore.readNextStartElement() && lettore.name() == "dataCreazione") _dataCreazione = QDate::fromString(lettore.readElementText());
+    //Lettura Data Caricamento File
+    if(lettore.readNextStartElement() && lettore.name() == "dataCaricamento") _dataCaricamento = QDate::fromString(lettore.readElementText());
+    //Lettura Descrizione File
+    if(lettore.readNextStartElement() && lettore.name() == "descrizione") _descrizione = lettore.readElementText();
+
+    //Lettura Tipo Compressione Media
+    if(lettore.readNextStartElement() && lettore.name() == "tipoCompressione") _tipoCompressione = compressione(lettore.readElementText().toInt());
+
+    //Lettura Bitrate
+    if(lettore.readNextStartElement() && lettore.name() == "tipoImmagine") _tipoImmagine = tipo(lettore.readElementText().toInt());
+    //Lettura Larghezza Immagine
+    if(lettore.readNextStartElement() && lettore.name() == "larghezza") _larghezza = lettore.readElementText().toUInt();
+    //Lettura Dimensione Immagine
+    if(lettore.readNextStartElement() && lettore.name() == "altezza") _altezza = lettore.readElementText().toUInt();
+
+    //Fine della lettura del singolo file
+    lettore.skipCurrentElement();
+    return new FileImmagine(_nome, _estensione, _dimensione, _dataCreazione, _dataCaricamento,
+                 _descrizione, _tipoCompressione, _tipoImmagine, _larghezza, _altezza);
+
 }
 

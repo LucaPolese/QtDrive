@@ -9,7 +9,7 @@ private:
     unsigned int numeroDiFile;
     bool protetto; // True sse archivio protetto da password
 public:
-    FileArchivio(QString, QString, unsigned int, QDate, QDate, QString descrizione_, unsigned int dimensioneOriginale_, unsigned int numeroDiFile_, bool protetto_);
+    FileArchivio(QString = "", QString = "", unsigned int = 0, QDate = QDate(1970,1,1), QDate  = QDate(1970,1,1), QString ="", unsigned int = 0, unsigned int = 0, bool = false);
     ~FileArchivio();
 
     unsigned int getDimensioneOriginale() const;
@@ -19,6 +19,7 @@ public:
     QString getInformazioniFile() const override;
     FileArchivio* clone() const override;
     void serializza(QXmlStreamWriter &scrittore) const override;
+    FileArchivio* deserializza(QXmlStreamReader& lettore) override;
 };
 
 #endif // FILEARCHIVIO_H

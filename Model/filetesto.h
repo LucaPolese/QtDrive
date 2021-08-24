@@ -9,7 +9,7 @@ private:
     unsigned int numeroParole;
 
 public:
-    FileTesto(QString, QString, unsigned int, QDate, QDate, QString, unsigned int, unsigned int);
+    FileTesto(QString = "", QString = "", unsigned int = 0, QDate = QDate(1970,1,1), QDate = QDate(1970,1,1), QString = "", unsigned int = 0, unsigned int = 0);
     ~FileTesto();
 
     unsigned int getNumeroCaratteri() const;
@@ -18,6 +18,7 @@ public:
     QString getInformazioniFile() const override;
     FileTesto* clone() const override;
     void serializza(QXmlStreamWriter &scrittore) const override;
+    FileTesto* deserializza(QXmlStreamReader& lettore) override;
 };
 
 #endif // FILETESTO_H
