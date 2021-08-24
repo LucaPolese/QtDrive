@@ -1,22 +1,184 @@
 #include "mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent) : QWidget(parent){
+MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Controller()), accountWidget(new AccountWidget(controller)), fileWidget(new NuovoFileWidget(controller)) {
     setWindowTitle("QtDrive");
     setMinimumSize(1024, 720);
 
     //Layout Pagina Principale
     QVBoxLayout* pagina = new QVBoxLayout();
 
-    //Layout delle Tabs
+    // Scheda ACCOUNT
+    QWidget* paginaAccount = new QWidget;
+    QVBoxLayout* layoutInfo1 = new QVBoxLayout; // Layout contenente le informazioni testuali della prima scheda ed i tre layout successivi
+    QHBoxLayout* layoutScheda1 = new QHBoxLayout; // Layout contenente la struttura della prima scheda
+    QVBoxLayout* layoutAccount = new QVBoxLayout; // Layout contenente la tabella degli account
+    layoutInfoAccount = new QVBoxLayout; // Layout per la visualizzazione delle informazioni dell'account
+
+    // Contenuto testuale scheda 1
+    QLabel* informazioni1 = new QLabel("Da questa scheda è possibile visualizzare le informazioni relative agli account registrati.<br>Per cominciare, carica un file tramite <b>File > Apri</b> oppure inserisci un nuovo account tramite il pulsante <b>Aggiungi account</b>. Per ulteriori informazioni, premi <b>Ctrl+H</b> per aprire la guida in linea.");
+
+    // Definizione tabella account
+    tabellaAccount = new QTableWidget;
+    tabellaAccount->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    tabellaAccount->setColumnCount(4);
+    QStringList headers1;
+    headers1 << "Servizio" << "Email" << "Password" << "Spazio fornito";
+    tabellaAccount->setHorizontalHeaderLabels(headers1);
+    tabellaAccount->verticalHeader()->hide();
+    tabellaAccount->setSelectionBehavior(QAbstractItemView::SelectRows);
+    tabellaAccount->setSelectionMode(QAbstractItemView::SingleSelection);
+    tabellaAccount->setAlternatingRowColors(true);
+    tabellaAccount->horizontalHeader()->setSectionsClickable(false);
+    tabellaAccount->setSortingEnabled(false);
+    tabellaAccount->resizeRowsToContents();
+    tabellaAccount->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    tabellaAccount->setFocusPolicy(Qt::NoFocus);
+
+    layoutInfo1->addWidget(informazioni1);
+    layoutScheda1->addWidget(tabellaAccount);
+    layoutInfo1->addLayout(layoutScheda1);
+    layoutInfo1->addLayout(layoutAccount);
+
+    // Elementi della finestra Informazioni account
+    set0 = new QBarSet("Archivio");
+    set1 = new QBarSet("Testo");
+    set2 = new QBarSet("Audio");
+    set3 = new QBarSet("Immagine");
+    set4 = new QBarSet("Video");
+    series = new QHorizontalPercentBarSeries();
+    *set0 << 50;
+    *set1 << 40;
+    *set2 << 30;
+    *set3 << 01;
+    *set4 << 02;
+
+    series->append(set0);
+    series->append(set1);
+    series->append(set2);
+    series->append(set3);
+    series->append(set4);
+
+    chart = new QChart();
+    chart->addSeries(series);
+    chart->setAnimationOptions(QChart::SeriesAnimations);
+    chart->setBackgroundBrush(QBrush(QColor("white")));
+
+    QStringList categories;
+    categories << "";
+    QBarCategoryAxis *axis = new QBarCategoryAxis();
+    axis->append(categories);
+    chart->createDefaultAxes();
+    chart->setAxisY(axis, series);
+
+    chart->legend()->setVisible(true);
+    chart->axisX()->setLabelsVisible(false);
+    chart->axisX()->setGridLineVisible(false);
+    chart->axisX()->setLineVisible(false);
+    chart->axisY()->setGridLineVisible(false);
+    chart->axisY()->setLineVisible(false);
+    chart->legend()->setAlignment(Qt::AlignTop);
+
+    chartView = new QChartView(chart);
+    chartView->setFixedSize(QSize(400, 100));
+    chartView->setRenderHint(QPainter::Antialiasing);
+    layoutInfoAccount->addWidget(chartView);
+
+    QFormLayout* layoutInformazioni = new QFormLayout;
+    layoutInformazioni->addRow("", new QWidget); // Aggiunge spazio sotto al grafico
+
+    emailAccount = new QLineEdit;
+    layoutInformazioni->addRow("Email:", emailAccount);
+
+    passwordAccount = new QLineEdit;
+    layoutInformazioni->addRow("Password:", passwordAccount);
+
+    numeroFile = new QLabel("1000"); numeroFile->setAlignment(Qt::AlignRight);
+    layoutInformazioni->addRow("File contenuti:", numeroFile);
+
+    spazioRimanente = new QLabel("spazio GB"); spazioRimanente->setAlignment(Qt::AlignRight);
+    layoutInformazioni->addRow("Spazio a disposizione:", spazioRimanente);
+
+    layoutInformazioni->setVerticalSpacing(30);
+    layoutInfoAccount->addLayout(layoutInformazioni);
+
+    QHBoxLayout* layoutPulsanti1 = new QHBoxLayout;
+    modificaAccount = new QPushButton(QIcon(":res/icons/pulsanti/modifica.png"), "Modifica"); modificaAccount->setFixedSize(modificaAccount->sizeHint());
+    eliminaAccount = new QPushButton(QIcon(":res/icons/pulsanti/elimina.png"), "Elimina"); eliminaAccount->setFixedSize(eliminaAccount->sizeHint());
+    chiudiAccount = new QPushButton("Chiudi"); chiudiAccount->setFixedSize(chiudiAccount->sizeHint());
+    layoutPulsanti1->addWidget(modificaAccount);
+    layoutPulsanti1->addWidget(eliminaAccount);
+    layoutPulsanti1->addWidget(chiudiAccount, 0, Qt::AlignRight);
+    layoutInfoAccount->addLayout(layoutPulsanti1);
+
+    connect(modificaAccount, &QPushButton::pressed, [=]{
+        QMessageBox messageBox(QMessageBox::Question, tr("QtDrive"), tr("Salvare le modifiche effettuate?"), QMessageBox::Yes | QMessageBox::No, this);
+        messageBox.setButtonText(QMessageBox::Yes, tr("Sì"));
+        messageBox.setButtonText(QMessageBox::No, tr("No"));
+        int ret = messageBox.exec();
+        if(ret == QMessageBox::Yes) {
+            controller->salvaModificaAccount(tabellaAccount->currentRow(), emailAccount->text(), passwordAccount->text());
+            informazioniAccount->hide();
+            visualizzaAccount();
+        }
+        else {
+             tabellaAccount->selectRow(tabellaAccount->currentRow());
+             visualizzaInfoAccount();
+        }
+    });
+
+    connect(eliminaAccount, &QPushButton::pressed, [=]{
+        QMessageBox messageBox(QMessageBox::Question, tr("QtDrive"), tr("Eliminare l'account selezionato?\nIl suo contenuto non sarà più gestibile da questa applicazione."), QMessageBox::Yes | QMessageBox::No, this);
+        messageBox.setButtonText(QMessageBox::Yes, tr("Sì"));
+        messageBox.setButtonText(QMessageBox::No, tr("No"));
+        int ret = messageBox.exec();
+        if(ret == QMessageBox::Yes) {
+            controller->eliminaAccount(tabellaAccount->currentRow());
+            informazioniAccount->hide();
+            visualizzaAccount();
+        }
+    });
+
+    connect(chiudiAccount, &QPushButton::pressed, [=]{
+        informazioniAccount->hide();
+    });
+
+    connect(tabellaAccount, SIGNAL(cellClicked(int,int)), this, SLOT(visualizzaInfoAccount()));
+
+    // Pulsante "Aggiungi account"
+    QPushButton* pulsanteAggiungiAccount = new QPushButton("Aggiungi account");
+    pulsanteAggiungiAccount->setFixedSize(pulsanteAggiungiAccount->sizeHint());
+    layoutAccount->addWidget(pulsanteAggiungiAccount);
+    paginaAccount->setLayout(layoutInfo1);
+
+    // Definizione layout per informazioni dell'account
+    informazioniAccount = new QWidget;
+    informazioniAccount->setLayout(layoutInfoAccount);
+    informazioniAccount->hide();
+    layoutScheda1->addWidget(informazioniAccount);
+    layoutScheda1->setAlignment(informazioniAccount, Qt::AlignHCenter);
+
+    // Finestra inserimento nuovo account
+    accountWidget->setWindowModality(Qt::ApplicationModal);
+    connect(accountWidget, &AccountWidget::accountAggiunto, this, &MainWindow::visualizzaAccount);
+    pagina->addLayout(layoutInfo1);
+
+    // Scheda FILE
     QWidget* paginaFile = new QWidget;
-    QHBoxLayout* layoutContenitore = new QHBoxLayout;
+    QVBoxLayout* layoutInfo2 = new QVBoxLayout; // Layout contenente le informazioni della seconda scheda
+    QHBoxLayout* layoutScheda2 = new QHBoxLayout; // Layout contenente la struttura della seconda scheda
+    QVBoxLayout* layoutFile = new QVBoxLayout; // Layout contenente il tree widget dei file
+    layoutInfoFile = new QVBoxLayout; // Layout per la visualizzazione delle informazioni dei file
+
+    // Contenuto testuale scheda 2
+    QLabel* informazioni2 = new QLabel("Da questa scheda è possibile visualizzare i file associati ad ogni account ed effettuare l'inserimento di nuovi file.<br>Clicca su un account per vedere i relativi file. Clicca su un file per visualizzare ulteriori informazioni ed accedere alle funzioni di modifica.<br>Clicca il pulsante <b>Nuovo file</b> per inserire un nuovo file nell'acccount correntemente selezionato. Per ulteriori informazioni, premi <b>Ctrl+H</b> per aprire la guida in linea.");
+
+    // Tabella con nome del servizio e indirizzo email associato
     tabellaFile = new QTableWidget;
     tabellaFile->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    tabellaFile->setRowCount(10);
-    tabellaFile->setColumnCount(4);
-    QStringList headers;
-    headers << "Servizio" << "Email" << "Password" << "Spazio fornito";
-    tabellaFile->setHorizontalHeaderLabels(headers);
+    tabellaFile->setColumnCount(2);
+    QStringList headers2;
+    headers2 << "Servizio" << "Email";
+    tabellaFile->setHorizontalHeaderLabels(headers2);
     tabellaFile->verticalHeader()->hide();
     tabellaFile->setSelectionBehavior(QAbstractItemView::SelectRows);
     tabellaFile->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -25,13 +187,79 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent){
     tabellaFile->setSortingEnabled(false);
     tabellaFile->resizeRowsToContents();
     tabellaFile->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    QTreeWidget* listaFile = new QTreeWidget;
-    layoutContenitore->addWidget(tabellaFile);
-    layoutContenitore->addWidget(listaFile);
-    paginaFile->setLayout(layoutContenitore);
-    connect(tabellaFile, SIGNAL(cellClicked(int,int)), this, SLOT(visualizzaFile(int)));
+    tabellaFile->setFocusPolicy(Qt::NoFocus);
 
-    QWidget* paginaAccount = new QWidget();
+    // TreeWidget per la visualizzazione dei file
+    QTreeWidget* listaFile = new QTreeWidget;
+    QStringList headersFile;
+    headersFile << "Tipo" << "Nome" << "Estensione" << "Dimensione" << "Descrizione";
+    listaFile->setHeaderLabels(headersFile);
+
+    layoutScheda2->addWidget(tabellaFile);
+    //layoutScheda2->addWidget(listaFile);
+    connect(tabellaFile, SIGNAL(cellClicked(int,int)), this, SLOT(visualizzaFile()));
+
+    QHBoxLayout* layoutPulsanti2 = new QHBoxLayout;
+    nuovoFile = new QPushButton(QIcon(":res/icons/file/file.png"), "Nuovo file");
+    eliminaFile = new QPushButton(QIcon(":res/icons/pulsanti/elimina.png"), "Elimina file");
+    chiudiListaFile = new QPushButton("Chiudi");
+    layoutPulsanti2->addWidget(nuovoFile); nuovoFile->setFixedSize(nuovoFile->sizeHint());
+    layoutPulsanti2->addWidget(eliminaFile); eliminaFile->setFixedSize(eliminaFile->sizeHint());
+    layoutPulsanti2->addWidget(chiudiListaFile, 0, Qt::AlignRight); chiudiListaFile->setFixedSize(chiudiListaFile->sizeHint());
+    layoutInfo2->addWidget(informazioni2);
+    layoutScheda2->addLayout(layoutFile);
+    layoutInfo2->addLayout(layoutScheda2);
+    layoutInfoFile->addWidget(listaFile);
+    layoutInfoFile->addLayout(layoutPulsanti2);
+    paginaFile->setLayout(layoutInfo2);
+    informazioniFile = new QWidget; // Widget per gestire la comparsa e scomparsa della finestra dei file
+    informazioniFile->setLayout(layoutInfoFile);
+    informazioniFile->hide();
+    layoutScheda2->addWidget(informazioniFile);
+
+    // Form inserimento nuovo file
+    fileWidget->setWindowModality(Qt::ApplicationModal);
+
+    connect(tabellaFile, SIGNAL(cellClicked(int,int)), this, SLOT(visualizzaListaFile()));
+
+    connect(nuovoFile, &QPushButton::pressed, [=]{
+        fileWidget->show();
+    });
+
+    connect(eliminaFile, &QPushButton::pressed, [=]{
+        QMessageBox messageBox(QMessageBox::Question, tr("QtDrive"), tr("Eliminare l'account selezionato?\nIl suo contenuto non sarà più gestibile da questa applicazione."), QMessageBox::Yes | QMessageBox::No, this);
+        messageBox.setButtonText(QMessageBox::Yes, tr("Sì"));
+        messageBox.setButtonText(QMessageBox::No, tr("No"));
+        int ret = messageBox.exec();
+        if(ret == QMessageBox::Yes) {
+           // controller->eliminaAccount(tabellaFile->currentRow());
+           // informazioniAccount->hide();
+            visualizzaAccountRidotto();
+        }
+    });
+
+    connect(chiudiListaFile, &QPushButton::pressed, [=]{
+        informazioniFile->hide();
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Scheda RICERCA
     QWidget* paginaRicerca = new QWidget();
 
 
@@ -69,20 +297,18 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent){
 
     //Tabs
     QTabWidget* tabs = new QTabWidget();
-    tabs->insertTab(0, paginaAccount, QIcon(":/res/styles/icons/home.svg"), "Account");
-    tabs->insertTab(1, paginaFile, QIcon(":/res/styles/icons/services.svg"), "File per Account");
-    tabs->insertTab(2, paginaRicerca, QIcon(":/res/styles/icons/nodes.svg"), "Ricerca File");
+    tabs->insertTab(0, paginaAccount, QIcon(":/res/icons/tabs/tab1.png"), "Account");
+    tabs->insertTab(1, paginaFile, QIcon(":/res/icons/tabs/tab2.png"), "File");
+    tabs->insertTab(2, paginaRicerca, QIcon(":/res/icons/tabs/tab3.png"), "Ricerca file");
+    tabs->setCurrentIndex(0);
 
-    /*tabs->setTabEnabled(1, false);
-    tabs->setTabEnabled(2, false);*/
+    connect(tabs, SIGNAL(tabBarClicked(int)), this, SLOT(visualizzaAccountRidotto()));
 
     //Aggiunta dei Widget e dei Layout al frame principale
     //layoutMenu->addWidget(menu);
 
     pagina->addWidget(menu);
     pagina->addWidget(tabs);
-
-    tabs->setCurrentIndex(1);
 
     // Connessione a "Apri"
     connect(apriFile, &QAction::triggered,  [=]() {
@@ -123,20 +349,13 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent){
         infoWidget->show();
     });
 
-
-    //CONNESSIONE DI PROVA PER INSERIMENTO ACCOUNT
-    connect(info, &QAction::triggered, [=]() {
-        AccountWidget* infoWidget = new AccountWidget();
-        infoWidget->setWindowModality(Qt::ApplicationModal); // Quando la finestra è aperta, le altre non possono essere selezionate
-        infoWidget->setAttribute(Qt::WA_DeleteOnClose);
-        infoWidget->show();
-    });
+    // Connessione a "Aggiungi account"
+    connect(pulsanteAggiungiAccount, &QPushButton::clicked, this, &MainWindow::aggiungiAccount);
 
     // Inizializzazione file di default, se non esiste viene creato
-    QFile file("account.json");
+    QFile file("account.xml");
     file.open(QIODevice::ReadWrite | QIODevice::Text);
     file.close();
-
 
     setLayout(pagina);
 }
@@ -151,9 +370,85 @@ void MainWindow::closeEvent (QCloseEvent *event) {
     else event->ignore();
 }
 
-void MainWindow::visualizzaFile(int riga) const{
+void MainWindow::aggiungiAccount() {
+    accountWidget->show();
+}
+
+void MainWindow::visualizzaAccount() {
+    tabellaAccount->setRowCount(0);
+    QString servizio;
+    for(int i = 0; i < controller->getNumeroAccount(); i++) {
+        tabellaAccount->insertRow(tabellaAccount->rowCount());
+        Account* a = controller->getAccount(i);
+        switch(a->getHost()) {
+            case 0: servizio = "AmazonDrive"; break;
+            case 1: servizio = "Box"; break;
+            case 2: servizio = "Dropbox"; break;
+            case 3: servizio = "GDrive"; break;
+            case 4: servizio = "iCloud"; break;
+            case 5: servizio = "Mediafire"; break;
+            case 6: servizio = "Mega"; break;
+            case 7: servizio = "Next"; break;
+            case 8: servizio = "OneDrive"; break;
+            case 9: servizio = "Qihoo360"; break;
+        }
+        QTableWidgetItem* itemServizio = new QTableWidgetItem(servizio); itemServizio->setTextAlignment(Qt::AlignCenter);
+        tabellaAccount->setItem(i, 0, itemServizio);
+        QTableWidgetItem* itemEmail = new QTableWidgetItem(a->getEmail()); itemEmail->setTextAlignment(Qt::AlignCenter);
+        tabellaAccount->setItem(i, 1, itemEmail);
+        QTableWidgetItem* itemPassword = new QTableWidgetItem(a->getPassword()); itemPassword->setTextAlignment(Qt::AlignCenter);
+        tabellaAccount->setItem(i, 2, itemPassword);
+        QString spazio = QString::number(a->getSpazioFornito()).append(" GB");
+        QTableWidgetItem* itemSpazio = new QTableWidgetItem(spazio); itemSpazio->setTextAlignment(Qt::AlignCenter);
+        tabellaAccount->setItem(i, 3, itemSpazio);
+    }
+}
+
+void MainWindow::visualizzaAccountRidotto() {
+    tabellaFile->setRowCount(0);
+    QString servizio;
+    for(int i = 0; i < controller->getNumeroAccount(); i++) {
+        tabellaFile->insertRow(tabellaFile->rowCount());
+        Account* a = controller->getAccount(i);
+        switch(a->getHost()) {
+            case 0: servizio = "AmazonDrive"; break;
+            case 1: servizio = "Box"; break;
+            case 2: servizio = "Dropbox"; break;
+            case 3: servizio = "GDrive"; break;
+            case 4: servizio = "iCloud"; break;
+            case 5: servizio = "Mediafire"; break;
+            case 6: servizio = "Mega"; break;
+            case 7: servizio = "Next"; break;
+            case 8: servizio = "OneDrive"; break;
+            case 9: servizio = "Qihoo360"; break;
+        }
+        QTableWidgetItem* itemServizio = new QTableWidgetItem(servizio); itemServizio->setTextAlignment(Qt::AlignCenter);
+        tabellaFile->setItem(i, 0, itemServizio);
+        QTableWidgetItem* itemEmail = new QTableWidgetItem(a->getEmail()); itemEmail->setTextAlignment(Qt::AlignCenter);
+        tabellaFile->setItem(i, 1, itemEmail);
+    }
+}
+
+void MainWindow::visualizzaInfoAccount() {
+    // Numero di file
+    *set0 << 20;
+    int i = tabellaAccount->currentRow(); // indice account selezionato;
+    Account a = *controller->getAccount(i);
+
+    emailAccount->setText(a.getEmail()); emailAccount->setAlignment(Qt::AlignRight);
+    passwordAccount->setText(a.getPassword()); passwordAccount->setAlignment(Qt::AlignRight);
+
+
+    informazioniAccount->show();
+}
+
+void MainWindow::visualizzaListaFile() {
+
+}
+
+void MainWindow::visualizzaFile() {
     tabellaFile->selectedItems();
-    qDebug() << tabellaFile->selectionModel()->currentIndex().row();
+    informazioniFile->show();
 }
 
 MainWindow::~MainWindow() {

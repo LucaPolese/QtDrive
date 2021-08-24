@@ -4,6 +4,7 @@
 #include <QTextBrowser>
 #include <QVBoxLayout>
 #include <QShortcut>
+#include <QIcon>
 
 class GuidaWidget: public QWidget {
     Q_OBJECT
