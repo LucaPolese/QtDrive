@@ -72,7 +72,7 @@ public:
     //Costruttore di copia
     Container(const Container& c);
     //Costruttore di spostamento
-    Container(const Container&& c);
+    Container(Container&& c);
     //Operatore di assegnazione
     Container& operator=(const Container& c);
     //Operatori di assegnazione di spostamento
@@ -265,13 +265,16 @@ typename Container<T>::const_iterator Container<T>::const_iterator::operator--(i
 template<typename T>
 void Container<T>::copia(Nodo* nodo, Nodo*& first, Nodo*& last) {
     if(!nodo){
+        //Caso Base: lista vuota
         first = last = nullptr;
     }else{
+        //Caso Base: 1 solo elemento
         first = last = new Nodo(nodo->info);
+        //Caso iterativo: 2+ elementi
         Nodo* successivo = nodo->next;
         while (successivo){
-            last = new Nodo(successivo->info, last);
-            last->prev->next = last;
+            last->next = new Nodo(successivo->info, 0 ,last);
+            last = last->next;
             successivo = successivo->next;
         }
     }
@@ -298,13 +301,13 @@ Container<T>::Container(const Container& c) : modificato(c.modificato){
 
 //Costruttore di spostamento
 template <class T>
-Container<T>::Container(const Container&& c) : first(c.first), last(c.last), modificato(c.modificato){
+Container<T>::Container(Container&& c) : first(c.first), last(c.last), modificato(c.modificato){
     first = last = nullptr;
 }
 
 //Operatore di assegnazione
 template <class T>
-Container<T>& Container<T>::operator=(const Container<T>& c){
+Container<T>& Container<T>::operator=(const Container& c){
     if(this != &c){
         distruggi(first);
         copia(c.first,first,last);
@@ -315,7 +318,7 @@ Container<T>& Container<T>::operator=(const Container<T>& c){
 
 //Operatori di assegnazione di spostamento
 template <class T>
-Container<T>& Container<T>::operator=(Container<T>&& c){
+Container<T>& Container<T>::operator=(Container&& c){
     if(this != &c){
         distruggi(first);
         first = c.first;
