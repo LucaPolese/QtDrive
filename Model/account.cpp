@@ -5,7 +5,6 @@ std::vector<File*> tipiDiFile;
 Account::Account(QString email_, QString password_, servizio host_, unsigned int spazioFornito_):
 email(email_), password(password_), host(host_), spazioFornito(spazioFornito_), listaFile() {}
 
-std::vector<File*> tipiDiFile;
 Account* Account::clone() const{
     return new Account(*this);
 }
