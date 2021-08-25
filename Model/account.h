@@ -1,6 +1,5 @@
 #ifndef ACCOUNT_H
 #define ACCOUNT_H
-
 #include <QString>
 #include "container.h"
 #include "deepptr.h"
@@ -11,13 +10,10 @@
 #include "filetesto.h"
 #include "filevideo.h"
 #include <QXmlStreamWriter>
-
-
 class Account {
 public:
     enum servizio {AmazonDrive, Box, Dropbox, GDrive, iCloud, Mediafire, Mega, Next, OneDrive, Qihoo360};
-    Account(QString, QString, servizio, unsigned int);
-    Account(QString, QString, servizio, unsigned int, Container<Deepptr<File>>);
+    Account(QString, QString, servizio, unsigned int, Container<Deepptr<File>> = Container<Deepptr<File>>());
     Account* clone() const;
     void serializza(QXmlStreamWriter& w) const;
 static Account* deserializza(QXmlStreamReader & reader);
@@ -33,9 +29,8 @@ private:
     QString password;
     servizio host;
     unsigned int spazioFornito;
-    Container<Deepptr<File>> listaFile;  
+    Container<Deepptr<File>> listaFile;
     //Funzioni
     static void riempiTipiDiFile();
 };
-
 #endif // ACCOUNT_H
