@@ -24,6 +24,14 @@ static Account* deserializza(QXmlStreamReader & reader);
     const Container<Deepptr<File> > &getListaFile() const;
     const QString &getEmail() const;
     void setEmail(QString);
+    template <class T>
+    int contaFile() const{
+        unsigned int contatore;
+        for(auto it = listaFile.begin(); it != listaFile.end(); ++it){
+            if(dynamic_cast<T*>(*it)) contatore++;
+        }
+        return contatore;
+    }
 private:
     QString email;
     QString password;
