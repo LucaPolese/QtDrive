@@ -10,6 +10,7 @@
 #include "filetesto.h"
 #include "filevideo.h"
 #include <QXmlStreamWriter>
+#include <iostream>
 class Account {
 public:
     enum servizio {AmazonDrive, Box, Dropbox, GDrive, iCloud, Mediafire, Mega, Next, OneDrive, Qihoo360};
@@ -26,9 +27,9 @@ static Account* deserializza(QXmlStreamReader & reader);
     void setEmail(QString);
     template <class T>
     int contaFile() const{
-        unsigned int contatore;
-        for(auto it = listaFile.begin(); it != listaFile.end(); ++it){
-            if(dynamic_cast<T*>(*it)) contatore++;
+        unsigned int contatore = 0;
+        for(auto it = listaFile.begin(); it != listaFile.end(); it++){
+            if(dynamic_cast<T*>((*it).getPuntatore())) contatore++;
         }
         return contatore;
     }
