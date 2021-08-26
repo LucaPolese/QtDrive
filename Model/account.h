@@ -17,14 +17,15 @@ public:
     Account(QString, QString, servizio, unsigned int, Container<Deepptr<File>> = Container<Deepptr<File>>());
     Account* clone() const;
     void serializza(QXmlStreamWriter& w) const;
-static Account* deserializza(QXmlStreamReader & reader);
- const QString &getPassword() const;
+    static Account* deserializza(QXmlStreamReader & reader);
+    const QString &getPassword() const;
     void setPassword(QString);
     servizio getHost() const;
     unsigned int getSpazioFornito() const;
-    const Container<Deepptr<File> > &getListaFile() const;
+    const Container<Deepptr<File>> &getListaFile() const;
     const QString &getEmail() const;
     void setEmail(QString);
+    void aggiungiFile(File*);
     template <class T>
     int contaFile() const{
         unsigned int contatore = 0;

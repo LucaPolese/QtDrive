@@ -30,6 +30,8 @@ class File {
         virtual File* clone() const =0;
         virtual void serializza(QXmlStreamWriter& scrittore) const = 0;
         virtual File* deserializza(QXmlStreamReader& lettore) = 0;
+
+        virtual QIcon getIcona() const = 0;
 };
 
 #endif // FILE_H

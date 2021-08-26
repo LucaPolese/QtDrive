@@ -2,6 +2,7 @@
 #define FILEAUDIO_H
 
 #include "filemedia.h"
+#include <QIcon>
 
 class FileAudio: public FileMedia {
 private:
@@ -20,6 +21,8 @@ public:
     FileAudio* clone() const override;
     void serializza(QXmlStreamWriter &scrittore) const override;
     FileAudio* deserializza(QXmlStreamReader& lettore) override;
+
+    QIcon getIcona() const override;
 };
 
 #endif // FILEAUDIO_H

@@ -121,3 +121,7 @@ FileArchivio* FileArchivio::deserializza(QXmlStreamReader & lettore){
                  _descrizione, _dimensioneOriginale, _numeroDiFile, _protetto);
 
 }
+
+QIcon FileArchivio::getIcona() const {
+    return QIcon(":res/icons/file/archivio.png");
+}

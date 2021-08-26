@@ -92,7 +92,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     passwordAccount = new QLineEdit;
     layoutInformazioni->addRow("Password:", passwordAccount);
 
-    numeroFile = new QLabel("1000"); numeroFile->setAlignment(Qt::AlignRight);
+    numeroFile = new QLabel; numeroFile->setAlignment(Qt::AlignRight);
     layoutInformazioni->addRow("File contenuti:", numeroFile);
 
     spazioRimanente = new QLabel("spazio GB"); spazioRimanente->setAlignment(Qt::AlignRight);
@@ -145,7 +145,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     connect(tabellaAccount, SIGNAL(cellClicked(int,int)), this, SLOT(visualizzaInfoAccount()));
 
     // Pulsante "Aggiungi account"
-    QPushButton* pulsanteAggiungiAccount = new QPushButton("Aggiungi account");
+    QPushButton* pulsanteAggiungiAccount = new QPushButton(QIcon(":res/icons/pulsanti/aggiungiAccount.png"), "Aggiungi account");
     pulsanteAggiungiAccount->setFixedSize(pulsanteAggiungiAccount->sizeHint());
     layoutAccount->addWidget(pulsanteAggiungiAccount);
     paginaAccount->setLayout(layoutInfo1);
@@ -190,10 +190,17 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     tabellaFile->setFocusPolicy(Qt::NoFocus);
 
     // TreeWidget per la visualizzazione dei file
-    QTreeWidget* listaFile = new QTreeWidget;
+    listaFile = new QTreeWidget;
     QStringList headersFile;
-    headersFile << "Tipo" << "Nome" << "Estensione" << "Dimensione" << "Descrizione";
+    headersFile << "" << "Tipo" << "Nome" << "Estensione" << "Dimensione" << "Descrizione";
     listaFile->setHeaderLabels(headersFile);
+    listaFile->hideColumn(0);
+    listaFile->resizeColumnToContents(1);
+    listaFile->resizeColumnToContents(2);
+    listaFile->resizeColumnToContents(3);
+    listaFile->resizeColumnToContents(4);
+    listaFile->resizeColumnToContents(5);
+    listaFile->setSortingEnabled(true);
 
     layoutScheda2->addWidget(tabellaFile);
     //layoutScheda2->addWidget(listaFile);
@@ -201,7 +208,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
 
     QHBoxLayout* layoutPulsanti2 = new QHBoxLayout;
     nuovoFile = new QPushButton(QIcon(":res/icons/file/file.png"), "Nuovo file");
-    eliminaFile = new QPushButton(QIcon(":res/icons/pulsanti/elimina.png"), "Elimina file");
+    eliminaFile = new QPushButton(QIcon(":res/icons/pulsanti/elimina.png"), "Elimina");
     chiudiListaFile = new QPushButton("Chiudi");
     layoutPulsanti2->addWidget(nuovoFile); nuovoFile->setFixedSize(nuovoFile->sizeHint());
     layoutPulsanti2->addWidget(eliminaFile); eliminaFile->setFixedSize(eliminaFile->sizeHint());
@@ -219,10 +226,12 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
 
     // Form inserimento nuovo file
     fileWidget->setWindowModality(Qt::ApplicationModal);
+    connect(fileWidget, &NuovoFileWidget::fileAggiunto, this, &MainWindow::visualizzaListaFile);
 
     connect(tabellaFile, SIGNAL(cellClicked(int,int)), this, SLOT(visualizzaListaFile()));
 
     connect(nuovoFile, &QPushButton::pressed, [=]{
+        fileWidget->setAccountSelezionato(tabellaFile->currentRow());
         fileWidget->show();
     });
 
@@ -299,7 +308,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     QTabWidget* tabs = new QTabWidget();
     tabs->insertTab(0, paginaAccount, QIcon(":/res/icons/tabs/tab1.png"), "Account");
     tabs->insertTab(1, paginaFile, QIcon(":/res/icons/tabs/tab2.png"), "File");
-    tabs->insertTab(2, paginaRicerca, QIcon(":/res/icons/tabs/tab3.png"), "Ricerca file");
+    tabs->insertTab(2, paginaRicerca, QIcon(":/res/icons/tabs/tab3.png"), "Ricerca");
     tabs->setCurrentIndex(0);
 
     connect(tabs, SIGNAL(tabBarClicked(int)), this, SLOT(visualizzaAccountRidotto()));
@@ -430,9 +439,29 @@ void MainWindow::visualizzaAccountRidotto() {
 }
 
 void MainWindow::visualizzaInfoAccount() {
+    int i = tabellaAccount->currentRow(); // indice account selezionato
+    series->clear();
+    set0 = new QBarSet("Archivio");
+    set1 = new QBarSet("Testo");
+    set2 = new QBarSet("Audio");
+    set3 = new QBarSet("Immagine");
+    set4 = new QBarSet("Video");
     // Numero di file
-    *set0 << 20;
-    int i = tabellaAccount->currentRow(); // indice account selezionato;
+    *set0 << controller->getAccount(i)->contaFile<FileArchivio>(); qDebug() << "Numero file archivio" << controller->getAccount(i)->contaFile<FileArchivio>();
+    *set1 << controller->getAccount(i)->contaFile<FileTesto>();
+    *set2 << controller->getAccount(i)->contaFile<FileAudio>();
+    *set3 << controller->getAccount(i)->contaFile<FileImmagine>();
+    *set4 << controller->getAccount(i)->contaFile<FileVideo>();
+
+    series->append(set0);
+    series->append(set1);
+    series->append(set2);
+    series->append(set3);
+    series->append(set4);
+    chartView->update();
+
+    numeroFile->setText(QString::number(controller->getAccount(i)->getListaFile().numeroElementi()));
+
     Account a = *controller->getAccount(i);
 
     emailAccount->setText(a.getEmail()); emailAccount->setAlignment(Qt::AlignRight);
@@ -443,11 +472,22 @@ void MainWindow::visualizzaInfoAccount() {
 }
 
 void MainWindow::visualizzaListaFile() {
-
+    //listaFile->findItems();
+    listaFile->clear();
+    Container<Deepptr<File>> lista = controller->getAccount(tabellaFile->currentRow())->getListaFile();
+    for(auto it = lista.begin(); it != lista.end(); ++it) {
+        QTreeWidgetItem* nuovo = new QTreeWidgetItem;
+        nuovo->setIcon(1, it->getPuntatore()->getIcona()); nuovo->setTextAlignment(1, Qt::AlignCenter);
+        nuovo->setText(2, it->getPuntatore()->getNome()); nuovo->setTextAlignment(2, Qt::AlignCenter);
+        nuovo->setText(3, it->getPuntatore()->getEstensione()); nuovo->setTextAlignment(3, Qt::AlignCenter);
+        nuovo->setText(4, QString::number(it->getPuntatore()->getDimensione()).append(" MB")); nuovo->setTextAlignment(4, Qt::AlignCenter);
+        nuovo->setText(5, it->getPuntatore()->getDescrizione());
+        listaFile->addTopLevelItem(nuovo);
+    }
 }
 
 void MainWindow::visualizzaFile() {
-    tabellaFile->selectedItems();
+   // tabellaFile->selectedItems();
     informazioniFile->show();
 }
 

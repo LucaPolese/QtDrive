@@ -5,6 +5,10 @@ std::vector<File*> tipiDiFile;
 Account::Account(QString email_, QString password_, servizio host_, unsigned int spazioFornito_, Container<Deepptr<File>> listaFile_):
     email(email_), password(password_), host(host_), spazioFornito(spazioFornito_), listaFile(listaFile_){}
 
+void Account::aggiungiFile(File *nuovoFile) {
+    listaFile.push_back(nuovoFile);
+}
+
 Account* Account::clone() const{
     return new Account(*this);
 }
@@ -112,7 +116,7 @@ Account* Account::deserializza(QXmlStreamReader & lettore){
                             }
                         }
                     }
-                }else throw QString("Il documento che è stato aperto non è ben formato: un file letto non è di alcun tipo!");
+                } else throw QString("Il documento che è stato aperto non è ben formato: un file letto non è di alcun tipo!");
             }
         }
 

@@ -74,6 +74,7 @@ private:
     QPushButton* chiudiListaFile;
     QWidget* informazioniFile;
     NuovoFileWidget* fileWidget;
+    QTreeWidget* listaFile;
 
 public:
     MainWindow(QWidget *parent = nullptr);

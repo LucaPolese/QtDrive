@@ -2,6 +2,7 @@
 #define FILEMEDIA_H
 
 #include "file.h"
+#include <QIcon>
 
 class FileMedia: public File {
     public:

@@ -3,6 +3,7 @@
 
 #include "filemedia.h"
 #include "fileaudio.h"
+#include <QIcon>
 
 class FileVideo: public FileMedia {
     private:
@@ -26,5 +27,7 @@ class FileVideo: public FileMedia {
         FileVideo* clone() const override;
         void serializza(QXmlStreamWriter &scrittore) const override;
         FileVideo* deserializza(QXmlStreamReader &lettore) override;
+
+        QIcon getIcona() const override;
 };
 #endif // FILEVIDEO_H

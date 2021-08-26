@@ -37,6 +37,7 @@
     <!-- ICONE PULSANTI -->
     <file>res/icons/pulsanti/modifica.png</file>
     <file>res/icons/pulsanti/elimina.png</file>
+    <file>res/icons/pulsanti/aggiungiAccount.png</file>
 
     <!-- GIF PER LO SPLASH -->
 

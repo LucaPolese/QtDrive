@@ -2,6 +2,7 @@
 #define FILEIMMAGINE_H
 
 #include "filemedia.h"
+#include <QIcon>
 
 class FileImmagine: public FileMedia {
     public:
@@ -16,6 +17,8 @@ class FileImmagine: public FileMedia {
         FileImmagine* clone() const override;
         void serializza(QXmlStreamWriter &scrittore) const override;
         FileImmagine* deserializza(QXmlStreamReader& lettore) override;
+
+        QIcon getIcona() const override;
     private:
         tipo tipoImmagine;
         unsigned int larghezza;

@@ -17,6 +17,8 @@
 #include "../Control/controller.h"
 
 class NuovoFileWidget: public QWidget {
+    Q_OBJECT
+
 private:
     QVBoxLayout* layout;
     QFormLayout* formLayout;
@@ -78,13 +80,21 @@ private:
     QSpinBox* durataA;
 
     Controller* controller;
+    unsigned int accountSelezionato;
 
     void resetForm();
 
 public:
     NuovoFileWidget(Controller *controller_, QWidget *parent = nullptr);
     ~NuovoFileWidget();
+    void setAccountSelezionato(int);
     void closeEvent (QCloseEvent *event);
+
+signals:
+    void fileAggiunto();
+
+public slots:
+    void aggiungiNuovoFile();
 };
 
 #endif // NUOVOFILEWIDGET_H

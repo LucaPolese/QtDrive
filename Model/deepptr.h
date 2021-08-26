@@ -1,6 +1,5 @@
 #ifndef DEEPPTR_H
 #define DEEPPTR_H
-
 template<class T>
 class Deepptr{
 private:
@@ -28,21 +27,17 @@ public:
     //Operatore di negazione
     bool operator!() const;
 };
-
 //Costruttore
 template<class T>
 Deepptr<T>::Deepptr(T* t) : p(t) {}
-
 //Costruttore di copia
 template<class T>
 Deepptr<T>::Deepptr(const Deepptr<T>& d) : p(d->clone()) {}
-
 //Costruttore di spostamento
 template<class T>
 Deepptr<T>::Deepptr(Deepptr<T>&& d) : p(d.p) {
     d.p = nullptr;
 }
-
 //Operatore di assegnazione
 template<class T>
 Deepptr<T>& Deepptr<T>::operator=(const Deepptr<T>& d) {
@@ -52,7 +47,6 @@ Deepptr<T>& Deepptr<T>::operator=(const Deepptr<T>& d) {
     }
     return *this;
 }
-
 //Operatore di assegnazione di spostamento
 template <class T>
 Deepptr<T>& Deepptr<T>::operator=(Deepptr<T>&& d) {
@@ -63,30 +57,22 @@ Deepptr<T>& Deepptr<T>::operator=(Deepptr<T>&& d) {
     }
     return *this;
 }
-
 //Distruttore
 template<class T>
 Deepptr<T>::~Deepptr(){ delete p; }
-
 //Operatori di dereferenziazione
 template<class T>
 T& Deepptr<T>::operator* () const { return *p; }
-
 template<class T>
 T* Deepptr<T>::operator-> () const { return p; }
-
 template<class T> //È un operatore con la stessa funzione di operator->, ma viene utilizzata come getter
 T* Deepptr<T>::getPuntatore() const { return p; }
-
 //Operatori di uguaglianza
 template<class T>
 bool Deepptr<T>::operator == (const Deepptr& d) const { return p == d.p;}
-
 template<class T>
 bool Deepptr<T>::operator != (const Deepptr& d) const { return p != d.p;}
-
 //Operatore di negazione
 template<class T>
 bool Deepptr<T>::operator!() const { return !p;}
-
 #endif // DEEPPTR_H

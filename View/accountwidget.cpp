@@ -2,6 +2,7 @@
 
 AccountWidget::AccountWidget(Controller *controller_, QWidget *parent): QWidget(parent), controller(controller_) {
     setWindowTitle("Aggiungi account");
+    setWindowIcon(QIcon(":res/icons/pulsanti/aggiungiAccount.png"));
     setFixedSize(QSize(300,180));
     layout = new QVBoxLayout;
     formLayout = new QFormLayout;
@@ -39,6 +40,8 @@ AccountWidget::AccountWidget(Controller *controller_, QWidget *parent): QWidget(
     layout->addLayout(buttonLayout);
     setLayout(layout);
 
+    // Form obbligatorio
+
     // Connessione "Aggiungi"
     connect(aggiungiAccount, &QPushButton::clicked, this, &AccountWidget::aggiungi);
 
@@ -73,7 +76,7 @@ void AccountWidget::aggiungi() {
     servizio->setCurrentIndex(0);
     int nSpazioFornito = spazioFornito->value(); spazioFornito->setValue(0);
     controller->aggiungiAccount(nEmail, nPassword, nServizio, nSpazioFornito);
-    emit this->hide();
+    this->hide();
     emit accountAggiunto();
 }
 

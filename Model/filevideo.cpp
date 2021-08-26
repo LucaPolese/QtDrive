@@ -156,3 +156,7 @@ FileVideo *FileVideo::deserializza(QXmlStreamReader &lettore){
                  _descrizione, _tipoCompressione, _codec, _durata, _larghezza, _altezza, _fps);
 
 }
+
+QIcon FileVideo::getIcona() const {
+    return QIcon(":res/icons/file/video.png");
+}

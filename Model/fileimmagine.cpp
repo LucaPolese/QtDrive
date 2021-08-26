@@ -129,3 +129,6 @@ FileImmagine *FileImmagine::deserializza(QXmlStreamReader &lettore){
 
 }
 
+QIcon FileImmagine::getIcona() const {
+    return QIcon(":res/icons/file/immagine.png");
+}

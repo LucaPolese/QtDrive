@@ -2,6 +2,7 @@
 
 NuovoFileWidget::NuovoFileWidget(Controller *controller_, QWidget *parent): QWidget(parent), controller(controller_) {
     setWindowTitle("Inserisci nuovo file");
+    setWindowIcon(QIcon(":res/icons/file/file.png"));
 
     layout = new QVBoxLayout;
     formLayout = new QFormLayout;
@@ -76,16 +77,16 @@ NuovoFileWidget::NuovoFileWidget(Controller *controller_, QWidget *parent): QWid
     layoutAudio = new QFormLayout;
 
     compressioneA = new QButtonGroup;
-    nessunaA = new QRadioButton("Nessuna"); nessunaA->setChecked(true); compressioneA->addButton(nessunaA);
-    losslessA = new QRadioButton("Lossless"); compressioneA->addButton(losslessA);
-    lossyA = new QRadioButton("Lossy"); compressioneA->addButton(lossyA);
+    nessunaA = new QRadioButton("Nessuna"); nessunaA->setChecked(true); compressioneA->addButton(nessunaA, 0);
+    losslessA = new QRadioButton("Lossless"); compressioneA->addButton(losslessA, 1);
+    lossyA = new QRadioButton("Lossy"); compressioneA->addButton(lossyA, 1);
     layoutAudio->addRow(tr("Compressione:"), nessunaA);
     layoutAudio->addRow(tr(""), losslessA);
     layoutAudio->addRow(tr(""), lossyA);
 
     bitrate = new QSpinBox;
     bitrate->setAlignment(Qt::AlignRight);
-    layoutAudio->addRow(tr("Bitrate:"), bitrate);
+    layoutAudio->addRow(tr("Bitrate (kbit/s):"), bitrate);
 
     durataA = new QSpinBox;
     durataA->setAlignment(Qt::AlignRight);
@@ -99,16 +100,16 @@ NuovoFileWidget::NuovoFileWidget(Controller *controller_, QWidget *parent): QWid
     layoutImmagine = new QFormLayout;
 
     compressioneI = new QButtonGroup;
-    nessunaI = new QRadioButton("Nessuna"); nessunaI->setChecked(true); compressioneI->addButton(nessunaI);
-    losslessI = new QRadioButton("Lossless"); compressioneI->addButton(losslessI);
-    lossyI = new QRadioButton("Lossy"); compressioneI->addButton(lossyI);
+    nessunaI = new QRadioButton("Nessuna"); nessunaI->setChecked(true); compressioneI->addButton(nessunaI, 0);
+    losslessI = new QRadioButton("Lossless"); compressioneI->addButton(losslessI, 1);
+    lossyI = new QRadioButton("Lossy"); compressioneI->addButton(lossyI, 2);
     layoutImmagine->addRow(tr("Compressione:"), nessunaI);
     layoutImmagine->addRow(tr(""), losslessI);
     layoutImmagine->addRow(tr(""), lossyI);
 
     tipoImmagine = new QButtonGroup;
-    raster = new QRadioButton("Raster"); raster->setChecked(true); tipoImmagine->addButton(raster);
-    vettoriale = new QRadioButton("Vettoriale"); tipoImmagine->addButton(vettoriale);
+    raster = new QRadioButton("Raster"); raster->setChecked(true); tipoImmagine->addButton(raster, 0);
+    vettoriale = new QRadioButton("Vettoriale"); tipoImmagine->addButton(vettoriale, 1);
     layoutImmagine->addRow("Tipo immagine:", raster);
     layoutImmagine->addRow("", vettoriale);
 
@@ -183,22 +184,95 @@ NuovoFileWidget::NuovoFileWidget(Controller *controller_, QWidget *parent): QWid
 
 
     // Connessione "Aggiungi"
-    connect(aggiungi, &QPushButton::clicked, [=]() {
-       });
+    connect(aggiungi, &QPushButton::clicked, this, &NuovoFileWidget::aggiungiNuovoFile);
 
     // Connessione "Annulla"
     connect(annulla, &QPushButton::clicked, [=]() {
-        emit this->close();
+        resetForm();
+        this->hide();
     });
 }
 
-void NuovoFileWidget::closeEvent(QCloseEvent *event) {
+void NuovoFileWidget::resetForm() {
+    // Se l'utente chiude il form premendo la X della finestra, il form viene resettato
     nome->clear();
     estensione->clear();
     descrizione->clear();
-    dimensione->clear();
+    dimensione->setValue(0);
     //dataCreazione->;
     tipo->setCurrentIndex(0);
+
+    // Pulizia archivio
+    dimensioneOriginale->setValue(0);
+    numeroDiFile->setValue(0);
+    protetto->setChecked(false);
+
+    // Pulizia testo
+    numeroCaratteri->setValue(0);
+    numeroParole->setValue(0);
+
+    // Pulizia audio
+    nessunaA->setChecked(true);
+    bitrate->setValue(0);
+    durataA->setValue(0);
+
+    // Pulizia immagine
+    nessunaI->setChecked(true);
+    raster->setChecked(true);
+    altezzaI->setValue(0);
+    larghezzaI->setValue(0);
+
+    // Pulizia video
+    nessunaV->setChecked(true);
+    codec->clear();
+    durataV->setValue(0);
+    altezzaV->setValue(0);
+    larghezzaV->setValue(0);
+    fps->setValue(0);
+}
+
+void NuovoFileWidget::setAccountSelezionato(int i) {
+    accountSelezionato = i;
+}
+
+void NuovoFileWidget::aggiungiNuovoFile() {
+    qDebug() << "Indice account: " << accountSelezionato;
+    QString nomeFile = nome->text();
+    QString estensioneFile = estensione->text();
+    unsigned int dimensioneFile = dimensione->value();
+    QString descrizioneFile = descrizione->text();
+    QDate dataCreazioneFile = dataCreazione->selectedDate();
+    File* file;
+    FileMedia::compressione compressioneFile;
+    switch(tipo->currentIndex()) {
+        case 0: // Archivio
+            {file = new FileArchivio(nomeFile, estensioneFile, dimensioneFile, dataCreazioneFile, QDate::currentDate(), descrizioneFile, dimensioneOriginale->value(), numeroDiFile->value());}
+        break;
+        case 1: // Testo
+            {file = new FileTesto(nomeFile, estensioneFile, dimensioneFile, dataCreazioneFile, QDate::currentDate(), descrizioneFile, numeroCaratteri->value(), numeroParole->value());}
+        break;
+        case 2: // Audio
+           { compressioneFile = static_cast<FileMedia::compressione>(compressioneA->checkedId());
+            file = new FileAudio(nomeFile, estensioneFile, dimensioneFile, dataCreazioneFile, QDate::currentDate(), descrizioneFile, compressioneFile, bitrate->value(), durataA->value());}
+        break;
+        case 3: // Immagine
+            {compressioneFile = static_cast<FileMedia::compressione>(compressioneI->checkedId());
+            FileImmagine::tipo tipoImmagineFile = static_cast<FileImmagine::tipo>(tipoImmagine->checkedId());
+            file = new FileImmagine(nomeFile, estensioneFile, dimensioneFile, dataCreazioneFile, QDate::currentDate(), descrizioneFile, compressioneFile, tipoImmagineFile, altezzaI->value(), larghezzaI->value());}
+        break;
+        case 4: // Video
+            {compressioneFile = static_cast<FileMedia::compressione>(compressioneV->checkedId());
+            file = new FileVideo(nomeFile, estensioneFile, dimensioneFile, dataCreazioneFile, QDate::currentDate(), descrizioneFile, compressioneFile, codec->text(), durataV->value(), altezzaV->value(), larghezzaV->value(), fps->value());}
+        break;
+    }
+    controller->aggiungiFile(accountSelezionato, file);
+    hide();
+    resetForm();
+    emit fileAggiunto();
+}
+
+void NuovoFileWidget::closeEvent(QCloseEvent *event) {
+    resetForm();
 }
 
 NuovoFileWidget::~NuovoFileWidget() = default;

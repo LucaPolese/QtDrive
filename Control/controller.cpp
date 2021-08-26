@@ -9,6 +9,11 @@ void Controller::aggiungiAccount(QString email, QString password, Account::servi
     listaAccount.push_back(new Account(email, password, host, spazioFornito));
 }
 
+void Controller::aggiungiFile(int indice, File *nuovoFile) {
+    listaAccount.at(indice)->aggiungiFile(nuovoFile);
+    qDebug() << "Aggiunto file" << nuovoFile->getNome() << "all'account " << indice;
+}
+
 int Controller::getNumeroAccount() const {
     return listaAccount.size();
 }

@@ -14,6 +14,7 @@ private:
 public:
     Controller();
     void aggiungiAccount(QString, QString, Account::servizio, unsigned int);
+    void aggiungiFile(int, File*);
     int getNumeroAccount() const;
     void salvaModificaAccount(int, QString, QString);
     void eliminaAccount(int);

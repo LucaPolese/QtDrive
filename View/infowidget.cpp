@@ -2,6 +2,7 @@
 
 InfoWidget::InfoWidget(QWidget *parent): QWidget(parent){
     setWindowTitle("Informazioni su QtDrive");
+    setWindowIcon(QIcon(":res/icons/menubar/info.png"));
     setFixedSize(QSize(300,250));
 
     QTextBrowser* testo = new QTextBrowser();

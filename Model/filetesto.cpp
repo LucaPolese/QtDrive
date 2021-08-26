@@ -110,3 +110,7 @@ FileTesto *FileTesto::deserializza(QXmlStreamReader &lettore){
                  _descrizione, _numeroCaratteri, _numeroParole);
 
 }
+
+QIcon FileTesto::getIcona() const {
+    return QIcon(":res/icons/file/testo.png");
+}

@@ -2,6 +2,7 @@
 #define FILETESTO_H
 
 #include "file.h"
+#include <QIcon>
 
 class FileTesto: public File {
 private:
@@ -19,6 +20,8 @@ public:
     FileTesto* clone() const override;
     void serializza(QXmlStreamWriter &scrittore) const override;
     FileTesto* deserializza(QXmlStreamReader& lettore) override;
+
+    QIcon getIcona() const override;
 };
 
 #endif // FILETESTO_H
