@@ -21,6 +21,7 @@ public:
     //Operatori di dereferenziazione
     T& operator* () const;
     T* operator->() const;
+    T* getPuntatore() const;
     //Operatori di uguaglianza
     bool operator== (const Deepptr<T>& d) const;
     bool operator!= (const Deepptr<T>& d) const;
@@ -73,6 +74,9 @@ T& Deepptr<T>::operator* () const { return *p; }
 
 template<class T>
 T* Deepptr<T>::operator-> () const { return p; }
+
+template<class T> //È un operatore con la stessa funzione di operator->, ma viene utilizzata come getter
+T* Deepptr<T>::getPuntatore() const { return p; }
 
 //Operatori di uguaglianza
 template<class T>
