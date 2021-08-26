@@ -9,7 +9,7 @@ private:
         T info;
         Nodo *next, *prev;
         //Costruttore a 0,1,2,3 parametri
-        Nodo(const T& i = T(), Nodo* n = nullptr, Nodo*p = nullptr);
+        Nodo(const T& i, Nodo* n = nullptr, Nodo*p = nullptr);
     };
     Nodo *first, *last;
     bool modificato;
@@ -142,14 +142,18 @@ bool Container<T>::iterator::operator==(const iterator& i) const{
 
 template <class T>
 bool Container<T>::iterator::operator!=(const iterator& i) const{
-    return !(this == i);
+    return !(*this == i);
 }
 
 //Operatori di Incremento
 template <class T>
 typename Container<T>::iterator& Container<T>::iterator::operator++(){
     if(nodo) {
-        nodo->next ? nodo=nodo->next : pastTheEnd=true;
+        if(nodo->next){
+            nodo=nodo->next;
+        }else{
+            pastTheEnd=true;
+        }
     }
     return *this;
 }
@@ -158,7 +162,11 @@ template <class T>
 typename Container<T>::iterator Container<T>::iterator::operator++(int){
     Container<T>::iterator app (*this);
     if(nodo) {
-        nodo->next ? nodo=nodo->next : pastTheEnd=true;
+        if(nodo->next){
+            nodo=nodo->next;
+        }else{
+            pastTheEnd=true;
+        }
     }
     return app;
 }
@@ -167,7 +175,11 @@ typename Container<T>::iterator Container<T>::iterator::operator++(int){
 template <class T>
 typename Container<T>::iterator& Container<T>::iterator::operator--(){
     if(nodo) {
-        nodo->prev ? nodo=nodo->prev: pastTheEnd=false;
+        if(nodo->prev){
+            nodo=nodo->prev;
+        }else{
+            pastTheEnd=false;
+        }
     }
     return *this;
 }
@@ -176,7 +188,11 @@ template <class T>
 typename Container<T>::iterator Container<T>::iterator::operator--(int){
     Container<T>::iterator app (*this);
     if(nodo) {
-        nodo->prev ? nodo=nodo->prev: pastTheEnd=false;
+        if(nodo->prev){
+            nodo=nodo->prev;
+        }else{
+            pastTheEnd=false;
+        }
     }
     return *this;
 }
@@ -235,7 +251,11 @@ template <class T>
 typename Container<T>::const_iterator Container<T>::const_iterator::operator++(int){
     Container<T>::const_iterator app (*this);
     if(nodo) {
-        nodo->next ? nodo=nodo->next : pastTheEnd=true;
+        if(nodo->next){
+            nodo=nodo->next;
+        }else{
+            pastTheEnd=true;
+        }
     }
     return app;
 }
@@ -244,7 +264,11 @@ typename Container<T>::const_iterator Container<T>::const_iterator::operator++(i
 template <class T>
 typename Container<T>::const_iterator& Container<T>::const_iterator::operator--(){
     if(nodo) {
-        nodo->prev ? nodo=nodo->prev: pastTheEnd=false;
+        if(nodo->prev){
+            nodo=nodo->prev;
+        }else{
+            pastTheEnd=false;
+        }
     }
     return *this;
 }
@@ -253,7 +277,11 @@ template <class T>
 typename Container<T>::const_iterator Container<T>::const_iterator::operator--(int){
     Container<T>::const_iterator app (*this);
     if(nodo) {
-        nodo->prev ? nodo=nodo->prev: pastTheEnd=false;
+        if(nodo->prev){
+            nodo=nodo->prev;
+        }else{
+            pastTheEnd=false;
+        }
     }
     return app;
 }
