@@ -1,12 +1,18 @@
 #include "account.h"
-
+#include <QDebug>
 std::vector<File*> tipiDiFile;
 
 Account::Account(QString email_, QString password_, servizio host_, unsigned int spazioFornito_, Container<Deepptr<File>> listaFile_):
     email(email_), password(password_), host(host_), spazioFornito(spazioFornito_), listaFile(listaFile_){}
 
 void Account::aggiungiFile(File *nuovoFile) {
+    qDebug() << "Prima del push";
     listaFile.push_back(nuovoFile);
+    qDebug() << "Dopo del push";
+}
+
+void Account::eliminaFile(int indiceFile) {
+    listaFile.erase(indiceFile);
 }
 
 Account* Account::clone() const{
@@ -39,6 +45,13 @@ unsigned int Account::getSpazioFornito() const {
 
 const Container<Deepptr<File> > &Account::getListaFile() const {
     return listaFile;
+}
+
+int Account::getSpazioOccupato() const {
+    int spazio = 0;
+    for(auto it = listaFile.begin(); it != listaFile.end(); ++it)
+        spazio += it->getPuntatore()->getDimensione();
+    return spazio;
 }
 
 void Account::serializza(QXmlStreamWriter &scrittore) const{

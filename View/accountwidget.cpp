@@ -94,9 +94,13 @@ void AccountWidget::aggiungi() {
     }
     servizio->setCurrentIndex(0);
     int nSpazioFornito = spazioFornito->value(); spazioFornito->setValue(0);
-    controller->aggiungiAccount(nEmail, nPassword, nServizio, nSpazioFornito);
-    this->hide();
-    emit accountAggiunto();
+    if(!controller->checkAccount(nEmail, nServizio)) {
+        QMessageBox::warning(this, tr("Errore"), tr("Account già registrato."), QMessageBox::Ok);
+    } else {
+        controller->aggiungiAccount(nEmail, nPassword, nServizio, nSpazioFornito);
+        this->hide();
+        emit accountAggiunto();
+    }
 }
 
 void AccountWidget::closeEvent(QCloseEvent *event) {

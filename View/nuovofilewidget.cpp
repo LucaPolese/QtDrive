@@ -27,6 +27,7 @@ NuovoFileWidget::NuovoFileWidget(Controller *controller_, QWidget *parent): QWid
     dataCreazione = new QCalendarWidget;
     dataCreazione->setFirstDayOfWeek(Qt::DayOfWeek::Monday);
     dataCreazione->setVerticalHeaderFormat(QCalendarWidget::NoVerticalHeader);
+    dataCreazione->setCurrentPage(2021, 1);
     formLayout->addRow(tr("Data creazione:"), dataCreazione);
 
     tipo = new QComboBox;
@@ -216,8 +217,9 @@ void NuovoFileWidget::resetForm() {
     estensione->clear();
     descrizione->clear();
     dimensione->setValue(0);
-    //dataCreazione->;
+    dataCreazione->setCurrentPage(2021, 1);
     tipo->setCurrentIndex(0);
+    layoutInfo->setCurrentIndex(0);
 
     // Pulizia archivio
     dimensioneOriginale->setValue(0);
@@ -253,7 +255,6 @@ void NuovoFileWidget::setAccountSelezionato(int i) {
 }
 
 void NuovoFileWidget::aggiungiNuovoFile() {
-    qDebug() << "Indice account: " << accountSelezionato;
     QString nomeFile = nome->text();
     QString estensioneFile = estensione->text();
     unsigned int dimensioneFile = dimensione->value();
@@ -282,6 +283,7 @@ void NuovoFileWidget::aggiungiNuovoFile() {
             file = new FileVideo(nomeFile, estensioneFile, dimensioneFile, dataCreazioneFile, QDate::currentDate(), descrizioneFile, compressioneFile, codec->text(), durataV->value(), altezzaV->value(), larghezzaV->value(), fps->value());}
         break;
     }
+    file = new FileTesto("Prova", "rar", 100, QDate::currentDate(), QDate::currentDate(), "Descrizione file di prova", 1000, 200);
     controller->aggiungiFile(accountSelezionato, file);
     hide();
     resetForm();

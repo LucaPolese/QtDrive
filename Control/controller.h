@@ -9,15 +9,17 @@
 
 class Controller {
 private:
-    std::vector<Account*> listaAccount;
+    Container<Deepptr<Account>> listaAccount;
 
 public:
     Controller();
     void aggiungiAccount(QString, QString, Account::servizio, unsigned int);
     void aggiungiFile(int, File*);
+    void eliminaFile(int, int);
     int getNumeroAccount() const;
     void salvaModificaAccount(int, QString, QString);
     void eliminaAccount(int);
+    bool checkAccount(QString, Account::servizio) const;
     Account* getAccount(int) const;
 };
 

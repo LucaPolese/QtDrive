@@ -387,11 +387,11 @@ typename Container<T>::const_iterator Container<T>::end() const {
 //Funzione di dimensione
 template<class T>
 unsigned int Container<T>::size() const {
-    int counter = 0;
     if (!first){
         return 0;
     }else{
         Nodo* app = first;
+        int counter = 1;
         while(app->next != nullptr){
             counter++;
             app = app->next;

@@ -97,7 +97,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     layoutInformazioni->addRow("File contenuti:", numeroFile);
 
     spazioRimanente = new QLabel("spazio GB"); spazioRimanente->setAlignment(Qt::AlignRight);
-    layoutInformazioni->addRow("Spazio a disposizione:", spazioRimanente);
+    layoutInformazioni->addRow("Spazio occupato:", spazioRimanente);
 
     layoutInformazioni->setVerticalSpacing(30);
     layoutInfoAccount->addLayout(layoutInformazioni);
@@ -203,7 +203,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     listaFile->resizeColumnToContents(3);
     listaFile->resizeColumnToContents(4);
     listaFile->resizeColumnToContents(5);
-    listaFile->setSortingEnabled(true);
+    listaFile->setSortingEnabled(false);
 
     layoutScheda2->addWidget(tabellaFile);
     //layoutScheda2->addWidget(listaFile);
@@ -212,6 +212,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     QHBoxLayout* layoutPulsanti2 = new QHBoxLayout;
     nuovoFile = new QPushButton(QIcon(":res/icons/file/file.png"), "Nuovo file");
     eliminaFile = new QPushButton(QIcon(":res/icons/pulsanti/elimina.png"), "Elimina");
+    eliminaFile->setDisabled(true);
     chiudiListaFile = new QPushButton("Chiudi");
     layoutPulsanti2->addWidget(nuovoFile); nuovoFile->setFixedSize(nuovoFile->sizeHint());
     layoutPulsanti2->addWidget(eliminaFile); eliminaFile->setFixedSize(eliminaFile->sizeHint());
@@ -239,38 +240,31 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     });
 
     connect(eliminaFile, &QPushButton::pressed, [=]{
-        QMessageBox messageBox(QMessageBox::Question, tr("QtDrive"), tr("Eliminare l'account selezionato?\nIl suo contenuto non sarà più gestibile da questa applicazione."), QMessageBox::Yes | QMessageBox::No, this);
+        QMessageBox messageBox(QMessageBox::Question, tr("QtDrive"), tr("Eliminare il file selezionato?"), QMessageBox::Yes | QMessageBox::No, this);
         messageBox.setButtonText(QMessageBox::Yes, tr("Sì"));
         messageBox.setButtonText(QMessageBox::No, tr("No"));
         int ret = messageBox.exec();
         if(ret == QMessageBox::Yes) {
-           // controller->eliminaAccount(tabellaFile->currentRow());
-           // informazioniAccount->hide();
+            QModelIndex index = listaFile->currentIndex();
+            controller->eliminaFile(tabellaFile->currentRow(), index.row());
+            informazioniAccount->hide();
             visualizzaAccountRidotto();
+            eliminaFile->setDisabled(true);
+            listaFile->clearSelection();
         }
     });
 
     connect(chiudiListaFile, &QPushButton::pressed, [=]{
         tabellaFile->clearSelection();
+        listaFile->clearSelection();
+        eliminaFile->setDisabled(true);
         informazioniFile->hide();
     });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    connect(listaFile, &QTreeWidget::clicked, [=](const QModelIndex &index) {
+        eliminaFile->setEnabled(true);
+        qDebug() << index.row();
+    });
 
     // Scheda RICERCA
     QWidget* paginaRicerca = new QWidget();
@@ -454,7 +448,7 @@ void MainWindow::visualizzaInfoAccount() {
     set3 = new QBarSet("Immagine");
     set4 = new QBarSet("Video");
     // Numero di file
-    *set0 << controller->getAccount(i)->contaFile<FileArchivio>(); qDebug() << "Numero file archivio" << controller->getAccount(i)->contaFile<FileArchivio>();
+    *set0 << controller->getAccount(i)->contaFile<FileArchivio>();
     *set1 << controller->getAccount(i)->contaFile<FileTesto>();
     *set2 << controller->getAccount(i)->contaFile<FileAudio>();
     *set3 << controller->getAccount(i)->contaFile<FileImmagine>();
@@ -473,20 +467,21 @@ void MainWindow::visualizzaInfoAccount() {
 
     emailAccount->setText(a.getEmail()); emailAccount->setAlignment(Qt::AlignRight);
     passwordAccount->setText(a.getPassword()); passwordAccount->setAlignment(Qt::AlignRight);
-
+    int spazioOccupato = a.getSpazioOccupato() / 1024; // Spazio occupato in GB
+    //QString spazio = QString::number(spazioOccupato)+"/"+QString::number(a.getSpazioFornito())+" GB";
+    //spazioRimanente->setText(spazio);
 
     informazioniAccount->show();
 }
 
 void MainWindow::visualizzaListaFile() {
-    //listaFile->findItems();
     listaFile->clear();
     Container<Deepptr<File>> lista = controller->getAccount(tabellaFile->currentRow())->getListaFile();
     for(auto it = lista.begin(); it != lista.end(); ++it) {
         QTreeWidgetItem* nuovo = new QTreeWidgetItem;
         nuovo->setIcon(1, it->getPuntatore()->getIcona()); nuovo->setTextAlignment(1, Qt::AlignCenter);
         nuovo->setText(2, it->getPuntatore()->getNome()); nuovo->setTextAlignment(2, Qt::AlignCenter);
-        nuovo->setText(3, it->getPuntatore()->getEstensione()); nuovo->setTextAlignment(3, Qt::AlignCenter);
+        nuovo->setText(3, "."+it->getPuntatore()->getEstensione()); nuovo->setTextAlignment(3, Qt::AlignCenter);
         nuovo->setText(4, QString::number(it->getPuntatore()->getDimensione()).append(" MB")); nuovo->setTextAlignment(4, Qt::AlignCenter);
         nuovo->setText(5, it->getPuntatore()->getDescrizione());
         listaFile->addTopLevelItem(nuovo);
