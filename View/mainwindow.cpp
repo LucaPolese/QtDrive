@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     tabellaAccount->setSelectionBehavior(QAbstractItemView::SelectRows);
     tabellaAccount->setSelectionMode(QAbstractItemView::SingleSelection);
     tabellaAccount->setAlternatingRowColors(true);
+    tabellaAccount->setStyleSheet("selection-background-color: lightblue");
     tabellaAccount->horizontalHeader()->setSectionsClickable(false);
     tabellaAccount->setSortingEnabled(false);
     tabellaAccount->resizeRowsToContents();
@@ -139,6 +140,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     });
 
     connect(chiudiAccount, &QPushButton::pressed, [=]{
+        tabellaAccount->clearSelection();
         informazioniAccount->hide();
     });
 
@@ -183,6 +185,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     tabellaFile->setSelectionBehavior(QAbstractItemView::SelectRows);
     tabellaFile->setSelectionMode(QAbstractItemView::SingleSelection);
     tabellaFile->setAlternatingRowColors(true);
+    tabellaFile->setStyleSheet("selection-background-color: lightblue");
     tabellaFile->horizontalHeader()->setSectionsClickable(false);
     tabellaFile->setSortingEnabled(false);
     tabellaFile->resizeRowsToContents();
@@ -248,6 +251,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     });
 
     connect(chiudiListaFile, &QPushButton::pressed, [=]{
+        tabellaFile->clearSelection();
         informazioniFile->hide();
     });
 
@@ -311,6 +315,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     tabs->insertTab(2, paginaRicerca, QIcon(":/res/icons/tabs/tab3.png"), "Ricerca");
     tabs->setCurrentIndex(0);
 
+    connect(tabs, SIGNAL(tabBarClicked(int)), this, SLOT(visualizzaAccount()));
     connect(tabs, SIGNAL(tabBarClicked(int)), this, SLOT(visualizzaAccountRidotto()));
 
     //Aggiunta dei Widget e dei Layout al frame principale
@@ -384,6 +389,7 @@ void MainWindow::aggiungiAccount() {
 }
 
 void MainWindow::visualizzaAccount() {
+    informazioniAccount->hide();
     tabellaAccount->setRowCount(0);
     QString servizio;
     for(int i = 0; i < controller->getNumeroAccount(); i++) {
@@ -414,6 +420,7 @@ void MainWindow::visualizzaAccount() {
 }
 
 void MainWindow::visualizzaAccountRidotto() {
+    informazioniFile->hide();
     tabellaFile->setRowCount(0);
     QString servizio;
     for(int i = 0; i < controller->getNumeroAccount(); i++) {

@@ -7,10 +7,18 @@ AccountWidget::AccountWidget(Controller *controller_, QWidget *parent): QWidget(
     layout = new QVBoxLayout;
     formLayout = new QFormLayout;
 
+    // Validatore indirizzo email
+    QRegularExpression rx("\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}\\b", QRegularExpression::CaseInsensitiveOption);
+
+
     email = new QLineEdit;
+    email->setMaxLength(100);
+    email->setValidator(new QRegularExpressionValidator(rx, this));
     formLayout->addRow(tr("&Email:"), email);
 
+
     password = new QLineEdit;
+    password->setMaxLength(36);
     formLayout->addRow(tr("&Password:"), password);
 
     servizio = new QComboBox;
@@ -28,6 +36,7 @@ AccountWidget::AccountWidget(Controller *controller_, QWidget *parent): QWidget(
 
     spazioFornito = new QSpinBox;
     spazioFornito->setAlignment(Qt::AlignRight);
+    spazioFornito->setMaximum(10000);
     formLayout->addRow(tr("Spazio fornito (GB):"), spazioFornito);
 
     buttonLayout = new QHBoxLayout;
@@ -43,7 +52,7 @@ AccountWidget::AccountWidget(Controller *controller_, QWidget *parent): QWidget(
     // Form obbligatorio
 
     // Connessione "Aggiungi"
-    connect(aggiungiAccount, &QPushButton::clicked, this, &AccountWidget::aggiungi);
+    connect(aggiungiAccount, &QPushButton::clicked, this, &AccountWidget::controlloEmail);
 
 
     // Connessione "Annulla"
@@ -57,7 +66,17 @@ AccountWidget::AccountWidget(Controller *controller_, QWidget *parent): QWidget(
     });
 }
 
+void AccountWidget::controlloEmail() {
+    if(!email->hasAcceptableInput()) {
+        QMessageBox::warning(this, tr("Errore"), tr("Indirizzo email non valido."), QMessageBox::Ok);
+    }
+    else aggiungi();
+}
+
 void AccountWidget::aggiungi() {
+    if(!email->hasAcceptableInput()) {
+        QMessageBox::warning(this, tr("Errore"), tr("Indirizzo email non valido."), QMessageBox::Ok);
+    }
     QString nEmail = email->text(); email->clear();
     QString nPassword = password->text(); password->clear();
     Account::servizio nServizio;

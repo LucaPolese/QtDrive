@@ -11,6 +11,7 @@
 #include <QPushButton>
 #include <QRegularExpression>
 #include <QDebug>
+#include <QMessageBox>
 #include "../Control/controller.h"
 
 class AccountWidget: public QWidget {
@@ -37,6 +38,7 @@ signals:
     void accountAggiunto();
 
 public slots:
+    void controlloEmail();
     void aggiungi();
 };
 

@@ -8,16 +8,20 @@ NuovoFileWidget::NuovoFileWidget(Controller *controller_, QWidget *parent): QWid
     formLayout = new QFormLayout;
 
     nome = new QLineEdit;
+    nome->setMaxLength(50);
     formLayout->addRow(tr("Nome file:"), nome);
 
     estensione = new QLineEdit;
+    estensione->setMaxLength(5);
     formLayout->addRow(tr("Estensione file:"), estensione);
 
     descrizione = new QLineEdit;
+    descrizione->setMaxLength(255);
     formLayout->addRow(tr("Descrizione:"), descrizione);
 
     dimensione = new QSpinBox();
     dimensione->setAlignment(Qt::AlignRight);
+    dimensione->setMaximum(10000);
     formLayout->addRow(tr("Dimensione (MB):"), dimensione);
 
     dataCreazione = new QCalendarWidget;
@@ -43,10 +47,12 @@ NuovoFileWidget::NuovoFileWidget(Controller *controller_, QWidget *parent): QWid
 
     dimensioneOriginale = new QSpinBox;
     dimensioneOriginale->setAlignment(Qt::AlignRight);
+    dimensioneOriginale->setMaximum(10000);
     layoutArchivio->addRow(tr("Dimensione originale (MB):"), dimensioneOriginale);
 
     numeroDiFile = new QSpinBox;
     numeroDiFile->setAlignment(Qt::AlignRight);
+    numeroDiFile->setMaximum(10000);
     layoutArchivio->addRow(tr("Numero file contenuti:"), numeroDiFile);
 
     protetto = new QCheckBox("Protetto da password");
@@ -61,10 +67,12 @@ NuovoFileWidget::NuovoFileWidget(Controller *controller_, QWidget *parent): QWid
 
     numeroCaratteri = new QSpinBox;
     numeroCaratteri->setAlignment(Qt::AlignRight);
+    numeroCaratteri->setMaximum(100000);
     layoutTesto->addRow(tr("Numero caratteri:"), numeroCaratteri);
 
     numeroParole = new QSpinBox;
     numeroParole->setAlignment(Qt::AlignRight);
+    numeroParole->setMaximum(10000);
     layoutTesto->addRow(tr("Numero parole:"), numeroParole);
 
     testoWidget->setLayout(layoutTesto);
@@ -86,10 +94,12 @@ NuovoFileWidget::NuovoFileWidget(Controller *controller_, QWidget *parent): QWid
 
     bitrate = new QSpinBox;
     bitrate->setAlignment(Qt::AlignRight);
+    bitrate->setMaximum(18000);
     layoutAudio->addRow(tr("Bitrate (kbit/s):"), bitrate);
 
     durataA = new QSpinBox;
     durataA->setAlignment(Qt::AlignRight);
+    durataA->setMaximum(3600);
     layoutAudio->addRow(tr("Durata (secondi):"), durataA);
 
     audioWidget->setLayout(layoutAudio);
@@ -115,10 +125,12 @@ NuovoFileWidget::NuovoFileWidget(Controller *controller_, QWidget *parent): QWid
 
     altezzaI = new QSpinBox;
     altezzaI->setAlignment(Qt::AlignRight);
+    altezzaI->setMaximum(61440);
     layoutImmagine->addRow(tr("Altezza (px):"), altezzaI);
 
     larghezzaI = new QSpinBox;
     larghezzaI->setAlignment(Qt::AlignRight);
+    larghezzaI->setMaximum(34560);
     layoutImmagine->addRow(tr("Larghezza (px):"), larghezzaI);
 
     immagineWidget->setLayout(layoutImmagine);
@@ -137,22 +149,27 @@ NuovoFileWidget::NuovoFileWidget(Controller *controller_, QWidget *parent): QWid
     layoutVideo->addRow(tr(""), lossyV);
 
     codec = new QLineEdit;
+    codec->setMaxLength(10);
     layoutVideo->addRow(tr("Codec:"), codec);
 
     durataV = new QSpinBox;
     durataV->setAlignment(Qt::AlignRight);
+    durataV->setMaximum(600);
     layoutVideo->addRow(tr("Durata (minuti):"), durataV);
 
     altezzaV = new QSpinBox;
     altezzaV->setAlignment(Qt::AlignRight);
+    altezzaV->setMaximum(7680);
     layoutVideo->addRow(tr("Altezza (px):"), altezzaV);
 
     larghezzaV = new QSpinBox;
     larghezzaV->setAlignment(Qt::AlignRight);
+    larghezzaV->setMaximum(4320);
     layoutVideo->addRow(tr("Larghezza (px):"), larghezzaV);
 
     fps = new QSpinBox;
     fps->setAlignment(Qt::AlignRight);
+    fps->setMaximum(300);
     layoutVideo->addRow(tr("Frame al secondo:"), fps);
 
     videoWidget->setLayout(layoutVideo);
