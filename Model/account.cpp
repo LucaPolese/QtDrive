@@ -1,14 +1,20 @@
 #include "account.h"
 #include <QDebug>
+#include "xmlifycopia.h"
 std::vector<File*> tipiDiFile;
 
 Account::Account(QString email_, QString password_, servizio host_, unsigned int spazioFornito_, Container<Deepptr<File>> listaFile_):
     email(email_), password(password_), host(host_), spazioFornito(spazioFornito_), listaFile(listaFile_){}
 
-void Account::aggiungiFile(File *nuovoFile) {
-    qDebug() << "Prima del push";
-    listaFile.push_back(nuovoFile);
+void Account::aggiungiFile(File* nuovoFile) {
+    qDebug() << "Prima del push" << nuovoFile->getInformazioniFile();
+    //listaFile.push_back(nuovoFile);
+    File* daInserire = nuovoFile->clone();
+    listaFile.push_back(daInserire);
     qDebug() << "Dopo del push";
+    /*File *prova = new FileTesto("Prova", "rar", 100, QDate::currentDate(), QDate::currentDate(), "Descrizione file di prova", 1000, 200);
+    XmlifyCopia xml("");
+    xml.salvaFile(nuovoFile, prova);*/
 }
 
 void Account::eliminaFile(int indiceFile) {
@@ -43,7 +49,7 @@ unsigned int Account::getSpazioFornito() const {
     return spazioFornito;
 }
 
-const Container<Deepptr<File> > &Account::getListaFile() const {
+const Container<Deepptr<File>>& Account::getListaFile() const {
     return listaFile;
 }
 

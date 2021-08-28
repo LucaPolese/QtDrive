@@ -260,31 +260,52 @@ void NuovoFileWidget::aggiungiNuovoFile() {
     unsigned int dimensioneFile = dimensione->value();
     QString descrizioneFile = descrizione->text();
     QDate dataCreazioneFile = dataCreazione->selectedDate();
-    File* file;
+    //File* file;
     FileMedia::compressione compressioneFile;
+    qDebug() << tipo->currentIndex();
     switch(tipo->currentIndex()) {
-        case 0: // Archivio
-            {file = new FileArchivio(nomeFile, estensioneFile, dimensioneFile, dataCreazioneFile, QDate::currentDate(), descrizioneFile, dimensioneOriginale->value(), numeroDiFile->value());}
-        break;
-        case 1: // Testo
-            {file = new FileTesto(nomeFile, estensioneFile, dimensioneFile, dataCreazioneFile, QDate::currentDate(), descrizioneFile, numeroCaratteri->value(), numeroParole->value());}
-        break;
-        case 2: // Audio
-           { compressioneFile = static_cast<FileMedia::compressione>(compressioneA->checkedId());
-            file = new FileAudio(nomeFile, estensioneFile, dimensioneFile, dataCreazioneFile, QDate::currentDate(), descrizioneFile, compressioneFile, bitrate->value(), durataA->value());}
-        break;
-        case 3: // Immagine
-            {compressioneFile = static_cast<FileMedia::compressione>(compressioneI->checkedId());
+        // Archivio
+        case 0:{
+            FileArchivio *file = new FileArchivio(nomeFile, estensioneFile, dimensioneFile, dataCreazioneFile, QDate::currentDate(), descrizioneFile, dimensioneOriginale->value(), numeroDiFile->value());
+            //controller->getAccount(accountSelezionato)->aggiungiFile(file);
+            controller->aggiungiFile(accountSelezionato, file);
+            break;
+        }
+        // Testo
+        case 1:{
+            FileTesto *file = new FileTesto(nomeFile, estensioneFile, dimensioneFile, dataCreazioneFile, QDate::currentDate(), descrizioneFile, numeroCaratteri->value(), numeroParole->value());
+           // controller->getAccount(accountSelezionato)->aggiungiFile(file);controller->getAccount(accountSelezionato)->aggiungiFile(file);
+            controller->aggiungiFile(accountSelezionato, file);
+            break;
+        }
+        // Audio
+        case 2:{
+            compressioneFile = static_cast<FileMedia::compressione>(compressioneA->checkedId());
+            FileAudio *file = new FileAudio(nomeFile, estensioneFile, dimensioneFile, dataCreazioneFile, QDate::currentDate(), descrizioneFile, compressioneFile, bitrate->value(), durataA->value());
+           // controller->getAccount(accountSelezionato)->aggiungiFile(file);
+            controller->aggiungiFile(accountSelezionato, file);
+            break;
+        }
+        // Immagine
+        case 3:{
+            compressioneFile = static_cast<FileMedia::compressione>(compressioneI->checkedId());
             FileImmagine::tipo tipoImmagineFile = static_cast<FileImmagine::tipo>(tipoImmagine->checkedId());
-            file = new FileImmagine(nomeFile, estensioneFile, dimensioneFile, dataCreazioneFile, QDate::currentDate(), descrizioneFile, compressioneFile, tipoImmagineFile, altezzaI->value(), larghezzaI->value());}
-        break;
-        case 4: // Video
-            {compressioneFile = static_cast<FileMedia::compressione>(compressioneV->checkedId());
-            file = new FileVideo(nomeFile, estensioneFile, dimensioneFile, dataCreazioneFile, QDate::currentDate(), descrizioneFile, compressioneFile, codec->text(), durataV->value(), altezzaV->value(), larghezzaV->value(), fps->value());}
-        break;
+            FileImmagine *file = new FileImmagine(nomeFile, estensioneFile, dimensioneFile, dataCreazioneFile, QDate::currentDate(), descrizioneFile, compressioneFile, tipoImmagineFile, altezzaI->value(), larghezzaI->value());
+            //controller->getAccount(accountSelezionato)->aggiungiFile(file);
+            controller->aggiungiFile(accountSelezionato, file);
+            break;
+        }
+        // Video
+        case 4:{
+            compressioneFile = static_cast<FileMedia::compressione>(compressioneV->checkedId());
+            FileVideo *file = new FileVideo(nomeFile, estensioneFile, dimensioneFile, dataCreazioneFile, QDate::currentDate(), descrizioneFile, compressioneFile, codec->text(), durataV->value(), altezzaV->value(), larghezzaV->value(), fps->value());
+           // controller->getAccount(accountSelezionato)->aggiungiFile(file);
+            controller->aggiungiFile(accountSelezionato, file);
+            break;
+        }
     }
-    file = new FileTesto("Prova", "rar", 100, QDate::currentDate(), QDate::currentDate(), "Descrizione file di prova", 1000, 200);
-    controller->aggiungiFile(accountSelezionato, file);
+    //File *prova = new FileTesto("Prova", "rar", 100, QDate::currentDate(), QDate::currentDate(), "Descrizione file di prova", 1000, 200);
+    //controller->aggiungiFile(accountSelezionato, file);
     hide();
     resetForm();
     emit fileAggiunto();

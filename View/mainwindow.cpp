@@ -468,8 +468,8 @@ void MainWindow::visualizzaInfoAccount() {
     emailAccount->setText(a.getEmail()); emailAccount->setAlignment(Qt::AlignRight);
     passwordAccount->setText(a.getPassword()); passwordAccount->setAlignment(Qt::AlignRight);
     int spazioOccupato = a.getSpazioOccupato() / 1024; // Spazio occupato in GB
-    //QString spazio = QString::number(spazioOccupato)+"/"+QString::number(a.getSpazioFornito())+" GB";
-    //spazioRimanente->setText(spazio);
+    QString spazio = QString::number(spazioOccupato)+"/"+QString::number(a.getSpazioFornito())+" GB";
+    spazioRimanente->setText(spazio);
 
     informazioniAccount->show();
 }

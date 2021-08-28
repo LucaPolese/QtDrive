@@ -409,7 +409,7 @@ bool Container<T>::empty() const {
 template<class T>
 void Container<T>::push_front(const T& t) {
     if (first != nullptr) {
-        first->prev = new Nodo(t,first);
+        first->prev = new Nodo(t, 0, first);
         first = first->prev_;
     } else {
         first = last = new Nodo(t);
@@ -419,7 +419,7 @@ void Container<T>::push_front(const T& t) {
 template<class T>
 void Container<T>::push_back(const T& t) {
     if (last != nullptr) {
-        last->next = new Nodo(t,0,last);
+        last->next = new Nodo(t, 0, last);
         last = last->next;
     } else {
         first = last = new Nodo(t);

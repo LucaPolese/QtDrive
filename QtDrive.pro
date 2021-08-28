@@ -19,6 +19,7 @@ SOURCES += \
     Model/filetesto.cpp \
     Model/filevideo.cpp \
     Model/xmlify.cpp \
+    Model/xmlifycopia.cpp \
     View/accountwidget.cpp \
     View/guidawidget.cpp \
     View/infowidget.cpp \
@@ -29,6 +30,7 @@ SOURCES += \
 
 HEADERS += \
     Model/xmlify.h \
+    Model/xmlifycopia.h \
     View/accountwidget.h \
     View/guidawidget.h \
     View/infowidget.h \
