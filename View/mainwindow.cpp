@@ -321,8 +321,12 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     // Connessione a "Apri"
     connect(apriFile, &QAction::triggered,  [=]() {
         QString fileScelto = QFileDialog::getOpenFileName(this, "Apri account", "./", "Account (*.xml)");
-        if (fileScelto.isEmpty()) return;
-        else{
+        if (fileScelto.isEmpty()){
+            QMessageBox* alert = new QMessageBox(QMessageBox::Critical, "Errore",
+                                                 "Attenzione: non hai scelto alcun file da aprire!",
+                                                 QMessageBox::Ok);
+            alert->exec();
+        }else{
             Xmlify xml(fileScelto);
             controller->aggiornaAccount(xml.acquisisciAccount());
             visualizzaAccount();
