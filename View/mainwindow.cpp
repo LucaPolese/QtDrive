@@ -343,10 +343,13 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
             vuoto->exec();
         }else{
             if(fileSalvataggio.endsWith(".xml", Qt::CaseInsensitive)){
-                qDebug() << "qui";
                 Xmlify xml(fileSalvataggio);
                 try{
                     xml.salvaAccount(controller->getListaAccount());
+                    QMessageBox* salvataggioOk = new QMessageBox(QMessageBox::Information, "Salvataggio",
+                                                         QString("Il file è stato salvato correttamente!"),
+                                                         QMessageBox::Ok);
+                    salvataggioOk->exec();
                 }catch(QString e){
                     QMessageBox* errore = new QMessageBox(QMessageBox::Critical, "Errore",
                                                          QString("Attenzione: il file selezionato per la scrittura non può essere salvato per un errore").arg(e),
