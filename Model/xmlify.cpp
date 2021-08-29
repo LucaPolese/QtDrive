@@ -22,12 +22,7 @@ bool Xmlify::salvaAccount(const Container<Deepptr<Account>>& listaAccount) const
     try{
         for(auto cit = listaAccount.begin(); cit != listaAccount.end(); ++cit) (*cit)->serializza(scrittore);
     }catch(QString s){
-        QMessageBox* alert = new QMessageBox(QMessageBox::Warning, "Errore",
-                                             QString("Attenzione: errore in scrittura"
-                                                     "<br><b>Descrizione:<b> %1").arg(s),
-                                             QMessageBox::Ok);
-        alert->exec();
-        return false;
+        throw s;
     }
 
     //Fine della Scrittura
