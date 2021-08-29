@@ -1,5 +1,5 @@
-#ifndef CONTAINTER_H
-#define CONTAINTER_H
+#ifndef CONTAINER_H
+#define CONTAINER_H
 
 template <class T>
 class Container{
@@ -330,7 +330,7 @@ Container<T>::Container(const Container& c) : modificato(c.modificato){
 //Costruttore di spostamento
 template <class T>
 Container<T>::Container(Container&& c) : first(c.first), last(c.last), modificato(c.modificato){
-    first = last = nullptr;
+    c.first = c.last = nullptr;
 }
 
 //Operatore di assegnazione
@@ -409,7 +409,7 @@ bool Container<T>::empty() const {
 template<class T>
 void Container<T>::push_front(const T& t) {
     if (first != nullptr) {
-        first->prev = new Nodo(t, 0, first);
+        first->prev = new Nodo(t, first, 0);
         first = first->prev_;
     } else {
         first = last = new Nodo(t);
@@ -508,4 +508,4 @@ int Container<T>::numeroElementi() const{
     return contatore;
 }
 
-#endif // CONTAINTER_H
+#endif // CONTAINER_H
