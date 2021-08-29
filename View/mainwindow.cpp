@@ -15,7 +15,8 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     layoutInfoAccount = new QVBoxLayout; // Layout per la visualizzazione delle informazioni dell'account
 
     // Contenuto testuale scheda 1
-    QLabel* informazioni1 = new QLabel("Da questa scheda è possibile visualizzare le informazioni relative agli account registrati.<br>Per cominciare, carica un file tramite <b>File > Apri</b> oppure inserisci un nuovo account tramite il pulsante <b>Aggiungi account</b>. Per ulteriori informazioni, premi <b>Ctrl+H</b> per aprire la guida in linea.");
+    QLabel* informazioni1 = new QLabel("Da questa scheda è possibile visualizzare le informazioni relative agli account registrati.<br>Per cominciare, carica un file tramite <b>File > Apri</b> oppure inserisci un nuovo account tramite il pulsante <b>Aggiungi account</b>. <br> Per ulteriori informazioni, premi <b>Ctrl+H</b> per aprire la guida in linea.");
+    informazioni1->adjustSize();
 
     // Definizione tabella account
     tabellaAccount = new QTableWidget;
@@ -172,7 +173,8 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     layoutInfoFile = new QVBoxLayout; // Layout per la visualizzazione delle informazioni dei file
 
     // Contenuto testuale scheda 2
-    QLabel* informazioni2 = new QLabel("Da questa scheda è possibile visualizzare i file associati ad ogni account ed effettuare l'inserimento di nuovi file.<br>Clicca su un account per vedere i relativi file. Clicca su un file per visualizzare ulteriori informazioni ed accedere alle funzioni di modifica.<br>Clicca il pulsante <b>Nuovo file</b> per inserire un nuovo file nell'acccount correntemente selezionato. Per ulteriori informazioni, premi <b>Ctrl+H</b> per aprire la guida in linea.");
+    QLabel* informazioni2 = new QLabel("Da questa scheda è possibile visualizzare i file associati ad ogni account ed effettuare l'inserimento di nuovi file.<br>Clicca su un account per vedere i relativi file. Clicca su un file per visualizzare ulteriori informazioni ed accedere alle funzioni di modifica.<br>Clicca il pulsante <b>Nuovo file</b> per inserire un nuovo file nell'acccount correntemente selezionato. <br> Per ulteriori informazioni, premi <b>Ctrl+H</b> per aprire la guida in linea.");
+    informazioni2->adjustSize();
 
     // Tabella con nome del servizio e indirizzo email associato
     tabellaFile = new QTableWidget;
