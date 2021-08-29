@@ -26,6 +26,7 @@
 #include "Model/account.h"
 #include "Model/deepptr.h"
 #include "Model/container.h"
+#include "Model/xmlify.h"
 
 // Classi per i grafici
 #include <QtWidgets/QApplication>

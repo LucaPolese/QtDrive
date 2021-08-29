@@ -323,9 +323,9 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
         QString fileScelto = QFileDialog::getOpenFileName(this, "Apri account", "./", "Account (*.xml)");
         if (fileScelto.isEmpty()) return;
         else{
-            QFile file(fileScelto);
-            //bool success;
-            //Caricare le informazione sul widget.
+            Xmlify xml(fileScelto);
+            controller->aggiornaAccount(xml.acquisisciAccount());
+            visualizzaAccount();
         }
     });
 
