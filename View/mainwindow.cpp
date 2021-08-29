@@ -335,7 +335,31 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
 
     // Connessione a "Salva"
     connect(salvaFile, &QAction::triggered,  [=]() {
-
+        QString fileSalvataggio = QFileDialog::getOpenFileName(this, "Salva account", "./", "Account (*.xml)");
+        if (fileSalvataggio.isEmpty()){
+            QMessageBox* vuoto = new QMessageBox(QMessageBox::Critical, "Errore",
+                                                 "Attenzione: non hai scelto alcun file su cui effettuare il salvataggio!",
+                                                 QMessageBox::Ok);
+            vuoto->exec();
+        }else{
+            if(fileSalvataggio.endsWith(".xml", Qt::CaseInsensitive)){
+                qDebug() << "qui";
+                Xmlify xml(fileSalvataggio);
+                try{
+                    xml.salvaAccount(controller->getListaAccount());
+                }catch(QString e){
+                    QMessageBox* errore = new QMessageBox(QMessageBox::Critical, "Errore",
+                                                         QString("Attenzione: il file selezionato per la scrittura non può essere salvato per un errore").arg(e),
+                                                         QMessageBox::Ok);
+                    errore->exec();
+                }
+            }else{
+                QMessageBox* noXml = new QMessageBox(QMessageBox::Critical, "Errore",
+                                                     "Attenzione: il file che hai selezionato non è un file XML",
+                                                     QMessageBox::Ok);
+                noXml->exec();
+            }
+        }
     });
 
     // Connessione a "Esci"
