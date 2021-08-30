@@ -22,6 +22,7 @@ SOURCES += \
     Model/xmlifycopia.cpp \
     View/accountwidget.cpp \
     View/guidawidget.cpp \
+    View/infofilewidget.cpp \
     View/infowidget.cpp \
     View/mainwindow.cpp \
     View/nuovofilewidget.cpp \
@@ -33,6 +34,7 @@ HEADERS += \
     Model/xmlifycopia.h \
     View/accountwidget.h \
     View/guidawidget.h \
+    View/infofilewidget.h \
     View/infowidget.h \
     View/mainwindow.h \
     Control/controller.h \

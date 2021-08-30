@@ -20,8 +20,10 @@ class File {
 
 
         const QString &getNome() const;
+        void setNome(QString);
         const QString &getEstensione() const;
         const QString &getDescrizione() const;
+        void setDescrizione(QString);
         unsigned int getDimensione() const;
         QDate getDataCreazione() const;
         QDate getDataCaricamento() const;

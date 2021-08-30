@@ -14,7 +14,7 @@ class FileMedia: public File {
 
         compressione getTipoCompressione() const;
 
-    private:
+    protected:
         compressione tipoCompressione;
 
 };

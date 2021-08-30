@@ -19,7 +19,10 @@ bool FileArchivio::getProtetto() const {
 }
 
 QString FileArchivio::getInformazioniFile() const {
-    return "FileArchivio";
+    QString informazioni;
+    if(protetto) informazioni = "File archivio protetto da password\n";
+    else informazioni = "File archivio non protetto da password\n";
+    return informazioni + "Dimensione del file non compresso: "+QString::number(dimensioneOriginale)+" MB"+"\nNumero di file presenti nell'archivio: "+QString::number(numeroDiFile)+"\n";
 }
 
 FileArchivio* FileArchivio::clone() const {

@@ -19,6 +19,7 @@
 #include "infowidget.h"
 #include "accountwidget.h"
 #include "nuovofilewidget.h"
+#include "infofilewidget.h"
 #include <QFileDialog>
 #include <QFile>
 #include <QScrollArea>
@@ -75,6 +76,7 @@ private:
     QWidget* informazioniFile;
     NuovoFileWidget* fileWidget;
     QTreeWidget* listaFile;
+    InfoFileWidget* infoFileWidget;
 
 public:
     MainWindow(QWidget *parent = nullptr);

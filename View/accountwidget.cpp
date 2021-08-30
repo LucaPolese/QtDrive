@@ -74,11 +74,24 @@ void AccountWidget::controlloEmail() {
 }
 
 void AccountWidget::aggiungi() {
+    bool ok = true;
     if(!email->hasAcceptableInput()) {
         QMessageBox::warning(this, tr("Errore"), tr("Indirizzo email non valido."), QMessageBox::Ok);
+        email->clear();
+        ok = false;
     }
-    QString nEmail = email->text(); email->clear();
-    QString nPassword = password->text(); password->clear();
+    else if(password->text() == "") {
+        QMessageBox::warning(this, tr("Errore"), tr("Password non valida."), QMessageBox::Ok);
+        password->clear();
+        ok = false;
+    }
+    else if(spazioFornito->value() == 0) {
+        QMessageBox::warning(this, tr("Errore"), tr("Inserire lo spazio fornito dall'host."), QMessageBox::Ok);
+        spazioFornito->setValue(0);
+        ok = false;
+    }
+    QString nEmail = email->text();
+    QString nPassword = password->text();
     Account::servizio nServizio;
     switch(servizio->currentIndex()){
         case 0: nServizio = Account::servizio::AmazonDrive; break;
@@ -93,10 +106,13 @@ void AccountWidget::aggiungi() {
         case 9: nServizio = Account::servizio::Qihoo360; break;
     }
     servizio->setCurrentIndex(0);
-    int nSpazioFornito = spazioFornito->value(); spazioFornito->setValue(0);
+    int nSpazioFornito = spazioFornito->value();
     if(!controller->checkAccount(nEmail, nServizio)) {
         QMessageBox::warning(this, tr("Errore"), tr("Account già registrato."), QMessageBox::Ok);
-    } else {
+    } else if(ok) {
+        email->clear();
+        password->clear();
+        spazioFornito->setValue(0);
         controller->aggiungiAccount(nEmail, nPassword, nServizio, nSpazioFornito);
         this->hide();
         emit accountAggiunto();

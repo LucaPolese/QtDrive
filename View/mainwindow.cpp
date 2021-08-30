@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Controller()), accountWidget(new AccountWidget(controller)), fileWidget(new NuovoFileWidget(controller)) {
+MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Controller()), accountWidget(new AccountWidget(controller)), fileWidget(new NuovoFileWidget(controller)), infoFileWidget(new InfoFileWidget(controller)) {
     setWindowTitle("QtDrive");
     setMinimumSize(1024, 720);
 
@@ -232,6 +232,9 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     fileWidget->setWindowModality(Qt::ApplicationModal);
     connect(fileWidget, &NuovoFileWidget::fileAggiunto, this, &MainWindow::visualizzaListaFile);
 
+    infoFileWidget->setWindowModality(Qt::ApplicationModal);
+
+
     connect(tabellaFile, SIGNAL(cellClicked(int,int)), this, SLOT(visualizzaListaFile()));
 
     connect(nuovoFile, &QPushButton::pressed, [=]{
@@ -263,8 +266,18 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
 
     connect(listaFile, &QTreeWidget::clicked, [=](const QModelIndex &index) {
         eliminaFile->setEnabled(true);
-        qDebug() << index.row();
     });
+
+    connect(infoFileWidget, &InfoFileWidget::fileModificato, [=]{
+        listaFile->clearSelection();
+        visualizzaListaFile();
+    });
+
+    connect(listaFile, &QTreeWidget::itemDoubleClicked, [=]{
+        QModelIndex index = listaFile->currentIndex();
+        infoFileWidget->visualizzaFile(tabellaFile->currentRow(), index.row());
+    });
+
 
     // Scheda RICERCA
     QWidget* paginaRicerca = new QWidget();
@@ -467,7 +480,7 @@ void MainWindow::visualizzaInfoAccount() {
 
     emailAccount->setText(a.getEmail()); emailAccount->setAlignment(Qt::AlignRight);
     passwordAccount->setText(a.getPassword()); passwordAccount->setAlignment(Qt::AlignRight);
-    int spazioOccupato = a.getSpazioOccupato() / 1024; // Spazio occupato in GB
+    float spazioOccupato = a.getSpazioOccupato() / 1024; // Spazio occupato in GB
     QString spazio = QString::number(spazioOccupato)+"/"+QString::number(a.getSpazioFornito())+" GB";
     spazioRimanente->setText(spazio);
 
@@ -480,12 +493,13 @@ void MainWindow::visualizzaListaFile() {
     for(auto it = lista.begin(); it != lista.end(); ++it) {
         QTreeWidgetItem* nuovo = new QTreeWidgetItem;
         nuovo->setIcon(1, it->getPuntatore()->getIcona()); nuovo->setTextAlignment(1, Qt::AlignCenter);
-        nuovo->setText(2, it->getPuntatore()->getNome()); nuovo->setTextAlignment(2, Qt::AlignCenter);
+        nuovo->setText(2, it->getPuntatore()->getNome()); nuovo->setTextAlignment(2, Qt::AlignLeft);
         nuovo->setText(3, "."+it->getPuntatore()->getEstensione()); nuovo->setTextAlignment(3, Qt::AlignCenter);
         nuovo->setText(4, QString::number(it->getPuntatore()->getDimensione()).append(" MB")); nuovo->setTextAlignment(4, Qt::AlignCenter);
         nuovo->setText(5, it->getPuntatore()->getDescrizione());
         listaFile->addTopLevelItem(nuovo);
     }
+    listaFile->resizeColumnToContents(2);
 }
 
 void MainWindow::visualizzaFile() {

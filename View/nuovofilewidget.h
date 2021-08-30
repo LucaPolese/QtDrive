@@ -14,6 +14,7 @@
 #include <QButtonGroup>
 #include <QRadioButton>
 #include <QStackedLayout>
+#include <QMessageBox>
 #include "../Control/controller.h"
 
 class NuovoFileWidget: public QWidget {

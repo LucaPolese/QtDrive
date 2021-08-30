@@ -16,7 +16,7 @@ unsigned int FileTesto::getNumeroParole() const {
 }
 
 QString FileTesto::getInformazioniFile() const {
-    return "FileTesto";
+    return "File di testo\nNumero caratteri: " + QString::number(numeroCaratteri) + "\nNumero parole: " + QString::number(numeroParole) + "\n";
 }
 
 FileTesto* FileTesto::clone() const {

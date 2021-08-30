@@ -27,7 +27,11 @@ unsigned int FileVideo::getFps() const {
 }
 
 QString FileVideo::getInformazioniFile() const {
-    return "FileVideo";
+    QString informazioni;
+    if(tipoCompressione == nessuna) informazioni = "File video non compresso\n";
+    else if(tipoCompressione == lossy) informazioni = "File video lossy\n";
+    else if(tipoCompressione == lossless) informazioni = "File video lossless\n";
+    return informazioni = "Durata: " + QDateTime::fromTime_t(durata*60).toUTC().toString("hh:mm:ss") + "\nCodec: " + codec + "\nFPS: " + fps + "\nRisoluzione: " + QString::number(larghezza) + "x" + QString::number(altezza) + " pixels\n";
 }
 
 FileVideo* FileVideo::clone() const {

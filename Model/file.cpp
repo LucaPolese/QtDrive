@@ -10,12 +10,20 @@ const QString &File::getNome() const {
     return nome;
 }
 
+void File::setNome(QString nuovo) {
+    nome = nuovo;
+}
+
 const QString &File::getEstensione() const {
     return estensione;
 }
 
 const QString &File::getDescrizione() const {
     return descrizione;
+}
+
+void File::setDescrizione(QString nuova) {
+    descrizione = nuova;
 }
 
 unsigned int File::getDimensione() const {

@@ -15,7 +15,13 @@ unsigned int FileImmagine::getLarghezza() const {
 }
 
 QString FileImmagine::getInformazioniFile() const {
-    return "FileImmagine";
+    QString informazioni;
+    if(tipoCompressione == nessuna) informazioni = "Immagine non compressa";
+    else if(tipoCompressione == lossy) informazioni = "Immagine lossy";
+    else if(tipoCompressione == lossless) informazioni = "Immagine lossless";
+    if(tipoImmagine == raster) informazioni += " di tipo raster\n";
+    else informazioni += " di tipo vettoriale\n";
+    return informazioni + "Risoluzione: " + QString::number(altezza) + "x" + QString::number(larghezza) + " pixels\n";
 }
 
 FileImmagine* FileImmagine::clone() const {

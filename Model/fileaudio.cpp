@@ -15,7 +15,11 @@ unsigned int FileAudio::getDurata() const {
 }
 
 QString FileAudio::getInformazioniFile() const {
-    return "FileAudio";
+    QString informazioni;
+    if(tipoCompressione == nessuna) informazioni = "File audio non compresso\n";
+    else if(tipoCompressione == lossy) informazioni = "File audio lossy\n";
+    else if(tipoCompressione == lossless) informazioni = "File audio lossless\n";
+    return informazioni + "Bitrate: " + QString::number(bitrate) + " kbit/s" + "\nDurata: " + QDateTime::fromTime_t(durata).toUTC().toString("hh:mm:ss") + "\n";
 }
 
 FileAudio* FileAudio::clone() const {
