@@ -22,12 +22,7 @@ bool Xmlify::salvaAccount(const Container<Deepptr<Account>>& listaAccount) const
     try{
         for(auto cit = listaAccount.begin(); cit != listaAccount.end(); ++cit) (*cit)->serializza(scrittore);
     }catch(QString s){
-        QMessageBox* alert = new QMessageBox(QMessageBox::Warning, "Errore",
-                                             QString("Attenzione: errore in scrittura"
-                                                     "<br><b>Descrizione:<b> %1").arg(s),
-                                             QMessageBox::Ok);
-        alert->exec();
-        return false;
+        throw s;
     }
 
     //Fine della Scrittura
@@ -41,6 +36,14 @@ bool Xmlify::salvaAccount(const Container<Deepptr<Account>>& listaAccount) const
 Container<Deepptr<Account>> Xmlify::acquisisciAccount() const{
     Container<Deepptr<Account>> letturaAccount;
     QFile file(account);
+    if(file.size() == 0){
+        QMessageBox* alert = new QMessageBox(QMessageBox::Critical, "Errore",
+                                             "Attenzione: il file che hai tentato di aprire è vuoto",
+                                             QMessageBox::Ok);
+        alert->exec();
+        return letturaAccount;
+
+    }
 
     if(!file.open(QIODevice::ReadOnly)){
         QMessageBox* alert = new QMessageBox(QMessageBox::Critical, "Errore",
@@ -67,7 +70,6 @@ Container<Deepptr<Account>> Xmlify::acquisisciAccount() const{
                                 "<br><b>Descrizione:</b> %1").arg(s),
                                 QMessageBox::Ok);
                 box.exec();
-                throw 1;
             }
         }
         lettore.skipCurrentElement();
@@ -79,7 +81,6 @@ Container<Deepptr<Account>> Xmlify::acquisisciAccount() const{
                         "<ul><li>Che il contenuto non sia corrotto</li><li>Di aver selezionato il file corretto</li></ul>",
                         QMessageBox::Ok);
         box.exec();
-        throw 1;
     }
 
     file.close();

@@ -1,6 +1,5 @@
 #include "account.h"
 #include <QDebug>
-#include "xmlifycopia.h"
 std::vector<File*> tipiDiFile;
 
 Account::Account(QString email_, QString password_, servizio host_, unsigned int spazioFornito_, Container<Deepptr<File>> listaFile_):
@@ -108,7 +107,7 @@ Account* Account::deserializza(QXmlStreamReader & lettore){
     Container<Deepptr<File>> _listaFile;
     riempiTipiDiFile();
 
-    if(lettore.name() != "account") throw QString("Non è presente alcun Account all'interno del file!");
+    if(lettore.name() != "account") throw QString("Non è presente alcun Account, oppure il formato dell'Account non è corretto!");
     else{
         //Lettura Email Account
         if(lettore.readNextStartElement() && lettore.name() == "email") _email = lettore.readElementText();
@@ -127,14 +126,11 @@ Account* Account::deserializza(QXmlStreamReader & lettore){
                 if(tipo != ""){
                     for(auto it = tipiDiFile.begin(); it != tipiDiFile.end() && !trovato ; it++){
                         if((*it)->getInformazioniFile() == tipo){
-                            try{
-                                _listaFile.push_back((*it)->deserializza(lettore));
-                                trovato = true;
-                            }catch(QString s){
-                                throw s;
-                            }
+                            _listaFile.push_back((*it)->deserializza(lettore));
+                            trovato = true;
                         }
                     }
+                    if(!trovato) throw QString("Un tipo di File che è stato letto, non è compatibile con i tipo accettati dal Software");
                 } else throw QString("Il documento che è stato aperto non è ben formato: un file letto non è di alcun tipo!");
             }
         }
@@ -152,4 +148,3 @@ void Account::riempiTipiDiFile(){
     tipiDiFile.push_back(new FileTesto());
     tipiDiFile.push_back(new FileVideo());
 }
-

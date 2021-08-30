@@ -1,18 +1,13 @@
 #include "controller.h"
 
-Controller::Controller()
-{
-
-}
+Controller::Controller(){}
 
 void Controller::aggiungiAccount(QString email, QString password, Account::servizio host, unsigned int spazioFornito) {
     listaAccount.push_back(new Account(email, password, host, spazioFornito));
 }
 
 void Controller::aggiungiFile(int indice, File *nuovoFile) {
-    qDebug() << "Tentativo di inserire il file " << nuovoFile->getNome();
     listaAccount[indice]->aggiungiFile(nuovoFile);
-    qDebug() << "Aggiunto file" << nuovoFile->getNome() << "all'account " << indice;
     delete nuovoFile;
 }
 
@@ -41,7 +36,14 @@ bool Controller::checkAccount(QString email, Account::servizio host) const {
     return true;
 }
 
+Container<Deepptr<Account>> Controller::getListaAccount() const{
+    return listaAccount;
+}
+
 Account* Controller::getAccount(int posizione) const {
-   // return listaAccount.at(posizione);
     return listaAccount[posizione].getPuntatore();
+}
+
+void Controller::aggiornaAccount(Container<Deepptr<Account>> la){
+    listaAccount = la;
 }

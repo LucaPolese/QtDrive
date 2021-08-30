@@ -15,7 +15,8 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     layoutInfoAccount = new QVBoxLayout; // Layout per la visualizzazione delle informazioni dell'account
 
     // Contenuto testuale scheda 1
-    QLabel* informazioni1 = new QLabel("Da questa scheda è possibile visualizzare le informazioni relative agli account registrati.<br>Per cominciare, carica un file tramite <b>File > Apri</b> oppure inserisci un nuovo account tramite il pulsante <b>Aggiungi account</b>. Per ulteriori informazioni, premi <b>Ctrl+H</b> per aprire la guida in linea.");
+    QLabel* informazioni1 = new QLabel("Da questa scheda è possibile visualizzare le informazioni relative agli account registrati.<br>Per cominciare, carica un file tramite <b>File > Apri</b> oppure inserisci un nuovo account tramite il pulsante <b>Aggiungi account</b>. <br> Per ulteriori informazioni, premi <b>Ctrl+H</b> per aprire la guida in linea.");
+    informazioni1->adjustSize();
 
     // Definizione tabella account
     tabellaAccount = new QTableWidget;
@@ -172,7 +173,8 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     layoutInfoFile = new QVBoxLayout; // Layout per la visualizzazione delle informazioni dei file
 
     // Contenuto testuale scheda 2
-    QLabel* informazioni2 = new QLabel("Da questa scheda è possibile visualizzare i file associati ad ogni account ed effettuare l'inserimento di nuovi file.<br>Clicca su un account per vedere i relativi file. Clicca su un file per visualizzare ulteriori informazioni ed accedere alle funzioni di modifica.<br>Clicca il pulsante <b>Nuovo file</b> per inserire un nuovo file nell'acccount correntemente selezionato. Per ulteriori informazioni, premi <b>Ctrl+H</b> per aprire la guida in linea.");
+    QLabel* informazioni2 = new QLabel("Da questa scheda è possibile visualizzare i file associati ad ogni account ed effettuare l'inserimento di nuovi file.<br>Clicca su un account per vedere i relativi file. Clicca su un file per visualizzare ulteriori informazioni ed accedere alle funzioni di modifica.<br>Clicca il pulsante <b>Nuovo file</b> per inserire un nuovo file nell'acccount correntemente selezionato. <br> Per ulteriori informazioni, premi <b>Ctrl+H</b> per aprire la guida in linea.");
+    informazioni2->adjustSize();
 
     // Tabella con nome del servizio e indirizzo email associato
     tabellaFile = new QTableWidget;
@@ -334,17 +336,48 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     // Connessione a "Apri"
     connect(apriFile, &QAction::triggered,  [=]() {
         QString fileScelto = QFileDialog::getOpenFileName(this, "Apri account", "./", "Account (*.xml)");
-        if (fileScelto.isEmpty()) return;
-        else{
-            QFile file(fileScelto);
-            //bool success;
-            //Caricare le informazione sul widget.
+        if (fileScelto.isEmpty()){
+            QMessageBox* alert = new QMessageBox(QMessageBox::Critical, "Errore",
+                                                 "Attenzione: non hai scelto alcun file da aprire!",
+                                                 QMessageBox::Ok);
+            alert->exec();
+        }else{
+            Xmlify xml(fileScelto);
+            controller->aggiornaAccount(xml.acquisisciAccount());
+            visualizzaAccount();
         }
     });
 
     // Connessione a "Salva"
     connect(salvaFile, &QAction::triggered,  [=]() {
-
+        QString fileSalvataggio = QFileDialog::getOpenFileName(this, "Salva account", "./", "Account (*.xml)");
+        if (fileSalvataggio.isEmpty()){
+            QMessageBox* vuoto = new QMessageBox(QMessageBox::Critical, "Errore",
+                                                 "Attenzione: non hai scelto alcun file su cui effettuare il salvataggio!",
+                                                 QMessageBox::Ok);
+            vuoto->exec();
+        }else{
+            if(fileSalvataggio.endsWith(".xml", Qt::CaseInsensitive)){
+                Xmlify xml(fileSalvataggio);
+                try{
+                    xml.salvaAccount(controller->getListaAccount());
+                    QMessageBox* salvataggioOk = new QMessageBox(QMessageBox::Information, "Salvataggio",
+                                                         QString("Il file è stato salvato correttamente!"),
+                                                         QMessageBox::Ok);
+                    salvataggioOk->exec();
+                }catch(QString e){
+                    QMessageBox* errore = new QMessageBox(QMessageBox::Critical, "Errore",
+                                                         QString("Attenzione: il file selezionato per la scrittura non può essere salvato per un errore").arg(e),
+                                                         QMessageBox::Ok);
+                    errore->exec();
+                }
+            }else{
+                QMessageBox* noXml = new QMessageBox(QMessageBox::Critical, "Errore",
+                                                     "Attenzione: il file che hai selezionato non è un file XML",
+                                                     QMessageBox::Ok);
+                noXml->exec();
+            }
+        }
     });
 
     // Connessione a "Esci"
