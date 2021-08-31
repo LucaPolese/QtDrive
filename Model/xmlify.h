@@ -16,6 +16,9 @@ public:
     Xmlify(const QString &);
     bool salvaAccount(const Container<Deepptr<Account>>& listaAccount) const;
     Container<Deepptr<Account>> acquisisciAccount() const;
+    void setPercorso(QString percorso);
+    bool percorsoVuoto();
+    bool controllaSeXml();
 };
 
 #endif // XMLIFY_H

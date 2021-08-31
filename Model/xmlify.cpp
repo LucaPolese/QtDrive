@@ -86,3 +86,15 @@ Container<Deepptr<Account>> Xmlify::acquisisciAccount() const{
     file.close();
     return letturaAccount;
 }
+
+void Xmlify::setPercorso(QString percorso){
+    account=percorso;
+}
+
+bool Xmlify::percorsoVuoto(){
+    return account == "";
+}
+
+bool Xmlify::controllaSeXml(){
+    return account.endsWith(".xml", Qt::CaseInsensitive);
+}
