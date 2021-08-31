@@ -5,12 +5,14 @@
 #include "../Model/deepptr.h"
 #include "../Model/file.h"
 #include "../Model/account.h"
+#include "../Model/xmlify.h"
 #include <QDebug>
 
 class Controller {
 private:
     Container<Deepptr<Account>> listaAccount;
-
+    Xmlify xml;
+    bool modificato;
 public:
     Controller();
     void aggiungiAccount(QString, QString, Account::servizio, unsigned int);
@@ -22,7 +24,10 @@ public:
     bool checkAccount(QString, Account::servizio) const;
     Container<Deepptr<Account>> getListaAccount() const;
     Account* getAccount(int) const;
-    void aggiornaAccount(Container<Deepptr<Account>>);
+    void aggiornaAccount();
+    Xmlify getXml() const;
+    bool salvataggioAccount() const;
+    void aggiornaPercorso(QString nuovoPercorso);
 };
 
 #endif // CONTROLLER_H

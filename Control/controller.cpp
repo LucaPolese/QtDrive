@@ -1,6 +1,6 @@
 #include "controller.h"
 
-Controller::Controller(){}
+Controller::Controller() : listaAccount(), modificato(false), xml(""){}
 
 void Controller::aggiungiAccount(QString email, QString password, Account::servizio host, unsigned int spazioFornito) {
     listaAccount.push_back(new Account(email, password, host, spazioFornito));
@@ -44,6 +44,18 @@ Account* Controller::getAccount(int posizione) const {
     return listaAccount[posizione].getPuntatore();
 }
 
-void Controller::aggiornaAccount(Container<Deepptr<Account>> la){
-    listaAccount = la;
+void Controller::aggiornaAccount(){
+    listaAccount = xml.acquisisciAccount();
+}
+
+Xmlify Controller::getXml() const{
+    return xml;
+}
+
+bool Controller::salvataggioAccount() const{
+    return xml.salvaAccount(getListaAccount());
+}
+
+void Controller::aggiornaPercorso(QString nuovoPercorso){
+    xml.setPercorso(nuovoPercorso);
 }
