@@ -12,7 +12,6 @@ private:
         Nodo(const T& i, Nodo* n = nullptr, Nodo*p = nullptr);
     };
     Nodo *first, *last;
-    bool modificato;
     static void copia(Nodo*, Nodo*&, Nodo*&);
     static void distruggi(Nodo*);
 public:
@@ -164,7 +163,7 @@ typename Container<T>::iterator Container<T>::iterator::operator++(int){
     if(nodo) {
         if(nodo->next){
             nodo=nodo->next;
-	}else{
+        }else{
             pastTheEnd=true;
         }
     }
@@ -319,17 +318,17 @@ void Container<T>::distruggi(Container<T>::Nodo* nodo) {
 
 //Costruttore
 template <class T>
-Container<T>::Container() : first(nullptr), last(nullptr), modificato(false){}
+Container<T>::Container() : first(nullptr), last(nullptr){}
 
 //Costruttore di copia
 template <class T>
-Container<T>::Container(const Container& c) : modificato(c.modificato){
+Container<T>::Container(const Container& c){
     copia(c.first, first, last);
 }
 
 //Costruttore di spostamento
 template <class T>
-Container<T>::Container(Container&& c) : first(c.first), last(c.last), modificato(c.modificato){
+Container<T>::Container(Container&& c) : first(c.first), last(c.last){
     c.first = c.last = nullptr;
 }
 
@@ -339,7 +338,6 @@ Container<T>& Container<T>::operator=(const Container& c){
     if(this != &c){
         distruggi(first);
         copia(c.first,first,last);
-        modificato = c.modificato;
     }
     return *this;
 }
@@ -351,7 +349,6 @@ Container<T>& Container<T>::operator=(Container&& c){
         distruggi(first);
         first = c.first;
         last = c.last;
-        modificato = c.modificato;
         c.first = c.last = nullptr;
     }
     return *this;
