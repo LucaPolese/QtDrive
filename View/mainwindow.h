@@ -83,6 +83,8 @@ private:
     QLineEdit* inputRicerca;
     QCheckBox* ricercaPerNome;
     QCheckBox* ricercaPerDescrizione;
+    QCheckBox* ricercaAvanzata;
+    QCheckBox* ricercaCaseSensitive;
     QTreeWidget* listaRicerca;
 
 public:

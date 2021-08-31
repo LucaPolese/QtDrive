@@ -30,5 +30,7 @@ class FileVideo: public FileMedia {
 
         QString getTipoFile() const override;
         QIcon getIcona() const override;
+
+        bool ricercaAvanzata(QString) const override;
 };
 #endif // FILEVIDEO_H

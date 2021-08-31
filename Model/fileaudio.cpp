@@ -132,3 +132,9 @@ FileAudio* FileAudio::deserializza(QXmlStreamReader & lettore){
 QIcon FileAudio::getIcona() const {
     return QIcon(":res/icons/file/audio.png");
 }
+
+bool FileAudio::ricercaAvanzata(QString input) const {
+    if(getInformazioniFile().contains(input))
+        return true;
+    return false;
+}

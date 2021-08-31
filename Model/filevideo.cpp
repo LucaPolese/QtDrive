@@ -168,3 +168,9 @@ FileVideo *FileVideo::deserializza(QXmlStreamReader &lettore){
 QIcon FileVideo::getIcona() const {
     return QIcon(":res/icons/file/video.png");
 }
+
+bool FileVideo::ricercaAvanzata(QString input) const {
+    if(getInformazioniFile().contains(input))
+        return true;
+    return false;
+}

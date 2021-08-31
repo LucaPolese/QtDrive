@@ -35,6 +35,10 @@ class File {
         virtual QString getTipoFile() const =0;
 
         virtual QIcon getIcona() const = 0;
+
+        bool ricercaNome(QString) const;
+        bool ricercaDescrizione(QString) const;
+        virtual bool ricercaAvanzata(QString) const =0;
 };
 
 #endif // FILE_H

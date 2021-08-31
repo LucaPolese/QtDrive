@@ -23,6 +23,8 @@ public:
 
     QString getTipoFile() const override;
     QIcon getIcona() const override;
+
+    bool ricercaAvanzata(QString) const override;
 };
 
 #endif // FILETESTO_H

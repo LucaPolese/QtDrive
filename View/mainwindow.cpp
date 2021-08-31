@@ -291,12 +291,18 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     layoutInfo3->addWidget(informazioni3);
 
     inputRicerca = new QLineEdit;
+    inputRicerca->setPlaceholderText("Digitare qui per iniziare una ricerca...");
     layoutRicerca->addWidget(inputRicerca);
 
+    layoutRicerca->addWidget(new QLabel("Ricerca per:"));
     ricercaPerNome = new QCheckBox("Nome");
     layoutCheckbox->addWidget(ricercaPerNome);
     ricercaPerDescrizione = new QCheckBox("Descrizione");
     layoutCheckbox->addWidget(ricercaPerDescrizione);
+    ricercaAvanzata = new QCheckBox("Informazioni aggiuntive");
+    layoutCheckbox->addWidget(ricercaAvanzata);
+    ricercaCaseSensitive = new QCheckBox("Case-sensitive");
+    layoutCheckbox->addWidget(ricercaCaseSensitive);
     layoutRicerca->addLayout(layoutCheckbox);
 
     listaRicerca = new QTreeWidget;
@@ -346,9 +352,21 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     tabs->insertTab(2, paginaRicerca, QIcon(":/res/icons/tabs/tab3.png"), "Ricerca");
     tabs->setCurrentIndex(0);
 
-    connect(tabs, SIGNAL(tabBarClicked(int)), this, SLOT(visualizzaAccount()));
-    connect(tabs, SIGNAL(tabBarClicked(int)), this, SLOT(visualizzaAccountRidotto()));
-    connect(tabs, SIGNAL(tabBarClicked(int)), this, SLOT(visualizzaFileDrive()));
+    // Reset delle selezioni
+    connect(tabs, &QTabWidget::tabBarClicked, this, &MainWindow::visualizzaAccount);
+    connect(tabs, &QTabWidget::tabBarClicked, this, &MainWindow::visualizzaAccountRidotto);
+    connect(tabs, &QTabWidget::tabBarClicked, this, &MainWindow::visualizzaFileDrive);
+    connect(tabs, &QTabWidget::tabBarClicked, [=]{
+        eliminaFile->setDisabled(true);
+    });
+
+
+
+
+    connect(tabellaFile, &QTableWidget::currentCellChanged, [=]{
+        eliminaFile->setDisabled(true);
+    });
+
 
     //Aggiunta dei Widget e dei Layout al frame principale
     //layoutMenu->addWidget(menu);
@@ -565,10 +583,30 @@ void MainWindow::visualizzaFile() {
 }
 
 void MainWindow::ricerca(const QString input) {
-    for(int i = 0; i < listaRicerca->topLevelItemCount(); i++) {
-
+    listaRicerca->clear();
+    for(int i = 0; i < controller->getNumeroAccount(); i++) {
+        Container<Deepptr<File>> lista = controller->getAccount(i)->getListaFile();
+        for(auto it = lista.begin(); it != lista.end(); ++it) {
+            bool ok = false, ok1 = false, ok2 = false, ok3 = false;
+            if(ricercaPerNome->isChecked()) ok1 = it->getPuntatore()->ricercaNome(input);
+            if(ricercaPerDescrizione->isChecked()) ok2 = it->getPuntatore()->ricercaDescrizione(input);
+            if(ricercaAvanzata->isChecked()) ok3 = it->getPuntatore()->ricercaAvanzata(input);
+            ok = ok1 || ok2 || ok3;
+            if(ok) {
+                QTreeWidgetItem* nuovo = new QTreeWidgetItem;
+                nuovo->setIcon(1, it->getPuntatore()->getIcona());
+                nuovo->setText(2, it->getPuntatore()->getNome());
+                nuovo->setText(3, "."+it->getPuntatore()->getEstensione()); nuovo->setTextAlignment(3, Qt::AlignCenter);
+                nuovo->setText(4, QString::number(it->getPuntatore()->getDimensione()).append(" MB")); nuovo->setTextAlignment(4, Qt::AlignCenter);
+                nuovo->setText(5, it->getPuntatore()->getDescrizione());
+                listaRicerca->addTopLevelItem(nuovo);
+            }
+        }
     }
-    qDebug() << input;
+    listaRicerca->resizeColumnToContents(1);
+    listaRicerca->resizeColumnToContents(2);
+    listaRicerca->resizeColumnToContents(3);
+    listaRicerca->resizeColumnToContents(4);
 }
 
 void MainWindow::visualizzaFileDrive() {

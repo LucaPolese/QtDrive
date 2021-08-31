@@ -142,3 +142,9 @@ FileImmagine *FileImmagine::deserializza(QXmlStreamReader &lettore){
 QIcon FileImmagine::getIcona() const {
     return QIcon(":res/icons/file/immagine.png");
 }
+
+bool FileImmagine::ricercaAvanzata(QString input) const {
+    if(getInformazioniFile().contains(input))
+        return true;
+    return false;
+}

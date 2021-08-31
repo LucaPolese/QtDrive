@@ -37,3 +37,15 @@ QDate File::getDataCreazione() const {
 QDate File::getDataCaricamento() const {
     return dataCaricamento;
 }
+
+bool File::ricercaNome(QString input) const {
+    if(nome.contains(input))
+        return true;
+    return false;
+}
+
+bool File::ricercaDescrizione(QString input) const {
+    if(descrizione.contains(input))
+        return true;
+    return false;
+}

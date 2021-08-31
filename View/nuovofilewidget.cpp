@@ -268,9 +268,10 @@ void NuovoFileWidget::aggiungiNuovoFile() {
         QMessageBox::warning(this, tr("Errore"), tr("Dimensione del file non valida."), QMessageBox::Ok);
         ok = false;
     }
-    if(controller->getAccount(accountSelezionato)->getSpazioOccupato()*1024+dimensione->value() > controller->getAccount(accountSelezionato)->getSpazioFornito()*1024) {
+    if(controller->getAccount(accountSelezionato)->getSpazioOccupato()+dimensione->value() > controller->getAccount(accountSelezionato)->getSpazioFornito()*1024) {
         QMessageBox::warning(this, tr("Errore"), tr("File troppo grande per essere inserito."), QMessageBox::Ok);
         ok = false;
+        qDebug() << "Spazio occupato GB" << controller->getAccount(accountSelezionato)->getSpazioOccupato();
     }
     if(ok) {
         QString nomeFile = nome->text();
