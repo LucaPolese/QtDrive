@@ -19,6 +19,10 @@ QString FileTesto::getInformazioniFile() const {
     return "File di testo\nNumero caratteri: " + QString::number(numeroCaratteri) + "\nNumero parole: " + QString::number(numeroParole) + "\n";
 }
 
+QString FileTesto::getTipoFile() const {
+    return "FileTesto";
+}
+
 FileTesto* FileTesto::clone() const {
     return new FileTesto(*this);
 }

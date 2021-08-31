@@ -24,6 +24,10 @@ QString FileImmagine::getInformazioniFile() const {
     return informazioni + "Risoluzione: " + QString::number(altezza) + "x" + QString::number(larghezza) + " pixels\n";
 }
 
+QString FileImmagine::getTipoFile() const {
+    return "FileImmagine";
+}
+
 FileImmagine* FileImmagine::clone() const {
     return new FileImmagine(*this);
 }

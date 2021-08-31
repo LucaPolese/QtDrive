@@ -124,15 +124,15 @@ NuovoFileWidget::NuovoFileWidget(Controller *controller_, QWidget *parent): QWid
     layoutImmagine->addRow("Tipo immagine:", raster);
     layoutImmagine->addRow("", vettoriale);
 
-    altezzaI = new QSpinBox;
-    altezzaI->setAlignment(Qt::AlignRight);
-    altezzaI->setMaximum(61440);
-    layoutImmagine->addRow(tr("Altezza (px):"), altezzaI);
-
     larghezzaI = new QSpinBox;
     larghezzaI->setAlignment(Qt::AlignRight);
     larghezzaI->setMaximum(34560);
     layoutImmagine->addRow(tr("Larghezza (px):"), larghezzaI);
+
+    altezzaI = new QSpinBox;
+    altezzaI->setAlignment(Qt::AlignRight);
+    altezzaI->setMaximum(61440);
+    layoutImmagine->addRow(tr("Altezza (px):"), altezzaI);
 
     immagineWidget->setLayout(layoutImmagine);
     layoutInfo->addWidget(immagineWidget);
@@ -158,15 +158,15 @@ NuovoFileWidget::NuovoFileWidget(Controller *controller_, QWidget *parent): QWid
     durataV->setMaximum(600);
     layoutVideo->addRow(tr("Durata (minuti):"), durataV);
 
-    altezzaV = new QSpinBox;
-    altezzaV->setAlignment(Qt::AlignRight);
-    altezzaV->setMaximum(7680);
-    layoutVideo->addRow(tr("Altezza (px):"), altezzaV);
-
     larghezzaV = new QSpinBox;
     larghezzaV->setAlignment(Qt::AlignRight);
     larghezzaV->setMaximum(4320);
     layoutVideo->addRow(tr("Larghezza (px):"), larghezzaV);
+
+    altezzaV = new QSpinBox;
+    altezzaV->setAlignment(Qt::AlignRight);
+    altezzaV->setMaximum(7680);
+    layoutVideo->addRow(tr("Altezza (px):"), altezzaV);
 
     fps = new QSpinBox;
     fps->setAlignment(Qt::AlignRight);
@@ -268,6 +268,10 @@ void NuovoFileWidget::aggiungiNuovoFile() {
         QMessageBox::warning(this, tr("Errore"), tr("Dimensione del file non valida."), QMessageBox::Ok);
         ok = false;
     }
+    if(controller->getAccount(accountSelezionato)->getSpazioOccupato()*1024+dimensione->value() > controller->getAccount(accountSelezionato)->getSpazioFornito()*1024) {
+        QMessageBox::warning(this, tr("Errore"), tr("File troppo grande per essere inserito."), QMessageBox::Ok);
+        ok = false;
+    }
     if(ok) {
         QString nomeFile = nome->text();
         QString estensioneFile = estensione->text();
@@ -278,15 +282,13 @@ void NuovoFileWidget::aggiungiNuovoFile() {
         switch(tipo->currentIndex()) {
             // Archivio
             case 0:{
-                FileArchivio *file = new FileArchivio(nomeFile, estensioneFile, dimensioneFile, dataCreazioneFile, QDate::currentDate(), descrizioneFile, dimensioneOriginale->value(), numeroDiFile->value());
-                //controller->getAccount(accountSelezionato)->aggiungiFile(file);
+                FileArchivio *file = new FileArchivio(nomeFile, estensioneFile, dimensioneFile, dataCreazioneFile, QDate::currentDate(), descrizioneFile, dimensioneOriginale->value(), numeroDiFile->value(), protetto->isChecked());
                 controller->aggiungiFile(accountSelezionato, file);
                 break;
             }
             // Testo
             case 1:{
                 FileTesto *file = new FileTesto(nomeFile, estensioneFile, dimensioneFile, dataCreazioneFile, QDate::currentDate(), descrizioneFile, numeroCaratteri->value(), numeroParole->value());
-               // controller->getAccount(accountSelezionato)->aggiungiFile(file);controller->getAccount(accountSelezionato)->aggiungiFile(file);
                 controller->aggiungiFile(accountSelezionato, file);
                 break;
             }
@@ -294,7 +296,6 @@ void NuovoFileWidget::aggiungiNuovoFile() {
             case 2:{
                 compressioneFile = static_cast<FileMedia::compressione>(compressioneA->checkedId());
                 FileAudio *file = new FileAudio(nomeFile, estensioneFile, dimensioneFile, dataCreazioneFile, QDate::currentDate(), descrizioneFile, compressioneFile, bitrate->value(), durataA->value());
-               // controller->getAccount(accountSelezionato)->aggiungiFile(file);
                 controller->aggiungiFile(accountSelezionato, file);
                 break;
             }
@@ -303,7 +304,6 @@ void NuovoFileWidget::aggiungiNuovoFile() {
                 compressioneFile = static_cast<FileMedia::compressione>(compressioneI->checkedId());
                 FileImmagine::tipo tipoImmagineFile = static_cast<FileImmagine::tipo>(tipoImmagine->checkedId());
                 FileImmagine *file = new FileImmagine(nomeFile, estensioneFile, dimensioneFile, dataCreazioneFile, QDate::currentDate(), descrizioneFile, compressioneFile, tipoImmagineFile, larghezzaI->value(), altezzaI->value());
-                //controller->getAccount(accountSelezionato)->aggiungiFile(file);
                 controller->aggiungiFile(accountSelezionato, file);
                 break;
             }
@@ -311,7 +311,6 @@ void NuovoFileWidget::aggiungiNuovoFile() {
             case 4:{
                 compressioneFile = static_cast<FileMedia::compressione>(compressioneV->checkedId());
                 FileVideo *file = new FileVideo(nomeFile, estensioneFile, dimensioneFile, dataCreazioneFile, QDate::currentDate(), descrizioneFile, compressioneFile, codec->text(), durataV->value(), larghezzaV->value(), altezzaV->value(), fps->value());
-               // controller->getAccount(accountSelezionato)->aggiungiFile(file);
                 controller->aggiungiFile(accountSelezionato, file);
                 break;
             }

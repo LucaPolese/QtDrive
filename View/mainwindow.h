@@ -79,6 +79,12 @@ private:
     QTreeWidget* listaFile;
     InfoFileWidget* infoFileWidget;
 
+    // Elementi terza scheda
+    QLineEdit* inputRicerca;
+    QCheckBox* ricercaPerNome;
+    QCheckBox* ricercaPerDescrizione;
+    QTreeWidget* listaRicerca;
+
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -91,6 +97,9 @@ public slots:
     void visualizzaAccountRidotto();
     void visualizzaListaFile();
     void visualizzaFile();
+
+    void ricerca(const QString);
+    void visualizzaFileDrive();
 };
 
 #endif

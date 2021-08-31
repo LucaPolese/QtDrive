@@ -283,11 +283,33 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
 
     // Scheda RICERCA
     QWidget* paginaRicerca = new QWidget();
+    QVBoxLayout* layoutInfo3 = new QVBoxLayout; // Layout contenente le informazioni testuali della terza scheda
+    QVBoxLayout* layoutRicerca = new QVBoxLayout;
+    QHBoxLayout* layoutCheckbox = new QHBoxLayout;
 
+    QLabel* informazioni3 = new QLabel("Da questa scheda è possibile effettuare una ricerca di file all'interno di tutti gli account registrati.");
+    layoutInfo3->addWidget(informazioni3);
 
+    inputRicerca = new QLineEdit;
+    layoutRicerca->addWidget(inputRicerca);
 
+    ricercaPerNome = new QCheckBox("Nome");
+    layoutCheckbox->addWidget(ricercaPerNome);
+    ricercaPerDescrizione = new QCheckBox("Descrizione");
+    layoutCheckbox->addWidget(ricercaPerDescrizione);
+    layoutRicerca->addLayout(layoutCheckbox);
 
+    listaRicerca = new QTreeWidget;
+    listaRicerca->setHeaderLabels(headersFile);
+    listaRicerca->hideColumn(0);
+    listaRicerca->setSortingEnabled(true);
+    layoutRicerca->addWidget(listaRicerca);
 
+    layoutInfo3->addLayout(layoutRicerca);
+
+    paginaRicerca->setLayout(layoutInfo3);
+
+    connect(inputRicerca, &QLineEdit::textChanged, this, &MainWindow::ricerca);
 
 
 
@@ -326,6 +348,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
 
     connect(tabs, SIGNAL(tabBarClicked(int)), this, SLOT(visualizzaAccount()));
     connect(tabs, SIGNAL(tabBarClicked(int)), this, SLOT(visualizzaAccountRidotto()));
+    connect(tabs, SIGNAL(tabBarClicked(int)), this, SLOT(visualizzaFileDrive()));
 
     //Aggiunta dei Widget e dei Layout al frame principale
     //layoutMenu->addWidget(menu);
@@ -345,6 +368,8 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
             Xmlify xml(fileScelto);
             controller->aggiornaAccount(xml.acquisisciAccount());
             visualizzaAccount();
+            visualizzaAccountRidotto();
+            visualizzaFileDrive();
         }
     });
 
@@ -514,7 +539,7 @@ void MainWindow::visualizzaInfoAccount() {
     emailAccount->setText(a.getEmail()); emailAccount->setAlignment(Qt::AlignRight);
     passwordAccount->setText(a.getPassword()); passwordAccount->setAlignment(Qt::AlignRight);
     float spazioOccupato = a.getSpazioOccupato() / 1024; // Spazio occupato in GB
-    QString spazio = QString::number(spazioOccupato)+"/"+QString::number(a.getSpazioFornito())+" GB";
+    QString spazio = QString::number(spazioOccupato, 'f', 2)+"/"+QString::number(a.getSpazioFornito())+" GB";
     spazioRimanente->setText(spazio);
 
     informazioniAccount->show();
@@ -526,7 +551,7 @@ void MainWindow::visualizzaListaFile() {
     for(auto it = lista.begin(); it != lista.end(); ++it) {
         QTreeWidgetItem* nuovo = new QTreeWidgetItem;
         nuovo->setIcon(1, it->getPuntatore()->getIcona()); nuovo->setTextAlignment(1, Qt::AlignCenter);
-        nuovo->setText(2, it->getPuntatore()->getNome()); nuovo->setTextAlignment(2, Qt::AlignLeft);
+        nuovo->setText(2, it->getPuntatore()->getNome());
         nuovo->setText(3, "."+it->getPuntatore()->getEstensione()); nuovo->setTextAlignment(3, Qt::AlignCenter);
         nuovo->setText(4, QString::number(it->getPuntatore()->getDimensione()).append(" MB")); nuovo->setTextAlignment(4, Qt::AlignCenter);
         nuovo->setText(5, it->getPuntatore()->getDescrizione());
@@ -536,8 +561,34 @@ void MainWindow::visualizzaListaFile() {
 }
 
 void MainWindow::visualizzaFile() {
-   // tabellaFile->selectedItems();
     informazioniFile->show();
+}
+
+void MainWindow::ricerca(const QString input) {
+    for(int i = 0; i < listaRicerca->topLevelItemCount(); i++) {
+
+    }
+    qDebug() << input;
+}
+
+void MainWindow::visualizzaFileDrive() {
+    listaRicerca->clear();
+    for(int i = 0; i < controller->getNumeroAccount(); i++) {
+        Container<Deepptr<File>> lista = controller->getAccount(i)->getListaFile();
+        for(auto it = lista.begin(); it != lista.end(); ++it) {
+            QTreeWidgetItem* nuovo = new QTreeWidgetItem;
+            nuovo->setIcon(1, it->getPuntatore()->getIcona());
+            nuovo->setText(2, it->getPuntatore()->getNome());
+            nuovo->setText(3, "."+it->getPuntatore()->getEstensione()); nuovo->setTextAlignment(3, Qt::AlignCenter);
+            nuovo->setText(4, QString::number(it->getPuntatore()->getDimensione()).append(" MB")); nuovo->setTextAlignment(4, Qt::AlignCenter);
+            nuovo->setText(5, it->getPuntatore()->getDescrizione());
+            listaRicerca->addTopLevelItem(nuovo);
+        }
+    }
+    listaRicerca->resizeColumnToContents(1);
+    listaRicerca->resizeColumnToContents(2);
+    listaRicerca->resizeColumnToContents(3);
+    listaRicerca->resizeColumnToContents(4);
 }
 
 MainWindow::~MainWindow() {

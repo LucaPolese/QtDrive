@@ -52,7 +52,7 @@ const Container<Deepptr<File>>& Account::getListaFile() const {
     return listaFile;
 }
 
-int Account::getSpazioOccupato() const {
+float Account::getSpazioOccupato() const {
     int spazio = 0;
     for(auto it = listaFile.begin(); it != listaFile.end(); ++it)
         spazio += it->getPuntatore()->getDimensione();
@@ -125,7 +125,7 @@ Account* Account::deserializza(QXmlStreamReader & lettore){
                 QString tipo = lettore.attributes().value("type").toString();
                 if(tipo != ""){
                     for(auto it = tipiDiFile.begin(); it != tipiDiFile.end() && !trovato ; it++){
-                        if((*it)->getInformazioniFile() == tipo){
+                        if((*it)->getTipoFile() == tipo){
                             _listaFile.push_back((*it)->deserializza(lettore));
                             trovato = true;
                         }

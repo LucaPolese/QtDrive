@@ -31,7 +31,11 @@ QString FileVideo::getInformazioniFile() const {
     if(tipoCompressione == nessuna) informazioni = "File video non compresso\n";
     else if(tipoCompressione == lossy) informazioni = "File video lossy\n";
     else if(tipoCompressione == lossless) informazioni = "File video lossless\n";
-    return informazioni = "Durata: " + QDateTime::fromTime_t(durata*60).toUTC().toString("hh:mm:ss") + "\nCodec: " + codec + "\nFPS: " + fps + "\nRisoluzione: " + QString::number(larghezza) + "x" + QString::number(altezza) + " pixels\n";
+    return informazioni + "Durata: " + QDateTime::fromTime_t(durata*60).toUTC().toString("hh:mm:ss") + "\nCodec: " + codec + "\nFPS: " + QString::number(fps) + "\nRisoluzione: " + QString::number(larghezza) + "x" + QString::number(altezza) + " pixels\n";
+}
+
+QString FileVideo::getTipoFile() const {
+    return "FileVideo";
 }
 
 FileVideo* FileVideo::clone() const {

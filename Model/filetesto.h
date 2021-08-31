@@ -21,6 +21,7 @@ public:
     void serializza(QXmlStreamWriter &scrittore) const override;
     FileTesto* deserializza(QXmlStreamReader& lettore) override;
 
+    QString getTipoFile() const override;
     QIcon getIcona() const override;
 };
 

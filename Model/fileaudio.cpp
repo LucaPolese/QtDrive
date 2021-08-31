@@ -22,6 +22,10 @@ QString FileAudio::getInformazioniFile() const {
     return informazioni + "Bitrate: " + QString::number(bitrate) + " kbit/s" + "\nDurata: " + QDateTime::fromTime_t(durata).toUTC().toString("hh:mm:ss") + "\n";
 }
 
+QString FileAudio::getTipoFile() const {
+    return "FileAudio";
+}
+
 FileAudio* FileAudio::clone() const {
     return new FileAudio(*this);
 }

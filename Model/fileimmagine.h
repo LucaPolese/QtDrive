@@ -18,6 +18,7 @@ class FileImmagine: public FileMedia {
         void serializza(QXmlStreamWriter &scrittore) const override;
         FileImmagine* deserializza(QXmlStreamReader& lettore) override;
 
+        QString getTipoFile() const override;
         QIcon getIcona() const override;
     private:
         tipo tipoImmagine;

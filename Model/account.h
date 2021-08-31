@@ -27,7 +27,7 @@ public:
     void setEmail(QString);
     void aggiungiFile(File*);
     void eliminaFile(int);
-    int getSpazioOccupato() const;
+    float getSpazioOccupato() const;
     template <class T>
     int contaFile() const{
         unsigned int contatore = 0;
