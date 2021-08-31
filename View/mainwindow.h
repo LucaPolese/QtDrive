@@ -87,21 +87,34 @@ private:
     QCheckBox* ricercaCaseSensitive;
     QTreeWidget* listaRicerca;
 
+
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void closeEvent (QCloseEvent *event);
 public slots:
+    void modificaDellAccount();
+    void eliminazioneDellAccount();
+    void chiusuraDellAccount();
     void visualizzaInfoAccount();
-    void aggiungiAccount();
-    void visualizzaAccount();
-
-    void visualizzaAccountRidotto();
-    void visualizzaListaFile();
     void visualizzaFile();
-
+    void visualizzaListaFile();
+    void creaNuovoFile();
+    void eliminazioneDelFile();
+    void chiusuraListaFile();
+    void attivaEliminaFile();
+    void refreshDati();
+    void visualizzaInformazioniAggiuntiveFile();
     void ricerca(const QString);
+    void visualizzaAccount();
+    void visualizzaAccountRidotto();
     void visualizzaFileDrive();
+    void selezioneTab();
+    void selezioneAltroAccount();
+    void apriIlFile();
+    void salvaIlFile();
+    void salvaIlNuovoFile();
+    void aggiungiAccount();
 };
 
 #endif

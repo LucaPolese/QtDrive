@@ -48,11 +48,6 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     set3 = new QBarSet("Immagine");
     set4 = new QBarSet("Video");
     series = new QHorizontalPercentBarSeries();
-    *set0 << 50;
-    *set1 << 40;
-    *set2 << 30;
-    *set3 << 01;
-    *set4 << 02;
 
     series->append(set0);
     series->append(set1);
@@ -112,41 +107,6 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     layoutPulsanti1->addWidget(chiudiAccount, 0, Qt::AlignRight);
     layoutInfoAccount->addLayout(layoutPulsanti1);
 
-    connect(modificaAccount, &QPushButton::pressed, [=]{
-        QMessageBox messageBox(QMessageBox::Question, tr("QtDrive"), tr("Salvare le modifiche effettuate?"), QMessageBox::Yes | QMessageBox::No, this);
-        messageBox.setButtonText(QMessageBox::Yes, tr("Sì"));
-        messageBox.setButtonText(QMessageBox::No, tr("No"));
-        int ret = messageBox.exec();
-        if(ret == QMessageBox::Yes) {
-            controller->salvaModificaAccount(tabellaAccount->currentRow(), emailAccount->text(), passwordAccount->text());
-            informazioniAccount->hide();
-            visualizzaAccount();
-        }
-        else {
-             tabellaAccount->selectRow(tabellaAccount->currentRow());
-             visualizzaInfoAccount();
-        }
-    });
-
-    connect(eliminaAccount, &QPushButton::pressed, [=]{
-        QMessageBox messageBox(QMessageBox::Question, tr("QtDrive"), tr("Eliminare l'account selezionato?\nIl suo contenuto non sarà più gestibile da questa applicazione."), QMessageBox::Yes | QMessageBox::No, this);
-        messageBox.setButtonText(QMessageBox::Yes, tr("Sì"));
-        messageBox.setButtonText(QMessageBox::No, tr("No"));
-        int ret = messageBox.exec();
-        if(ret == QMessageBox::Yes) {
-            controller->eliminaAccount(tabellaAccount->currentRow());
-            informazioniAccount->hide();
-            visualizzaAccount();
-        }
-    });
-
-    connect(chiudiAccount, &QPushButton::pressed, [=]{
-        tabellaAccount->clearSelection();
-        informazioniAccount->hide();
-    });
-
-    connect(tabellaAccount, SIGNAL(cellClicked(int,int)), this, SLOT(visualizzaInfoAccount()));
-
     // Pulsante "Aggiungi account"
     QPushButton* pulsanteAggiungiAccount = new QPushButton(QIcon(":res/icons/pulsanti/aggiungiAccount.png"), "Aggiungi account");
     pulsanteAggiungiAccount->setFixedSize(pulsanteAggiungiAccount->sizeHint());
@@ -162,8 +122,8 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
 
     // Finestra inserimento nuovo account
     accountWidget->setWindowModality(Qt::ApplicationModal);
-    connect(accountWidget, &AccountWidget::accountAggiunto, this, &MainWindow::visualizzaAccount);
     pagina->addLayout(layoutInfo1);
+
 
     // Scheda FILE
     QWidget* paginaFile = new QWidget;
@@ -208,8 +168,6 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     listaFile->setSortingEnabled(false);
 
     layoutScheda2->addWidget(tabellaFile);
-    //layoutScheda2->addWidget(listaFile);
-    connect(tabellaFile, SIGNAL(cellClicked(int,int)), this, SLOT(visualizzaFile()));
 
     QHBoxLayout* layoutPulsanti2 = new QHBoxLayout;
     nuovoFile = new QPushButton(QIcon(":res/icons/file/file.png"), "Nuovo file");
@@ -232,57 +190,12 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
 
     // Form inserimento nuovo file
     fileWidget->setWindowModality(Qt::ApplicationModal);
-    connect(fileWidget, &NuovoFileWidget::fileAggiunto, this, &MainWindow::visualizzaListaFile);
-
     infoFileWidget->setWindowModality(Qt::ApplicationModal);
-
-
-    connect(tabellaFile, SIGNAL(cellClicked(int,int)), this, SLOT(visualizzaListaFile()));
-
-    connect(nuovoFile, &QPushButton::pressed, [=]{
-        fileWidget->setAccountSelezionato(tabellaFile->currentRow());
-        fileWidget->show();
-    });
-
-    connect(eliminaFile, &QPushButton::pressed, [=]{
-        QMessageBox messageBox(QMessageBox::Question, tr("QtDrive"), tr("Eliminare il file selezionato?"), QMessageBox::Yes | QMessageBox::No, this);
-        messageBox.setButtonText(QMessageBox::Yes, tr("Sì"));
-        messageBox.setButtonText(QMessageBox::No, tr("No"));
-        int ret = messageBox.exec();
-        if(ret == QMessageBox::Yes) {
-            QModelIndex index = listaFile->currentIndex();
-            controller->eliminaFile(tabellaFile->currentRow(), index.row());
-            informazioniAccount->hide();
-            visualizzaAccountRidotto();
-            eliminaFile->setDisabled(true);
-            listaFile->clearSelection();
-        }
-    });
-
-    connect(chiudiListaFile, &QPushButton::pressed, [=]{
-        tabellaFile->clearSelection();
-        listaFile->clearSelection();
-        eliminaFile->setDisabled(true);
-        informazioniFile->hide();
-    });
-
-    connect(listaFile, &QTreeWidget::clicked, [=](const QModelIndex &index) {
-        eliminaFile->setEnabled(true);
-    });
-
-    connect(infoFileWidget, &InfoFileWidget::fileModificato, [=]{
-        listaFile->clearSelection();
-        visualizzaListaFile();
-    });
-
-    connect(listaFile, &QTreeWidget::itemDoubleClicked, [=]{
-        QModelIndex index = listaFile->currentIndex();
-        infoFileWidget->visualizzaFile(tabellaFile->currentRow(), index.row());
-    });
 
 
     // Scheda RICERCA
     QWidget* paginaRicerca = new QWidget();
+
     QVBoxLayout* layoutInfo3 = new QVBoxLayout; // Layout contenente le informazioni testuali della terza scheda
     QVBoxLayout* layoutRicerca = new QVBoxLayout;
     QHBoxLayout* layoutCheckbox = new QHBoxLayout;
@@ -315,9 +228,6 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
 
     paginaRicerca->setLayout(layoutInfo3);
 
-    connect(inputRicerca, &QLineEdit::textChanged, this, &MainWindow::ricerca);
-
-
 
     // Menubar
     QMenuBar *menu = new QMenuBar();
@@ -327,11 +237,14 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
             apriFile->setIcon(QIcon(":/res/icons/menubar/apri.png"));
             QAction *salvaFile = new QAction("Salva", menuFile); salvaFile->setShortcut(Qt::CTRL | Qt::Key_S);
             salvaFile->setIcon(QIcon(":/res/icons/menubar/salva.png"));
+            QAction *salvaNuovoFile = new QAction("Salva con nome", menuFile); salvaNuovoFile->setShortcut(Qt::CTRL | Qt::SHIFT |Qt::Key_S);
+            salvaNuovoFile->setIcon(QIcon(":/res/icons/menubar/sovrascrivi.png"));
             QAction *chiudiApplicazione = new QAction("Esci", menuFile); chiudiApplicazione->setShortcut(Qt::CTRL | Qt::Key_Q);
             chiudiApplicazione->setIcon(QIcon(":/res/icons/menubar/esci.png"));
             menu->addMenu(menuFile);
                 menuFile->addAction(apriFile);
                 menuFile->addAction(salvaFile);
+                menuFile->addAction(salvaNuovoFile);
                 menuFile->addSeparator();
                 menuFile->addAction(chiudiApplicazione);
         // Aiuto
@@ -352,81 +265,9 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     tabs->insertTab(2, paginaRicerca, QIcon(":/res/icons/tabs/tab3.png"), "Ricerca");
     tabs->setCurrentIndex(0);
 
-    // Reset delle selezioni
-    connect(tabs, &QTabWidget::tabBarClicked, this, &MainWindow::visualizzaAccount);
-    connect(tabs, &QTabWidget::tabBarClicked, this, &MainWindow::visualizzaAccountRidotto);
-    connect(tabs, &QTabWidget::tabBarClicked, this, &MainWindow::visualizzaFileDrive);
-    connect(tabs, &QTabWidget::tabBarClicked, [=]{
-        eliminaFile->setDisabled(true);
-    });
-
-
-
-
-    connect(tabellaFile, &QTableWidget::currentCellChanged, [=]{
-        eliminaFile->setDisabled(true);
-    });
-
-
     //Aggiunta dei Widget e dei Layout al frame principale
-    //layoutMenu->addWidget(menu);
-
     pagina->addWidget(menu);
     pagina->addWidget(tabs);
-
-    // Connessione a "Apri"
-    connect(apriFile, &QAction::triggered,  [=]() {
-        QString fileScelto = QFileDialog::getOpenFileName(this, "Apri account", "./", "Account (*.xml)");
-        if (fileScelto.isEmpty()){
-            QMessageBox* alert = new QMessageBox(QMessageBox::Critical, "Errore",
-                                                 "Attenzione: non hai scelto alcun file da aprire!",
-                                                 QMessageBox::Ok);
-            alert->exec();
-        }else{
-            Xmlify xml(fileScelto);
-            controller->aggiornaAccount(xml.acquisisciAccount());
-            visualizzaAccount();
-            visualizzaAccountRidotto();
-            visualizzaFileDrive();
-        }
-    });
-
-    // Connessione a "Salva"
-    connect(salvaFile, &QAction::triggered,  [=]() {
-        QString fileSalvataggio = QFileDialog::getOpenFileName(this, "Salva account", "./", "Account (*.xml)");
-        if (fileSalvataggio.isEmpty()){
-            QMessageBox* vuoto = new QMessageBox(QMessageBox::Critical, "Errore",
-                                                 "Attenzione: non hai scelto alcun file su cui effettuare il salvataggio!",
-                                                 QMessageBox::Ok);
-            vuoto->exec();
-        }else{
-            if(fileSalvataggio.endsWith(".xml", Qt::CaseInsensitive)){
-                Xmlify xml(fileSalvataggio);
-                try{
-                    xml.salvaAccount(controller->getListaAccount());
-                    QMessageBox* salvataggioOk = new QMessageBox(QMessageBox::Information, "Salvataggio",
-                                                         QString("Il file è stato salvato correttamente!"),
-                                                         QMessageBox::Ok);
-                    salvataggioOk->exec();
-                }catch(QString e){
-                    QMessageBox* errore = new QMessageBox(QMessageBox::Critical, "Errore",
-                                                         QString("Attenzione: il file selezionato per la scrittura non può essere salvato per un errore").arg(e),
-                                                         QMessageBox::Ok);
-                    errore->exec();
-                }
-            }else{
-                QMessageBox* noXml = new QMessageBox(QMessageBox::Critical, "Errore",
-                                                     "Attenzione: il file che hai selezionato non è un file XML",
-                                                     QMessageBox::Ok);
-                noXml->exec();
-            }
-        }
-    });
-
-    // Connessione a "Esci"
-    connect(chiudiApplicazione, &QAction::triggered,  [=]() {
-        close();
-    });
 
     // Connessione a "Guida"
     connect(guida, &QAction::triggered, [=]() {
@@ -446,29 +287,195 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
         infoWidget->show();
     });
 
-    // Connessione a "Aggiungi account"
-    connect(pulsanteAggiungiAccount, &QPushButton::clicked, this, &MainWindow::aggiungiAccount);
-
     // Inizializzazione file di default, se non esiste viene creato
     QFile file("account.xml");
     file.open(QIODevice::ReadWrite | QIODevice::Text);
     file.close();
 
+    // Connessioni
+    connect(modificaAccount, &QPushButton::pressed, this, &MainWindow::modificaDellAccount);
+    connect(eliminaAccount, &QPushButton::pressed, this, &MainWindow::eliminazioneDellAccount);
+    connect(chiudiAccount, &QPushButton::pressed, this, &MainWindow::chiusuraDellAccount);
+    connect(tabellaAccount, &QTableWidget::cellClicked, this, &MainWindow::visualizzaInfoAccount);
+    connect(accountWidget, &AccountWidget::accountAggiunto, this, &MainWindow::visualizzaAccount);
+    connect(tabellaFile, &QTableWidget::cellClicked, this, &MainWindow::visualizzaFile);
+    connect(fileWidget, &NuovoFileWidget::fileAggiunto, this, &MainWindow::visualizzaListaFile);
+    connect(tabellaFile, &QTableWidget::cellClicked, this, &MainWindow::visualizzaListaFile);
+    connect(nuovoFile, &QPushButton::pressed, this, &MainWindow::creaNuovoFile);
+    connect(eliminaFile, &QPushButton::pressed, this, &MainWindow::eliminazioneDelFile);
+    connect(chiudiListaFile, &QPushButton::pressed, this, &MainWindow::chiusuraListaFile);
+    connect(listaFile, &QTreeWidget::clicked, this, &MainWindow::attivaEliminaFile);
+    connect(infoFileWidget, &InfoFileWidget::fileModificato, this, &MainWindow::refreshDati);
+    connect(listaFile, &QTreeWidget::itemDoubleClicked, this, &MainWindow::visualizzaInformazioniAggiuntiveFile);
+    connect(inputRicerca, &QLineEdit::textChanged, this, &MainWindow::ricerca);
+    connect(tabs, &QTabWidget::tabBarClicked, this, &MainWindow::visualizzaAccount);
+    connect(tabs, &QTabWidget::tabBarClicked, this, &MainWindow::visualizzaAccountRidotto);
+    connect(tabs, &QTabWidget::tabBarClicked, this, &MainWindow::visualizzaFileDrive);
+    connect(tabs, &QTabWidget::tabBarClicked, this, &MainWindow::selezioneTab);
+    connect(tabellaFile, &QTableWidget::currentCellChanged, this, &MainWindow::selezioneAltroAccount);
+    connect(apriFile, &QAction::triggered, this, &MainWindow::apriIlFile);
+    connect(salvaFile, &QAction::triggered, this, &MainWindow::salvaIlFile);
+    connect(salvaNuovoFile, &QAction::triggered, this, &MainWindow::salvaIlNuovoFile);
+    connect(pulsanteAggiungiAccount, &QPushButton::clicked, this, &MainWindow::aggiungiAccount);
+    connect(chiudiApplicazione, &QAction::triggered, this, &MainWindow::close);
+
     setLayout(pagina);
 }
 
-void MainWindow::closeEvent (QCloseEvent *event) {
-    QMessageBox messageBox(QMessageBox::Question, tr("QtDrive"), tr("Uscire dall'applicazione?"), QMessageBox::Yes | QMessageBox::No, this);
+void MainWindow::modificaDellAccount(){
+    QMessageBox messageBox(QMessageBox::Question, tr("QtDrive"), tr("Salvare le modifiche effettuate?"), QMessageBox::Yes | QMessageBox::No, this);
     messageBox.setButtonText(QMessageBox::Yes, tr("Sì"));
     messageBox.setButtonText(QMessageBox::No, tr("No"));
     int ret = messageBox.exec();
-    if(ret == QMessageBox::Yes)
-        event->accept();
-    else event->ignore();
+    if(ret == QMessageBox::Yes) {
+        controller->salvaModificaAccount(tabellaAccount->currentRow(), emailAccount->text(), passwordAccount->text());
+        informazioniAccount->hide();
+        visualizzaAccount();
+    }
+    else {
+         tabellaAccount->selectRow(tabellaAccount->currentRow());
+         visualizzaInfoAccount();
+    }
 }
 
-void MainWindow::aggiungiAccount() {
-    accountWidget->show();
+void MainWindow::eliminazioneDellAccount(){
+    QMessageBox messageBox(QMessageBox::Question, tr("QtDrive"), tr("Eliminare l'account selezionato?\nIl suo contenuto non sarà più gestibile da questa applicazione."), QMessageBox::Yes | QMessageBox::No, this);
+    messageBox.setButtonText(QMessageBox::Yes, tr("Sì"));
+    messageBox.setButtonText(QMessageBox::No, tr("No"));
+    int ret = messageBox.exec();
+    if(ret == QMessageBox::Yes) {
+        controller->eliminaAccount(tabellaAccount->currentRow());
+        informazioniAccount->hide();
+        visualizzaAccount();
+    }
+}
+
+void MainWindow::chiusuraDellAccount(){
+    tabellaAccount->clearSelection();
+    informazioniAccount->hide();
+}
+
+void MainWindow::visualizzaInfoAccount() {
+    int i = tabellaAccount->currentRow(); // indice account selezionato
+    series->clear();
+    set0 = new QBarSet("Archivio");
+    set1 = new QBarSet("Testo");
+    set2 = new QBarSet("Audio");
+    set3 = new QBarSet("Immagine");
+    set4 = new QBarSet("Video");
+    // Numero di file
+    *set0 << controller->getAccount(i)->contaFile<FileArchivio>();
+    *set1 << controller->getAccount(i)->contaFile<FileTesto>();
+    *set2 << controller->getAccount(i)->contaFile<FileAudio>();
+    *set3 << controller->getAccount(i)->contaFile<FileImmagine>();
+    *set4 << controller->getAccount(i)->contaFile<FileVideo>();
+
+    series->append(set0);
+    series->append(set1);
+    series->append(set2);
+    series->append(set3);
+    series->append(set4);
+    chartView->update();
+
+    numeroFile->setText(QString::number(controller->getAccount(i)->getListaFile().numeroElementi()));
+
+    Account a = *controller->getAccount(i);
+
+    emailAccount->setText(a.getEmail()); emailAccount->setAlignment(Qt::AlignRight);
+    passwordAccount->setText(a.getPassword()); passwordAccount->setAlignment(Qt::AlignRight);
+    float spazioOccupato = a.getSpazioOccupato() / 1024; // Spazio occupato in GB
+    QString spazio = QString::number(spazioOccupato, 'f', 2)+"/"+QString::number(a.getSpazioFornito())+" GB";
+    spazioRimanente->setText(spazio);
+
+    informazioniAccount->show();
+}
+
+void MainWindow::visualizzaFile() {
+    informazioniFile->show();
+}
+
+void MainWindow::visualizzaListaFile() {
+    listaFile->clear();
+    Container<Deepptr<File>> lista = controller->getAccount(tabellaFile->currentRow())->getListaFile();
+    for(auto it = lista.begin(); it != lista.end(); ++it) {
+        QTreeWidgetItem* nuovo = new QTreeWidgetItem;
+        nuovo->setIcon(1, it->getPuntatore()->getIcona()); nuovo->setTextAlignment(1, Qt::AlignCenter);
+        nuovo->setText(2, it->getPuntatore()->getNome());
+        nuovo->setText(3, "."+it->getPuntatore()->getEstensione()); nuovo->setTextAlignment(3, Qt::AlignCenter);
+        nuovo->setText(4, QString::number(it->getPuntatore()->getDimensione()).append(" MB")); nuovo->setTextAlignment(4, Qt::AlignCenter);
+        nuovo->setText(5, it->getPuntatore()->getDescrizione());
+        listaFile->addTopLevelItem(nuovo);
+    }
+    listaFile->resizeColumnToContents(2);
+}
+
+void MainWindow::creaNuovoFile(){
+    fileWidget->setAccountSelezionato(tabellaFile->currentRow());
+    fileWidget->show();
+}
+
+void MainWindow::eliminazioneDelFile(){
+    QMessageBox messageBox(QMessageBox::Question, tr("QtDrive"), tr("Eliminare il file selezionato?"), QMessageBox::Yes | QMessageBox::No, this);
+    messageBox.setButtonText(QMessageBox::Yes, tr("Sì"));
+    messageBox.setButtonText(QMessageBox::No, tr("No"));
+    int ret = messageBox.exec();
+    if(ret == QMessageBox::Yes) {
+        QModelIndex index = listaFile->currentIndex();
+        controller->eliminaFile(tabellaFile->currentRow(), index.row());
+        informazioniAccount->hide();
+        visualizzaAccountRidotto();
+        eliminaFile->setDisabled(true);
+        listaFile->clearSelection();
+    }
+}
+
+void MainWindow::chiusuraListaFile(){
+    tabellaFile->clearSelection();
+    listaFile->clearSelection();
+    eliminaFile->setDisabled(true);
+    informazioniFile->hide();
+}
+
+void MainWindow::attivaEliminaFile(){
+    eliminaFile->setEnabled(true);
+}
+
+void MainWindow::refreshDati(){
+    listaFile->clearSelection();
+    visualizzaListaFile();
+}
+
+void MainWindow::visualizzaInformazioniAggiuntiveFile(){
+    QModelIndex index = listaFile->currentIndex();
+    infoFileWidget->visualizzaFile(tabellaFile->currentRow(), index.row());
+}
+
+void MainWindow::ricerca(const QString input){
+    listaRicerca->clear();
+    for(int i = 0; i < controller->getNumeroAccount(); i++) {
+        Container<Deepptr<File>> lista = controller->getAccount(i)->getListaFile();
+        for(auto it = lista.begin(); it != lista.end(); ++it) {
+            bool ok = false, ok1 = false, ok2 = false, ok3 = false;
+            if(ricercaPerNome->isChecked()) ok1 = it->getPuntatore()->ricercaNome(input);
+            if(ricercaPerDescrizione->isChecked()) ok2 = it->getPuntatore()->ricercaDescrizione(input);
+            if(ricercaAvanzata->isChecked()) ok3 = it->getPuntatore()->ricercaAvanzata(input);
+            ok = ok1 || ok2 || ok3;
+            if(ok) {
+                QTreeWidgetItem* nuovo = new QTreeWidgetItem;
+                nuovo->setIcon(1, it->getPuntatore()->getIcona());
+                nuovo->setText(2, it->getPuntatore()->getNome());
+                nuovo->setText(3, "."+it->getPuntatore()->getEstensione()); nuovo->setTextAlignment(3, Qt::AlignCenter);
+                nuovo->setText(4, QString::number(it->getPuntatore()->getDimensione()).append(" MB")); nuovo->setTextAlignment(4, Qt::AlignCenter);
+                nuovo->setText(5, it->getPuntatore()->getDescrizione());
+                listaRicerca->addTopLevelItem(nuovo);
+            }
+        }
+    }
+
+    listaRicerca->resizeColumnToContents(1);
+    listaRicerca->resizeColumnToContents(2);
+    listaRicerca->resizeColumnToContents(3);
+    listaRicerca->resizeColumnToContents(4);
 }
 
 void MainWindow::visualizzaAccount() {
@@ -528,87 +535,6 @@ void MainWindow::visualizzaAccountRidotto() {
     }
 }
 
-void MainWindow::visualizzaInfoAccount() {
-    int i = tabellaAccount->currentRow(); // indice account selezionato
-    series->clear();
-    set0 = new QBarSet("Archivio");
-    set1 = new QBarSet("Testo");
-    set2 = new QBarSet("Audio");
-    set3 = new QBarSet("Immagine");
-    set4 = new QBarSet("Video");
-    // Numero di file
-    *set0 << controller->getAccount(i)->contaFile<FileArchivio>();
-    *set1 << controller->getAccount(i)->contaFile<FileTesto>();
-    *set2 << controller->getAccount(i)->contaFile<FileAudio>();
-    *set3 << controller->getAccount(i)->contaFile<FileImmagine>();
-    *set4 << controller->getAccount(i)->contaFile<FileVideo>();
-
-    series->append(set0);
-    series->append(set1);
-    series->append(set2);
-    series->append(set3);
-    series->append(set4);
-    chartView->update();
-
-    numeroFile->setText(QString::number(controller->getAccount(i)->getListaFile().numeroElementi()));
-
-    Account a = *controller->getAccount(i);
-
-    emailAccount->setText(a.getEmail()); emailAccount->setAlignment(Qt::AlignRight);
-    passwordAccount->setText(a.getPassword()); passwordAccount->setAlignment(Qt::AlignRight);
-    float spazioOccupato = a.getSpazioOccupato() / 1024; // Spazio occupato in GB
-    QString spazio = QString::number(spazioOccupato, 'f', 2)+"/"+QString::number(a.getSpazioFornito())+" GB";
-    spazioRimanente->setText(spazio);
-
-    informazioniAccount->show();
-}
-
-void MainWindow::visualizzaListaFile() {
-    listaFile->clear();
-    Container<Deepptr<File>> lista = controller->getAccount(tabellaFile->currentRow())->getListaFile();
-    for(auto it = lista.begin(); it != lista.end(); ++it) {
-        QTreeWidgetItem* nuovo = new QTreeWidgetItem;
-        nuovo->setIcon(1, it->getPuntatore()->getIcona()); nuovo->setTextAlignment(1, Qt::AlignCenter);
-        nuovo->setText(2, it->getPuntatore()->getNome());
-        nuovo->setText(3, "."+it->getPuntatore()->getEstensione()); nuovo->setTextAlignment(3, Qt::AlignCenter);
-        nuovo->setText(4, QString::number(it->getPuntatore()->getDimensione()).append(" MB")); nuovo->setTextAlignment(4, Qt::AlignCenter);
-        nuovo->setText(5, it->getPuntatore()->getDescrizione());
-        listaFile->addTopLevelItem(nuovo);
-    }
-    listaFile->resizeColumnToContents(2);
-}
-
-void MainWindow::visualizzaFile() {
-    informazioniFile->show();
-}
-
-void MainWindow::ricerca(const QString input) {
-    listaRicerca->clear();
-    for(int i = 0; i < controller->getNumeroAccount(); i++) {
-        Container<Deepptr<File>> lista = controller->getAccount(i)->getListaFile();
-        for(auto it = lista.begin(); it != lista.end(); ++it) {
-            bool ok = false, ok1 = false, ok2 = false, ok3 = false;
-            if(ricercaPerNome->isChecked()) ok1 = it->getPuntatore()->ricercaNome(input);
-            if(ricercaPerDescrizione->isChecked()) ok2 = it->getPuntatore()->ricercaDescrizione(input);
-            if(ricercaAvanzata->isChecked()) ok3 = it->getPuntatore()->ricercaAvanzata(input);
-            ok = ok1 || ok2 || ok3;
-            if(ok) {
-                QTreeWidgetItem* nuovo = new QTreeWidgetItem;
-                nuovo->setIcon(1, it->getPuntatore()->getIcona());
-                nuovo->setText(2, it->getPuntatore()->getNome());
-                nuovo->setText(3, "."+it->getPuntatore()->getEstensione()); nuovo->setTextAlignment(3, Qt::AlignCenter);
-                nuovo->setText(4, QString::number(it->getPuntatore()->getDimensione()).append(" MB")); nuovo->setTextAlignment(4, Qt::AlignCenter);
-                nuovo->setText(5, it->getPuntatore()->getDescrizione());
-                listaRicerca->addTopLevelItem(nuovo);
-            }
-        }
-    }
-    listaRicerca->resizeColumnToContents(1);
-    listaRicerca->resizeColumnToContents(2);
-    listaRicerca->resizeColumnToContents(3);
-    listaRicerca->resizeColumnToContents(4);
-}
-
 void MainWindow::visualizzaFileDrive() {
     listaRicerca->clear();
     for(int i = 0; i < controller->getNumeroAccount(); i++) {
@@ -627,6 +553,104 @@ void MainWindow::visualizzaFileDrive() {
     listaRicerca->resizeColumnToContents(2);
     listaRicerca->resizeColumnToContents(3);
     listaRicerca->resizeColumnToContents(4);
+}
+
+void MainWindow::selezioneTab(){
+    eliminaFile->setDisabled(true);
+}
+
+void MainWindow::selezioneAltroAccount(){
+    eliminaFile->setDisabled(true);
+}
+
+void MainWindow::apriIlFile(){
+    QString fileScelto = QFileDialog::getOpenFileName(this, "Apri account", "./", "Account (*.xml)");
+    if (fileScelto.isEmpty()){
+        QMessageBox* alert = new QMessageBox(QMessageBox::Critical, "Errore",
+                                             "Attenzione: non hai scelto alcun file da aprire!",
+                                             QMessageBox::Ok);
+        alert->exec();
+    }else{
+        controller->aggiornaPercorso(fileScelto);
+        controller->aggiornaAccount();
+        visualizzaAccount();
+    }
+}
+
+void MainWindow::salvaIlFile(){
+    //QString fileSalvataggio = QFileDialog::getOpenFileName(this, "Salva account", "./", "Account (*.xml)");
+    if (controller->getXml().percorsoVuoto()){
+        QMessageBox* vuoto = new QMessageBox(QMessageBox::Critical, "Errore",
+                                             "Attenzione: non hai scelto alcun file su cui effettuare il salvataggio!",
+                                             QMessageBox::Ok);
+        vuoto->exec();
+        salvaIlNuovoFile();
+    }else{
+        if(controller->getXml().controllaSeXml()){
+            try{
+                controller->salvataggioAccount();
+                QMessageBox* salvataggioOk = new QMessageBox(QMessageBox::Information, "Salvataggio",
+                                                     QString("Il file è stato salvato correttamente!"),
+                                                     QMessageBox::Ok);
+                salvataggioOk->exec();
+            }catch(QString e){
+                QMessageBox* errore = new QMessageBox(QMessageBox::Critical, "Errore",
+                                                     QString("Attenzione: il file selezionato per la scrittura non può essere salvato per un errore").arg(e),
+                                                     QMessageBox::Ok);
+                errore->exec();
+            }
+        }else{
+            QMessageBox* noXml = new QMessageBox(QMessageBox::Critical, "Errore",
+                                                 "Attenzione: il file che hai selezionato non è un file XML",
+                                                 QMessageBox::Ok);
+            noXml->exec();
+        }
+    }
+}
+
+void MainWindow::salvaIlNuovoFile(){
+    QString fileSalvataggio = QFileDialog::getOpenFileName(this, "Salva account", "./", "Account (*.xml)");
+    if (controller->getXml().percorsoVuoto()){
+        QMessageBox* vuoto = new QMessageBox(QMessageBox::Critical, "Errore",
+                                             "Attenzione: non hai scelto alcun file su cui effettuare il salvataggio!"
+                                             "<br>Il tuo profilo non può essere salvato.",
+                                             QMessageBox::Ok);
+        vuoto->exec();
+    }else{
+        if(controller->getXml().controllaSeXml()){
+            try{
+                controller->salvataggioAccount();
+                QMessageBox* salvataggioOk = new QMessageBox(QMessageBox::Information, "Salvataggio",
+                                                     QString("Il file è stato salvato correttamente!"),
+                                                     QMessageBox::Ok);
+                salvataggioOk->exec();
+            }catch(QString e){
+                QMessageBox* errore = new QMessageBox(QMessageBox::Critical, "Errore",
+                                                     QString("Attenzione: il file selezionato per la scrittura non può essere salvato per un errore").arg(e),
+                                                     QMessageBox::Ok);
+                errore->exec();
+            }
+        }else{
+            QMessageBox* noXml = new QMessageBox(QMessageBox::Critical, "Errore",
+                                                 "Attenzione: il file che hai selezionato non è un file XML",
+                                                 QMessageBox::Ok);
+            noXml->exec();
+        }
+    }
+}
+
+void MainWindow::aggiungiAccount() {
+    accountWidget->show();
+}
+
+void MainWindow::closeEvent (QCloseEvent *event) {
+    QMessageBox messageBox(QMessageBox::Question, tr("QtDrive"), tr("Uscire dall'applicazione?"), QMessageBox::Yes | QMessageBox::No, this);
+    messageBox.setButtonText(QMessageBox::Yes, tr("Sì"));
+    messageBox.setButtonText(QMessageBox::No, tr("No"));
+    int ret = messageBox.exec();
+    if(ret == QMessageBox::Yes)
+        event->accept();
+    else event->ignore();
 }
 
 MainWindow::~MainWindow() {
