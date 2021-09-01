@@ -1,5 +1,6 @@
 #include "filetesto.h"
 #include <iostream>
+#include <QDebug>
 
 FileTesto::FileTesto(QString nome_, QString estensione_, unsigned int dimensione_, QDate dataCreazione_, QDate dataCaricamento_, QString descrizione_, unsigned int numeroCaratteri_, unsigned int numeroParole_):
 File(nome_, estensione_, dimensione_, dataCreazione_, dataCaricamento_, descrizione_), numeroCaratteri(numeroCaratteri_), numeroParole(numeroParole_){
@@ -104,9 +105,11 @@ FileTesto *FileTesto::deserializza(QXmlStreamReader &lettore){
     if(lettore.readNextStartElement() && lettore.name() == "descrizione") _descrizione = lettore.readElementText();
 
     //Lettura Numero Caratteri Testo
-    if(lettore.readNextStartElement() && lettore.name() == "_numeroCaratteri") _numeroCaratteri = lettore.readElementText().toUInt();
+    if(lettore.readNextStartElement() && lettore.name() == "numeroCaratteri"){
+        _numeroCaratteri = lettore.readElementText().toInt();
+    }
     //Lettura Numero Parole Testo
-    if(lettore.readNextStartElement() && lettore.name() == "numeroParole") _numeroParole = lettore.readElementText().toUInt();
+    if(lettore.readNextStartElement() && lettore.name() == "numeroParole") _numeroParole = lettore.readElementText().toInt();
 
     //Fine della lettura del singolo file
     lettore.skipCurrentElement();
