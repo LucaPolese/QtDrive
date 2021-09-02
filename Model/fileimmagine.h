@@ -21,7 +21,7 @@ class FileImmagine: public FileMedia {
         QString getTipoFile() const override;
         QIcon getIcona() const override;
 
-        bool ricercaAvanzata(QString) const override;
+        bool ricercaAvanzata(QString, Qt::CaseSensitivity) const override;
     private:
         tipo tipoImmagine;
         unsigned int larghezza;

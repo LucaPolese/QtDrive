@@ -142,3 +142,12 @@ void Account::riempiTipiDiFile(){
     tipiDiFile.push_back(new FileTesto());
     tipiDiFile.push_back(new FileVideo());
 }
+
+
+bool Account::checkFile(QString nomeFile, QString estensioneFile) const {
+    for(auto it = listaFile.begin(); it != listaFile.end(); ++it) {
+        if(it->getPuntatore()->getNome() == nomeFile && it->getPuntatore()->getEstensione() == estensioneFile)
+            return false;
+    }
+    return true;
+}

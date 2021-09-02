@@ -271,7 +271,10 @@ void NuovoFileWidget::aggiungiNuovoFile() {
     if(controller->getAccount(accountSelezionato)->getSpazioOccupato()+dimensione->value() > controller->getAccount(accountSelezionato)->getSpazioFornito()*1024) {
         QMessageBox::warning(this, tr("Errore"), tr("File troppo grande per essere inserito."), QMessageBox::Ok);
         ok = false;
-        qDebug() << "Spazio occupato GB" << controller->getAccount(accountSelezionato)->getSpazioOccupato();
+    }
+    if(!controller->getAccount(accountSelezionato)->checkFile(nome->text(), estensione->text())) {
+        QMessageBox::warning(this, tr("Errore"), tr("File già presente all'interno dell'account."), QMessageBox::Ok);
+        ok = false;
     }
     if(ok) {
         QString nomeFile = nome->text();
@@ -295,22 +298,22 @@ void NuovoFileWidget::aggiungiNuovoFile() {
             }
             // Audio
             case 2:{
-                compressioneFile = static_cast<FileMedia::compressione>(compressioneA->checkedId());
+                compressioneFile = FileMedia::compressione(compressioneA->checkedId());
                 FileAudio *file = new FileAudio(nomeFile, estensioneFile, dimensioneFile, dataCreazioneFile, QDate::currentDate(), descrizioneFile, compressioneFile, bitrate->value(), durataA->value());
                 controller->aggiungiFile(accountSelezionato, file);
                 break;
             }
             // Immagine
             case 3:{
-                compressioneFile = static_cast<FileMedia::compressione>(compressioneI->checkedId());
-                FileImmagine::tipo tipoImmagineFile = static_cast<FileImmagine::tipo>(tipoImmagine->checkedId());
+                compressioneFile = FileMedia::compressione(compressioneI->checkedId());
+                FileImmagine::tipo tipoImmagineFile = FileImmagine::tipo(tipoImmagine->checkedId());
                 FileImmagine *file = new FileImmagine(nomeFile, estensioneFile, dimensioneFile, dataCreazioneFile, QDate::currentDate(), descrizioneFile, compressioneFile, tipoImmagineFile, larghezzaI->value(), altezzaI->value());
                 controller->aggiungiFile(accountSelezionato, file);
                 break;
             }
             // Video
             case 4:{
-                compressioneFile = static_cast<FileMedia::compressione>(compressioneV->checkedId());
+                compressioneFile = FileMedia::compressione(compressioneV->checkedId());
                 FileVideo *file = new FileVideo(nomeFile, estensioneFile, dimensioneFile, dataCreazioneFile, QDate::currentDate(), descrizioneFile, compressioneFile, codec->text(), durataV->value(), larghezzaV->value(), altezzaV->value(), fps->value());
                 controller->aggiungiFile(accountSelezionato, file);
                 break;

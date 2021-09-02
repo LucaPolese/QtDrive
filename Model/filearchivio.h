@@ -25,7 +25,7 @@ public:
     QString getTipoFile() const override;
     QIcon getIcona() const override;
 
-    bool ricercaAvanzata(QString) const override;
+    bool ricercaAvanzata(QString, Qt::CaseSensitivity) const override;
 };
 
 #endif // FILEARCHIVIO_H

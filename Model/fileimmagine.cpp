@@ -143,8 +143,8 @@ QIcon FileImmagine::getIcona() const {
     return QIcon(":res/icons/file/immagine.png");
 }
 
-bool FileImmagine::ricercaAvanzata(QString input) const {
-    if(getInformazioniFile().contains(input))
+bool FileImmagine::ricercaAvanzata(QString input, Qt::CaseSensitivity cs) const {
+    if(getInformazioniFile().contains(input, cs))
         return true;
     return false;
 }

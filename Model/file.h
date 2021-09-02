@@ -36,9 +36,9 @@ class File {
 
         virtual QIcon getIcona() const = 0;
 
-        bool ricercaNome(QString) const;
-        bool ricercaDescrizione(QString) const;
-        virtual bool ricercaAvanzata(QString) const =0;
+        bool ricercaNome(QString, Qt::CaseSensitivity) const;
+        bool ricercaDescrizione(QString, Qt::CaseSensitivity) const;
+        virtual bool ricercaAvanzata(QString, Qt::CaseSensitivity) const =0;
 };
 
 #endif // FILE_H

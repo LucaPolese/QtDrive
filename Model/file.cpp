@@ -38,14 +38,14 @@ QDate File::getDataCaricamento() const {
     return dataCaricamento;
 }
 
-bool File::ricercaNome(QString input) const {
-    if(nome.contains(input))
+bool File::ricercaNome(QString input, Qt::CaseSensitivity cs) const {
+    if(nome.contains(input, cs))
         return true;
     return false;
 }
 
-bool File::ricercaDescrizione(QString input) const {
-    if(descrizione.contains(input))
+bool File::ricercaDescrizione(QString input, Qt::CaseSensitivity cs) const {
+    if(descrizione.contains(input, cs))
         return true;
     return false;
 }

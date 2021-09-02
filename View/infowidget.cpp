@@ -20,7 +20,7 @@ InfoWidget::InfoWidget(QWidget *parent): QWidget(parent){
     // Shortcut Ctrl+I per chiudere il widget
     QShortcut* shortcut = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_I), this);
     connect(shortcut, &QShortcut::activated, [=]{
-        emit this->close();
+        close();
     });
 }
 

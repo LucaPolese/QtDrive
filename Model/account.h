@@ -36,6 +36,7 @@ public:
         }
         return contatore;
     }
+    bool checkFile(QString, QString) const;
 private:
     QString email;
     QString password;

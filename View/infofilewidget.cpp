@@ -56,7 +56,8 @@ void InfoFileWidget::visualizzaFile(int indiceAccount, int indiceFile) {
     setWindowIcon(fileAperto->getIcona());
     nome->setText(fileAperto->getNome());
     nomeOriginale = QString(nome->text());
-    estensione->setText("."+fileAperto->getEstensione());
+    QString stringaEstensione = fileAperto->getEstensione();
+    estensione->setText("." + stringaEstensione.remove('.'));
     float percentuale = (fileAperto->getDimensione()*100)/(controller->getAccount(indiceAccount)->getSpazioFornito()*1024);
     QString stringaDimensione = QString(QString::number(fileAperto->getDimensione())+" MB ("+QString::number(percentuale)+"% dello spazio a disposizione)");
     dimensione->setText(stringaDimensione);

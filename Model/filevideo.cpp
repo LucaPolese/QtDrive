@@ -169,8 +169,8 @@ QIcon FileVideo::getIcona() const {
     return QIcon(":res/icons/file/video.png");
 }
 
-bool FileVideo::ricercaAvanzata(QString input) const {
-    if(getInformazioniFile().contains(input))
+bool FileVideo::ricercaAvanzata(QString input, Qt::CaseSensitivity cs) const {
+    if(getInformazioniFile().contains(input, cs))
         return true;
     return false;
 }

@@ -36,6 +36,6 @@ GuidaWidget::GuidaWidget(QWidget *parent): QWidget(parent){
     // Shortcut Ctrl+H per chiudere il widget
     QShortcut* shortcut = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_H), this);
     connect(shortcut, &QShortcut::activated, [=]{
-        emit this->close();
+        close();
     });
 }

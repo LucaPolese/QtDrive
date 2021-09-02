@@ -47,6 +47,8 @@ private:
     Controller* controller;
     Container<Deepptr<Account>> accountsUtente; //Lista degli account dell'utente
 
+    QTabWidget* tabs;
+
     // Elementi prima scheda
     QTableWidget* tabellaAccount;
     QVBoxLayout* layoutInfoAccount;
@@ -115,6 +117,7 @@ public slots:
     void salvaIlFile();
     void salvaIlNuovoFile();
     void aggiungiAccount();
+    void fileTrovato();
 };
 
 #endif

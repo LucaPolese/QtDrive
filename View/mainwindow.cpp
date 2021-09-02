@@ -207,7 +207,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     inputRicerca->setPlaceholderText("Digitare qui per iniziare una ricerca...");
     layoutRicerca->addWidget(inputRicerca);
 
-    layoutRicerca->addWidget(new QLabel("Ricerca per:"));
+    layoutRicerca->addWidget(new QLabel("Impostazioni ricerca:"));
     ricercaPerNome = new QCheckBox("Nome");
     layoutCheckbox->addWidget(ricercaPerNome);
     ricercaPerDescrizione = new QCheckBox("Descrizione");
@@ -219,8 +219,10 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     layoutRicerca->addLayout(layoutCheckbox);
 
     listaRicerca = new QTreeWidget;
-    listaRicerca->setHeaderLabels(headersFile);
+    listaRicerca->setHeaderLabels(headersFile<<""<<"");
     listaRicerca->hideColumn(0);
+    listaRicerca->hideColumn(6);
+    listaRicerca->hideColumn(7);
     listaRicerca->setSortingEnabled(true);
     layoutRicerca->addWidget(listaRicerca);
 
@@ -232,7 +234,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     // Menubar
     QMenuBar *menu = new QMenuBar();
         // File
-        QMenu *menuFile = new QMenu("File", menu);
+        QMenu *menuFile = new QMenu("Profilo", menu);
             QAction *apriFile = new QAction("Apri", menuFile); apriFile->setShortcut(Qt::CTRL | Qt::Key_O);
             apriFile->setIcon(QIcon(":/res/icons/menubar/apri.png"));
             QAction *salvaFile = new QAction("Salva", menuFile); salvaFile->setShortcut(Qt::CTRL | Qt::Key_S);
@@ -259,11 +261,15 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
 
 
     //Tabs
-    QTabWidget* tabs = new QTabWidget();
+    tabs = new QTabWidget();
     tabs->insertTab(0, paginaAccount, QIcon(":/res/icons/tabs/tab1.png"), "Account");
     tabs->insertTab(1, paginaFile, QIcon(":/res/icons/tabs/tab2.png"), "File");
     tabs->insertTab(2, paginaRicerca, QIcon(":/res/icons/tabs/tab3.png"), "Ricerca");
     tabs->setCurrentIndex(0);
+
+        visualizzaAccount();
+        visualizzaAccountRidotto();
+        visualizzaFileDrive();
 
     //Aggiunta dei Widget e dei Layout al frame principale
     pagina->addWidget(menu);
@@ -318,6 +324,8 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     connect(salvaNuovoFile, &QAction::triggered, this, &MainWindow::salvaIlNuovoFile);
     connect(pulsanteAggiungiAccount, &QPushButton::clicked, this, &MainWindow::aggiungiAccount);
     connect(chiudiApplicazione, &QAction::triggered, this, &MainWindow::close);
+
+    connect(listaRicerca, &QTreeWidget::doubleClicked, this, &MainWindow::fileTrovato);
 
     setLayout(pagina);
 }
@@ -381,7 +389,7 @@ void MainWindow::visualizzaInfoAccount() {
 
     Account a = *controller->getAccount(i);
 
-    emailAccount->setText(a.getEmail()); emailAccount->setAlignment(Qt::AlignRight);
+    emailAccount->setText(a.getEmail()); emailAccount->setAlignment(Qt::AlignRight); emailAccount->setReadOnly(true);
     passwordAccount->setText(a.getPassword()); passwordAccount->setAlignment(Qt::AlignRight);
     float spazioOccupato = a.getSpazioOccupato() / 1024; // Spazio occupato in GB
     QString spazio = QString::number(spazioOccupato, 'f', 2)+"/"+QString::number(a.getSpazioFornito())+" GB";
@@ -401,7 +409,8 @@ void MainWindow::visualizzaListaFile() {
         QTreeWidgetItem* nuovo = new QTreeWidgetItem;
         nuovo->setIcon(1, it->getPuntatore()->getIcona()); nuovo->setTextAlignment(1, Qt::AlignCenter);
         nuovo->setText(2, it->getPuntatore()->getNome());
-        nuovo->setText(3, "."+it->getPuntatore()->getEstensione()); nuovo->setTextAlignment(3, Qt::AlignCenter);
+        QString estensione = it->getPuntatore()->getEstensione();
+        nuovo->setText(3, "." + estensione.remove('.')); nuovo->setTextAlignment(3, Qt::AlignCenter);
         nuovo->setText(4, QString::number(it->getPuntatore()->getDimensione()).append(" MB")); nuovo->setTextAlignment(4, Qt::AlignCenter);
         nuovo->setText(5, it->getPuntatore()->getDescrizione());
         listaFile->addTopLevelItem(nuovo);
@@ -452,21 +461,28 @@ void MainWindow::visualizzaInformazioniAggiuntiveFile(){
 
 void MainWindow::ricerca(const QString input){
     listaRicerca->clear();
+    Qt::CaseSensitivity cs = Qt::CaseInsensitive;
+    if(ricercaCaseSensitive->isChecked())
+        cs = Qt::CaseSensitive;
     for(int i = 0; i < controller->getNumeroAccount(); i++) {
         Container<Deepptr<File>> lista = controller->getAccount(i)->getListaFile();
         for(auto it = lista.begin(); it != lista.end(); ++it) {
             bool ok = false, ok1 = false, ok2 = false, ok3 = false;
-            if(ricercaPerNome->isChecked()) ok1 = it->getPuntatore()->ricercaNome(input);
-            if(ricercaPerDescrizione->isChecked()) ok2 = it->getPuntatore()->ricercaDescrizione(input);
-            if(ricercaAvanzata->isChecked()) ok3 = it->getPuntatore()->ricercaAvanzata(input);
+            if(ricercaPerNome->isChecked()) ok1 = it->getPuntatore()->ricercaNome(input, cs);
+            if(ricercaPerDescrizione->isChecked()) ok2 = it->getPuntatore()->ricercaDescrizione(input, cs);
+            if(ricercaAvanzata->isChecked()) ok3 = it->getPuntatore()->ricercaAvanzata(input, cs);
             ok = ok1 || ok2 || ok3;
             if(ok) {
                 QTreeWidgetItem* nuovo = new QTreeWidgetItem;
+                qDebug() << controller->getAccount(i)->getHost()<< " - "<<controller->getAccount(i)->getEmail();
                 nuovo->setIcon(1, it->getPuntatore()->getIcona());
                 nuovo->setText(2, it->getPuntatore()->getNome());
-                nuovo->setText(3, "."+it->getPuntatore()->getEstensione()); nuovo->setTextAlignment(3, Qt::AlignCenter);
+                QString estensione = it->getPuntatore()->getEstensione();
+                nuovo->setText(3, "." + estensione.remove('.')); nuovo->setTextAlignment(3, Qt::AlignCenter);
                 nuovo->setText(4, QString::number(it->getPuntatore()->getDimensione()).append(" MB")); nuovo->setTextAlignment(4, Qt::AlignCenter);
                 nuovo->setText(5, it->getPuntatore()->getDescrizione());
+                nuovo->setText(6, QString::number(controller->getAccount(i)->getHost()));
+                nuovo->setText(7, controller->getAccount(i)->getEmail());
                 listaRicerca->addTopLevelItem(nuovo);
             }
         }
@@ -543,9 +559,12 @@ void MainWindow::visualizzaFileDrive() {
             QTreeWidgetItem* nuovo = new QTreeWidgetItem;
             nuovo->setIcon(1, it->getPuntatore()->getIcona());
             nuovo->setText(2, it->getPuntatore()->getNome());
-            nuovo->setText(3, "."+it->getPuntatore()->getEstensione()); nuovo->setTextAlignment(3, Qt::AlignCenter);
+            QString estensione = it->getPuntatore()->getEstensione();
+            nuovo->setText(3, "." + estensione.remove('.')); nuovo->setTextAlignment(3, Qt::AlignCenter);
             nuovo->setText(4, QString::number(it->getPuntatore()->getDimensione()).append(" MB")); nuovo->setTextAlignment(4, Qt::AlignCenter);
             nuovo->setText(5, it->getPuntatore()->getDescrizione());
+            nuovo->setText(6, QString::number(controller->getAccount(i)->getHost()));
+            nuovo->setText(7, controller->getAccount(i)->getEmail());
             listaRicerca->addTopLevelItem(nuovo);
         }
     }
@@ -574,6 +593,8 @@ void MainWindow::apriIlFile(){
         controller->aggiornaPercorso(fileScelto);
         controller->aggiornaAccount();
         visualizzaAccount();
+        visualizzaAccountRidotto();
+        visualizzaFileDrive();
     }
 }
 
@@ -595,13 +616,13 @@ void MainWindow::salvaIlFile(){
                 salvataggioOk->exec();
             }catch(QString e){
                 QMessageBox* errore = new QMessageBox(QMessageBox::Critical, "Errore",
-                                                     QString("Attenzione: il file selezionato per la scrittura non può essere salvato per un errore").arg(e),
+                                                     QString("Attenzione: il file selezionato per la scrittura non può essere salvato per un errore.").arg(e),
                                                      QMessageBox::Ok);
                 errore->exec();
             }
         }else{
             QMessageBox* noXml = new QMessageBox(QMessageBox::Critical, "Errore",
-                                                 "Attenzione: il file che hai selezionato non è un file XML",
+                                                 "Attenzione: il file che hai selezionato non è un file XML.",
                                                  QMessageBox::Ok);
             noXml->exec();
         }
@@ -626,13 +647,13 @@ void MainWindow::salvaIlNuovoFile(){
                 salvataggioOk->exec();
             }catch(QString e){
                 QMessageBox* errore = new QMessageBox(QMessageBox::Critical, "Errore",
-                                                     QString("Attenzione: il file selezionato per la scrittura non può essere salvato per un errore").arg(e),
+                                                     QString("Attenzione: il file selezionato per la scrittura non può essere salvato per un errore.").arg(e),
                                                      QMessageBox::Ok);
                 errore->exec();
             }
         }else{
             QMessageBox* noXml = new QMessageBox(QMessageBox::Critical, "Errore",
-                                                 "Attenzione: il file che hai selezionato non è un file XML",
+                                                 "Attenzione: il file che hai selezionato non è un file XML.",
                                                  QMessageBox::Ok);
             noXml->exec();
         }
@@ -641,6 +662,41 @@ void MainWindow::salvaIlNuovoFile(){
 
 void MainWindow::aggiungiAccount() {
     accountWidget->show();
+}
+
+void MainWindow::fileTrovato() {
+    tabs->setCurrentIndex(1);
+    for(int i = 0; i < tabellaFile->rowCount(); i++) {
+        QTableWidgetItem* servizio = tabellaFile->item(i, 0);
+        QTableWidgetItem* email = tabellaFile->item(i, 1);
+        QString s;
+        switch(listaRicerca->currentItem()->text(6).toInt()) {
+            case 0: s = "AmazonDrive"; break;
+            case 1: s = "Box"; break;
+            case 2: s = "Dropbox"; break;
+            case 3: s = "GDrive"; break;
+            case 4: s = "iCloud"; break;
+            case 5: s = "Mediafire"; break;
+            case 6: s = "Mega"; break;
+            case 7: s = "Next"; break;
+            case 8: s = "OneDrive"; break;
+            case 9: s = "Qihoo360"; break;
+        }
+        if(servizio->text() == s && email->text() == listaRicerca->currentItem()->text(7)) {
+            tabellaFile->setCurrentCell(i, 0);
+            emit tabellaFile->cellClicked(i, 0);
+            QTreeWidgetItemIterator it(listaFile);
+            while(*it) {
+                if((*it)->text(2) == listaRicerca->currentItem()->text(2) && (*it)->text(3) == listaRicerca->currentItem()->text(3)) {
+                    (*it)->setSelected(true);
+                    QModelIndex index = listaFile->currentIndex();
+                    //emit listaFile->itemDoubleClicked(*it, listaFile->indexOfTopLevelItem(*it));
+                    visualizzaInformazioniAggiuntiveFile();
+                }
+                ++it;
+            }
+        }
+    }
 }
 
 void MainWindow::closeEvent (QCloseEvent *event) {

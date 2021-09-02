@@ -122,8 +122,8 @@ QIcon FileTesto::getIcona() const {
     return QIcon(":res/icons/file/testo.png");
 }
 
-bool FileTesto::ricercaAvanzata(QString input) const {
-    if(getInformazioniFile().contains(input))
+bool FileTesto::ricercaAvanzata(QString input, Qt::CaseSensitivity cs) const {
+    if(getInformazioniFile().contains(input, cs))
         return true;
     return false;
 }

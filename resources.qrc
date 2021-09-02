@@ -41,7 +41,7 @@
     <file>res/icons/pulsanti/aggiungiAccount.png</file>
 
     <!-- GIF PER LO SPLASH -->
-    <file>res/icons/Intro.gif</file>
+    <!-- <file>res/icons/Intro.gif</file>-->
 
 </qresource>
 </RCC>
