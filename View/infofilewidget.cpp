@@ -51,7 +51,6 @@ InfoFileWidget::InfoFileWidget(Controller *controller_, QWidget *parent): QWidge
 }
 
 void InfoFileWidget::visualizzaFile(int indiceAccount, int indiceFile) {
-
     fileAperto = controller->getAccount(indiceAccount)->getListaFile()[indiceFile].getPuntatore();
     setWindowIcon(fileAperto->getIcona());
     nome->setText(fileAperto->getNome());

@@ -24,6 +24,7 @@ SOURCES += \
     View/infofilewidget.cpp \
     View/infowidget.cpp \
     View/mainwindow.cpp \
+    View/modificaaccountwidget.cpp \
     View/nuovofilewidget.cpp \
     View/splash.cpp \
     main.cpp
@@ -50,8 +51,11 @@ HEADERS += \
     View/guidawidget.h \
     View/infowidget.h \
     View/mainwindow.h \
+    View/modificaaccountwidget.h \
     View/nuovofilewidget.h \
     View/splash.h
+
+RC_ICONS = res/icons/icon.ico
 
 RESOURCES += \
     resources.qrc

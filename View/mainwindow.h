@@ -20,6 +20,7 @@
 #include "accountwidget.h"
 #include "nuovofilewidget.h"
 #include "infofilewidget.h"
+#include "modificaaccountwidget.h"
 #include <QFileDialog>
 #include <QFile>
 #include <QScrollArea>
@@ -61,14 +62,15 @@ private:
     QHorizontalPercentBarSeries *series;
     QChart *chart;
     QChartView *chartView;
-    QLineEdit* emailAccount;
-    QLineEdit* passwordAccount;
+    QLabel* emailAccount;
+    QLabel* passwordAccount;
     QLabel* numeroFile;
     QLabel* spazioRimanente;
     QPushButton* modificaAccount;
     QPushButton* eliminaAccount;
     QPushButton* chiudiAccount;
     AccountWidget* accountWidget;
+    ModificaAccountWidget* modificaAccountWidget;
 
     // Elementi seconda scheda
     QTableWidget* tabellaFile;
@@ -119,6 +121,8 @@ public slots:
     void salvaIlNuovoFile();
     void aggiungiAccount();
     void fileTrovato();
+    void checkboxSelezionato(int);
+    void controlloCheckbox();
 };
 
 #endif

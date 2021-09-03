@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Controller()), accountWidget(new AccountWidget(controller)), fileWidget(new NuovoFileWidget(controller)), infoFileWidget(new InfoFileWidget(controller)) {
+MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Controller()), accountWidget(new AccountWidget(controller)), fileWidget(new NuovoFileWidget(controller)), modificaAccountWidget(new ModificaAccountWidget(controller)), infoFileWidget(new InfoFileWidget(controller)) {
     setWindowTitle("QtDrive");
     setMinimumSize(1024, 720);
 
@@ -83,10 +83,10 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     QFormLayout* layoutInformazioni = new QFormLayout;
     layoutInformazioni->addRow("", new QWidget); // Aggiunge spazio sotto al grafico
 
-    emailAccount = new QLineEdit;
+    emailAccount = new QLabel;
     layoutInformazioni->addRow("Email:", emailAccount);
 
-    passwordAccount = new QLineEdit;
+    passwordAccount = new QLabel;
     layoutInformazioni->addRow("Password:", passwordAccount);
 
     numeroFile = new QLabel; numeroFile->setAlignment(Qt::AlignRight);
@@ -124,6 +124,9 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     accountWidget->setWindowModality(Qt::ApplicationModal);
     pagina->addLayout(layoutInfo1);
 
+
+    // Finestra modifica account
+    modificaAccountWidget->setWindowModality(Qt::ApplicationModal);
 
     // Scheda FILE
     QWidget* paginaFile = new QWidget;
@@ -203,10 +206,6 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     QLabel* informazioni3 = new QLabel("Da questa scheda è possibile effettuare una ricerca di file all'interno di tutti gli account registrati.");
     layoutInfo3->addWidget(informazioni3);
 
-    inputRicerca = new QLineEdit;
-    inputRicerca->setPlaceholderText("Digitare qui per iniziare una ricerca...");
-    layoutRicerca->addWidget(inputRicerca);
-
     layoutRicerca->addWidget(new QLabel("Impostazioni ricerca:"));
     ricercaPerNome = new QCheckBox("Nome");
     layoutCheckbox->addWidget(ricercaPerNome);
@@ -217,6 +216,10 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     ricercaCaseSensitive = new QCheckBox("Case-sensitive");
     layoutCheckbox->addWidget(ricercaCaseSensitive);
     layoutRicerca->addLayout(layoutCheckbox);
+
+    inputRicerca = new QLineEdit;
+    inputRicerca->setPlaceholderText("Digitare qui per iniziare una ricerca...");
+    layoutRicerca->addWidget(inputRicerca);
 
     listaRicerca = new QTreeWidget;
     listaRicerca->setHeaderLabels(headersFile<<""<<"");
@@ -256,7 +259,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
         QMenu *menuAiuto = new QMenu("Aiuto", menu);
             QAction *guida = new QAction("Guida", menuAiuto); guida->setShortcut(Qt::CTRL | Qt::Key_H);
             guida->setIcon(QIcon(":/res/icons/menubar/guida.png"));
-            QAction *info = new QAction("Informazioni su QtDrive", menuAiuto); info->setShortcut(Qt::CTRL | Qt::Key_I);
+            QAction *info = new QAction("Informazioni su...", menuAiuto); info->setShortcut(Qt::CTRL | Qt::Key_I);
             info->setIcon(QIcon(":/res/icons/menubar/info.png"));
             menu->addMenu(menuAiuto);
                 menuAiuto->addAction(guida);
@@ -307,6 +310,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     connect(chiudiAccount, &QPushButton::pressed, this, &MainWindow::chiusuraDellAccount);
     connect(tabellaAccount, &QTableWidget::cellClicked, this, &MainWindow::visualizzaInfoAccount);
     connect(accountWidget, &AccountWidget::accountAggiunto, this, &MainWindow::visualizzaAccount);
+    connect(modificaAccountWidget, &ModificaAccountWidget::accountModificato, this, &MainWindow::visualizzaAccount);
     connect(tabellaFile, &QTableWidget::cellClicked, this, &MainWindow::visualizzaFile);
     connect(fileWidget, &NuovoFileWidget::fileAggiunto, this, &MainWindow::visualizzaListaFile);
     connect(tabellaFile, &QTableWidget::cellClicked, this, &MainWindow::visualizzaListaFile);
@@ -328,27 +332,25 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     connect(salvaNuovoFile, &QAction::triggered, this, &MainWindow::salvaIlNuovoFile);
     connect(pulsanteAggiungiAccount, &QPushButton::clicked, this, &MainWindow::aggiungiAccount);
     connect(chiudiApplicazione, &QAction::triggered, this, &MainWindow::close);
-
     connect(listaRicerca, &QTreeWidget::doubleClicked, this, &MainWindow::fileTrovato);
+
+    connect(ricercaPerNome, &QCheckBox::stateChanged, this, &MainWindow::checkboxSelezionato);
+    connect(ricercaPerDescrizione, &QCheckBox::stateChanged, this, &MainWindow::checkboxSelezionato);
+    connect(ricercaAvanzata, &QCheckBox::stateChanged, this, &MainWindow::checkboxSelezionato);
+    connect(ricercaCaseSensitive, &QCheckBox::stateChanged, this, &MainWindow::checkboxSelezionato);
+
+    connect(ricercaPerNome, &QCheckBox::stateChanged, this, &MainWindow::controlloCheckbox);
+    connect(ricercaPerDescrizione, &QCheckBox::stateChanged, this, &MainWindow::controlloCheckbox);
+    connect(ricercaAvanzata, &QCheckBox::stateChanged, this, &MainWindow::controlloCheckbox);
+
 
     setLayout(pagina);
 }
 
 void MainWindow::modificaDellAccount(){
-    QMessageBox messageBox(QMessageBox::Question, tr("QtDrive"), tr("Salvare le modifiche effettuate?"), QMessageBox::Yes | QMessageBox::No, this);
-    messageBox.setButtonText(QMessageBox::Yes, tr("Sì"));
-    messageBox.setButtonText(QMessageBox::No, tr("No"));
-    int ret = messageBox.exec();
-    if(ret == QMessageBox::Yes) {
-        controller->salvaModificaAccount(tabellaAccount->currentRow(), emailAccount->text(), passwordAccount->text());
+    modificaAccountWidget->show();
+    modificaAccountWidget->visualizzaInfo(tabellaAccount->currentRow(), emailAccount->text(), passwordAccount->text());
         controller->setModificato(true);
-        informazioniAccount->hide();
-        visualizzaAccount();
-    }
-    else {
-         tabellaAccount->selectRow(tabellaAccount->currentRow());
-         visualizzaInfoAccount();
-    }
 }
 
 void MainWindow::eliminazioneDellAccount(){
@@ -469,6 +471,8 @@ void MainWindow::visualizzaInformazioniAggiuntiveFile(){
 
 void MainWindow::ricerca(const QString input){
     listaRicerca->clear();
+    if(!ricercaPerNome->isChecked() && !ricercaPerDescrizione->isChecked() && !ricercaAvanzata->isChecked())
+        ricercaPerNome->setChecked(true);
     Qt::CaseSensitivity cs = Qt::CaseInsensitive;
     if(ricercaCaseSensitive->isChecked())
         cs = Qt::CaseSensitive;
@@ -720,14 +724,23 @@ void MainWindow::fileTrovato() {
             while(*it) {
                 if((*it)->text(2) == listaRicerca->currentItem()->text(2) && (*it)->text(3) == listaRicerca->currentItem()->text(3)) {
                     (*it)->setSelected(true);
+                    listaFile->setCurrentItem(*it);
                     QModelIndex index = listaFile->currentIndex();
-                    //emit listaFile->itemDoubleClicked(*it, listaFile->indexOfTopLevelItem(*it));
                     visualizzaInformazioniAggiuntiveFile();
                 }
                 ++it;
             }
         }
     }
+}
+
+void MainWindow::checkboxSelezionato(int state) {
+    if(state == 2) emit inputRicerca->textChanged(inputRicerca->text());
+}
+
+void MainWindow::controlloCheckbox() {
+    if(!ricercaPerNome->isChecked() && !ricercaPerDescrizione->isChecked() && !ricercaAvanzata->isChecked())
+        ricercaPerNome->setChecked(true);
 }
 
 void MainWindow::closeEvent (QCloseEvent *event) {

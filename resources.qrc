@@ -44,5 +44,7 @@
     <!-- GIF PER LO SPLASH -->
     <!-- <file>res/icons/Intro.gif</file>-->
 
+    <!-- ICONA APPLICAZIONE -->
+    <file>res/icons/icon.ico</file>
 </qresource>
 </RCC>
