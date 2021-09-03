@@ -75,3 +75,8 @@ bool Controller::getModificato() const{
 void Controller::setModificato(bool mod){
     modificato = mod;
 }
+
+void Controller::azzeraContenutoAccount(){
+    listaAccount.clear();
+    qDebug() << listaAccount.numeroElementi();
+}

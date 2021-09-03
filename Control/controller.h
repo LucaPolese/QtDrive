@@ -30,6 +30,7 @@ public:
     void aggiornaPercorso(QString nuovoPercorso);
     bool getModificato() const;
     void setModificato(bool);
+    void azzeraContenutoAccount();
 };
 
 #endif // CONTROLLER_H
