@@ -235,6 +235,8 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     QMenuBar *menu = new QMenuBar();
         // File
         QMenu *menuFile = new QMenu("Profilo", menu);
+            QAction *nuovo = new QAction("Nuovo", menuFile); nuovo->setShortcut(Qt::CTRL | Qt::Key_N);
+            nuovo->setIcon(QIcon(":/res/icons/menubar/nuovo.png"));
             QAction *apriFile = new QAction("Apri", menuFile); apriFile->setShortcut(Qt::CTRL | Qt::Key_O);
             apriFile->setIcon(QIcon(":/res/icons/menubar/apri.png"));
             QAction *salvaFile = new QAction("Salva", menuFile); salvaFile->setShortcut(Qt::CTRL | Qt::Key_S);
@@ -244,6 +246,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
             QAction *chiudiApplicazione = new QAction("Esci", menuFile); chiudiApplicazione->setShortcut(Qt::CTRL | Qt::Key_Q);
             chiudiApplicazione->setIcon(QIcon(":/res/icons/menubar/esci.png"));
             menu->addMenu(menuFile);
+                menuFile->addAction(nuovo);
                 menuFile->addAction(apriFile);
                 menuFile->addAction(salvaFile);
                 menuFile->addAction(salvaNuovoFile);
@@ -319,6 +322,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     connect(tabs, &QTabWidget::tabBarClicked, this, &MainWindow::visualizzaFileDrive);
     connect(tabs, &QTabWidget::tabBarClicked, this, &MainWindow::selezioneTab);
     connect(tabellaFile, &QTableWidget::currentCellChanged, this, &MainWindow::selezioneAltroAccount);
+    connect(nuovo, &QAction::triggered, this, &MainWindow::apriNuovoFile);
     connect(apriFile, &QAction::triggered, this, &MainWindow::apriIlFile);
     connect(salvaFile, &QAction::triggered, this, &MainWindow::salvaIlFile);
     connect(salvaNuovoFile, &QAction::triggered, this, &MainWindow::salvaIlNuovoFile);
@@ -502,6 +506,7 @@ void MainWindow::visualizzaAccount() {
     informazioniAccount->hide();
     tabellaAccount->setRowCount(0);
     QString servizio;
+    qDebug() << controller->getNumeroAccount();
     for(int i = 0; i < controller->getNumeroAccount(); i++) {
         tabellaAccount->insertRow(tabellaAccount->rowCount());
         Account* a = controller->getAccount(i);
@@ -586,6 +591,31 @@ void MainWindow::selezioneAltroAccount(){
     eliminaFile->setDisabled(true);
 }
 
+void MainWindow::apriNuovoFile(){
+    //Se c'è una modifica prima devo vedere se l'utente vuole salvarla,
+    //solo a quel punto posso azzerare il contenuto del file
+    if(controller->getModificato()){
+        QMessageBox* messaggio = new QMessageBox(QMessageBox::Question, tr("QtDrive"), tr("Vuoi salvare le modifiche prima di aprire il nuovo file?"), QMessageBox::Yes | QMessageBox::No, this);
+        messaggio->setButtonText(QMessageBox::Yes, tr("Sì"));
+        messaggio->setButtonText(QMessageBox::No, tr("No"));
+        if(messaggio->exec() == QMessageBox::Yes) salvaIlFile();
+        else controller->setModificato(false);
+
+    }
+    //Se non è stata effettuata alcuna modifica, oppure se il salvataggio è avvenuto con successo allora azzera il contenuto
+    if(!controller->getModificato()){
+       controller->azzeraContenutoAccount();
+       qDebug() << "completato";
+       controller->aggiornaPercorso("");
+       qDebug() << "nuovoPercorso";
+       visualizzaAccount();
+       qDebug() << "Account Visualizzato";
+       visualizzaAccountRidotto();
+       visualizzaFileDrive();
+    }
+
+}
+
 void MainWindow::apriIlFile(){
     //Se non ho aperto alcun file, ma ho aggiunto manualmente degli account
     //oppure se il file che ho precedentemente aperto ha subito modifiche
@@ -595,38 +625,29 @@ void MainWindow::apriIlFile(){
             profiloDaSalvare.setButtonText(QMessageBox::Yes, tr("Sì"));
             profiloDaSalvare.setButtonText(QMessageBox::No, tr("No"));
             if(profiloDaSalvare.exec() == QMessageBox::Yes) {
-                while(controller->getModificato()){
-                    if(controller->getXml().percorsoVuoto()) salvaIlNuovoFile();
-                    else salvaIlFile();
-                }
+                    salvaIlFile();
             }
     }
-    QString fileScelto = QFileDialog::getOpenFileName(this, "Apri account", "./", "Account (*.xml)");
-    if (fileScelto.isEmpty()){
-        QMessageBox* alert = new QMessageBox(QMessageBox::Critical, "Errore",
-                                             "Attenzione: non hai scelto alcun file da aprire!",
-                                             QMessageBox::Ok);
-        alert->exec();
-    }else{
-        controller->aggiornaPercorso(fileScelto);
-        controller->aggiornaAccount();
-        controller->setModificato(false);
-        visualizzaAccount();
-        visualizzaAccountRidotto();
-        visualizzaFileDrive();
+    if(controller->getModificato()){
+        QString fileScelto = QFileDialog::getOpenFileName(this, "Apri account", "./", "Account (*.xml)");
+        if (!fileScelto.isEmpty()){
+            controller->aggiornaPercorso(fileScelto);
+            controller->aggiornaAccount();
+            controller->setModificato(false);
+            visualizzaAccount();
+            visualizzaAccountRidotto();
+            visualizzaFileDrive();
+        }
     }
 
 }
 
 void MainWindow::salvaIlFile(){
-    //QString fileSalvataggio = QFileDialog::getOpenFileName(this, "Salva account", "./", "Account (*.xml)");
+    //Se clicco su salva e non ho aperto in precedenza alcun file, allora chiamo salvaIlNuovoFile
     if (controller->getXml().percorsoVuoto()){
-        QMessageBox* vuoto = new QMessageBox(QMessageBox::Critical, "Errore",
-                                             "Attenzione: non hai scelto alcun file su cui effettuare il salvataggio!",
-                                             QMessageBox::Ok);
-        vuoto->exec();
         salvaIlNuovoFile();
     }else{
+        //Controllo se l'informazione
         if(controller->getXml().controllaSeXml()){
             try{
                 controller->salvataggioAccount();
@@ -634,7 +655,7 @@ void MainWindow::salvaIlFile(){
                 controller->setModificato(false);
             }catch(QString e){
                 QMessageBox* errore = new QMessageBox(QMessageBox::Critical, "Errore",
-                                                     QString("Attenzione: il file selezionato per la scrittura non può essere salvato per un errore.").arg(e),
+                                                     QString("Attenzione: il file selezionato per la scrittura ha subito un errore.").arg(e),
                                                      QMessageBox::Ok);
                 errore->exec();
             }
@@ -649,13 +670,7 @@ void MainWindow::salvaIlFile(){
 
 void MainWindow::salvaIlNuovoFile(){
     QString fileSalvataggio = QFileDialog::getOpenFileName(this, "Salva account", "./", "Account (*.xml)");
-    if (controller->getXml().percorsoVuoto()){
-        QMessageBox* vuoto = new QMessageBox(QMessageBox::Critical, "Errore",
-                                             "Attenzione: non hai scelto alcun file su cui effettuare il salvataggio!"
-                                             "<br>Il tuo profilo non può essere salvato.",
-                                             QMessageBox::Ok);
-        vuoto->exec();
-    }else{
+    if (!controller->getXml().percorsoVuoto()){
         if(controller->getXml().controllaSeXml()){
             try{
                 controller->salvataggioAccount();
@@ -663,7 +678,7 @@ void MainWindow::salvaIlNuovoFile(){
                 controller->setModificato(false);
             }catch(QString e){
                 QMessageBox* errore = new QMessageBox(QMessageBox::Critical, "Errore",
-                                                     QString("Attenzione: il file selezionato per la scrittura non può essere salvato per un errore.").arg(e),
+                                                     QString("Attenzione: il file selezionato per la scrittura ha subito un errore.").arg(e),
                                                      QMessageBox::Ok);
                 errore->exec();
             }
@@ -717,18 +732,14 @@ void MainWindow::fileTrovato() {
 
 void MainWindow::closeEvent (QCloseEvent *event) {
     QMessageBox* messaggio;
-    qDebug() << controller->getModificato();
     if(controller->getModificato()){
         messaggio = new QMessageBox(QMessageBox::Question, tr("QtDrive"), tr("Vuoi salvare le modifiche prima di uscire dall'applicazione"), QMessageBox::Yes | QMessageBox::No, this);
         messaggio->setButtonText(QMessageBox::Yes, tr("Sì"));
         messaggio->setButtonText(QMessageBox::No, tr("No"));
         if(messaggio->exec() == QMessageBox::Yes){
-            while(controller->getModificato()){
-                if(controller->getXml().percorsoVuoto()) salvaIlNuovoFile();
-                salvaIlFile();
-            }
-        }
-        event->accept();
+            salvaIlFile();
+            event->ignore();
+        }else event->accept();
     }else{
         QMessageBox messageBox(QMessageBox::Question, tr("QtDrive"), tr("Uscire dall'applicazione?"), QMessageBox::Yes | QMessageBox::No, this);
         messageBox.setButtonText(QMessageBox::Yes, tr("Sì"));
