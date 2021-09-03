@@ -20,8 +20,16 @@ int Controller::getNumeroAccount() const {
 }
 
 void Controller::salvaModificaAccount(int indice, QString nuovaEmail, QString nuovaPassword) {
-    listaAccount[indice]->setEmail(nuovaEmail);
-    listaAccount[indice]->setPassword(nuovaPassword);
+    if(checkAccount(nuovaEmail,listaAccount[indice]->getHost())){
+        listaAccount[indice]->setEmail(nuovaEmail);
+        listaAccount[indice]->setPassword(nuovaPassword);
+    }else{
+        QMessageBox* vuoto = new QMessageBox(QMessageBox::Critical, "Errore",
+                                             "Attenzione: le credenziali che hai modificato appartengono ad un servizio che è già presente nel tuo profilo!"
+                                             "<br>Il tuo account non può essere salvato.",
+                                             QMessageBox::Ok);
+        vuoto->exec();
+    }
 }
 
 void Controller::eliminaAccount(int indice) {
@@ -58,4 +66,17 @@ bool Controller::salvataggioAccount() const{
 
 void Controller::aggiornaPercorso(QString nuovoPercorso){
     xml.setPercorso(nuovoPercorso);
+}
+
+bool Controller::getModificato() const{
+    return modificato;
+}
+
+void Controller::setModificato(bool mod){
+    modificato = mod;
+}
+
+void Controller::azzeraContenutoAccount(){
+    listaAccount.clear();
+    qDebug() << listaAccount.numeroElementi();
 }

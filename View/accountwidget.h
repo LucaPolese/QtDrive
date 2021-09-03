@@ -39,7 +39,7 @@ signals:
 
 public slots:
     void controlloEmail();
-    void aggiungi();
+            void aggiungi();
 };
 
 #endif // ACCOUNTWIDGET_H

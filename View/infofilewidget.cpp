@@ -83,6 +83,7 @@ void InfoFileWidget::controlloModifiche() {
         if(ret == QMessageBox::Yes) {
             fileAperto->setNome(nome->text());
             fileAperto->setDescrizione(descrizione->text());
+            controller->setModificato(true);
         }
     }
     descrizione->setText("");

@@ -113,6 +113,7 @@ public slots:
     void visualizzaFileDrive();
     void selezioneTab();
     void selezioneAltroAccount();
+    void apriNuovoFile();
     void apriIlFile();
     void salvaIlFile();
     void salvaIlNuovoFile();
