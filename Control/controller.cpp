@@ -20,8 +20,16 @@ int Controller::getNumeroAccount() const {
 }
 
 void Controller::salvaModificaAccount(int indice, QString nuovaEmail, QString nuovaPassword) {
-    listaAccount[indice]->setEmail(nuovaEmail);
-    listaAccount[indice]->setPassword(nuovaPassword);
+    if(!checkNuoviDatiAccount(nuovaEmail,listaAccount[indice]->getHost(),indice)){
+        listaAccount[indice]->setEmail(nuovaEmail);
+        listaAccount[indice]->setPassword(nuovaPassword);
+    }else{
+        QMessageBox* vuoto = new QMessageBox(QMessageBox::Critical, "Errore",
+                                             "Attenzione: le credenziali che hai modificato appartengono ad un servizio che è già presente nel tuo profilo!"
+                                             "<br>Il tuo account non può essere salvato.",
+                                             QMessageBox::Ok);
+        vuoto->exec();
+    }
 }
 
 void Controller::eliminaAccount(int indice) {
@@ -34,6 +42,20 @@ bool Controller::checkAccount(QString email, Account::servizio host) const {
             return false;
     }
     return true;
+}
+
+bool Controller::checkNuoviDatiAccount(QString email, Account::servizio host, int pos) const {
+    for(unsigned int i = 0; i < listaAccount.size(); i++) {
+        if(i != pos){
+            if(email == listaAccount[i].getPuntatore()->getEmail() && host == listaAccount[i].getPuntatore()->getHost())
+                return true;
+
+            qDebug() << email << " vs " << listaAccount[i].getPuntatore()->getEmail();
+            qDebug() << host << " vs " << listaAccount[i].getPuntatore()->getHost();
+
+        }
+    }
+    return false;
 }
 
 Container<Deepptr<Account>> Controller::getListaAccount() const{
@@ -58,4 +80,12 @@ bool Controller::salvataggioAccount() const{
 
 void Controller::aggiornaPercorso(QString nuovoPercorso){
     xml.setPercorso(nuovoPercorso);
+}
+
+bool Controller::getModificato() const{
+    return modificato;
+}
+
+void Controller::setModificato(bool mod){
+    modificato = mod;
 }

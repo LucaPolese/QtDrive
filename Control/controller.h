@@ -22,12 +22,15 @@ public:
     void salvaModificaAccount(int, QString, QString);
     void eliminaAccount(int);
     bool checkAccount(QString, Account::servizio) const;
+    bool checkNuoviDatiAccount(QString, Account::servizio, int) const;
     Container<Deepptr<Account>> getListaAccount() const;
     Account* getAccount(int) const;
     void aggiornaAccount();
     Xmlify getXml() const;
     bool salvataggioAccount() const;
     void aggiornaPercorso(QString nuovoPercorso);
+    bool getModificato() const;
+    void setModificato(bool);
 };
 
 #endif // CONTROLLER_H
