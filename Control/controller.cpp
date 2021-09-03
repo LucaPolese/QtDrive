@@ -49,10 +49,6 @@ bool Controller::checkNuoviDatiAccount(QString email, Account::servizio host, in
         if(i != pos){
             if(email == listaAccount[i].getPuntatore()->getEmail() && host == listaAccount[i].getPuntatore()->getHost())
                 return true;
-
-            qDebug() << email << " vs " << listaAccount[i].getPuntatore()->getEmail();
-            qDebug() << host << " vs " << listaAccount[i].getPuntatore()->getHost();
-
         }
     }
     return false;
