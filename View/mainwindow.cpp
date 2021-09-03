@@ -337,6 +337,7 @@ void MainWindow::modificaDellAccount(){
     int ret = messageBox.exec();
     if(ret == QMessageBox::Yes) {
         controller->salvaModificaAccount(tabellaAccount->currentRow(), emailAccount->text(), passwordAccount->text());
+        controller->setModificato(true);
         informazioniAccount->hide();
         visualizzaAccount();
     }
@@ -353,6 +354,7 @@ void MainWindow::eliminazioneDellAccount(){
     int ret = messageBox.exec();
     if(ret == QMessageBox::Yes) {
         controller->eliminaAccount(tabellaAccount->currentRow());
+        controller->setModificato(true);
         informazioniAccount->hide();
         visualizzaAccount();
     }
@@ -421,6 +423,7 @@ void MainWindow::visualizzaListaFile() {
 void MainWindow::creaNuovoFile(){
     fileWidget->setAccountSelezionato(tabellaFile->currentRow());
     fileWidget->show();
+    controller->setModificato(true);
 }
 
 void MainWindow::eliminazioneDelFile(){
@@ -431,6 +434,7 @@ void MainWindow::eliminazioneDelFile(){
     if(ret == QMessageBox::Yes) {
         QModelIndex index = listaFile->currentIndex();
         controller->eliminaFile(tabellaFile->currentRow(), index.row());
+        controller->setModificato(true);
         informazioniAccount->hide();
         visualizzaAccountRidotto();
         eliminaFile->setDisabled(true);
@@ -606,6 +610,7 @@ void MainWindow::apriIlFile(){
     }else{
         controller->aggiornaPercorso(fileScelto);
         controller->aggiornaAccount();
+        controller->setModificato(false);
         visualizzaAccount();
         visualizzaAccountRidotto();
         visualizzaFileDrive();
@@ -711,13 +716,29 @@ void MainWindow::fileTrovato() {
 }
 
 void MainWindow::closeEvent (QCloseEvent *event) {
-    QMessageBox messageBox(QMessageBox::Question, tr("QtDrive"), tr("Uscire dall'applicazione?"), QMessageBox::Yes | QMessageBox::No, this);
-    messageBox.setButtonText(QMessageBox::Yes, tr("Sì"));
-    messageBox.setButtonText(QMessageBox::No, tr("No"));
-    int ret = messageBox.exec();
-    if(ret == QMessageBox::Yes)
+    QMessageBox* messaggio;
+    qDebug() << controller->getModificato();
+    if(controller->getModificato()){
+        messaggio = new QMessageBox(QMessageBox::Question, tr("QtDrive"), tr("Vuoi salvare le modifiche prima di uscire dall'applicazione"), QMessageBox::Yes | QMessageBox::No, this);
+        messaggio->setButtonText(QMessageBox::Yes, tr("Sì"));
+        messaggio->setButtonText(QMessageBox::No, tr("No"));
+        if(messaggio->exec() == QMessageBox::Yes){
+            while(controller->getModificato()){
+                if(controller->getXml().percorsoVuoto()) salvaIlNuovoFile();
+                salvaIlFile();
+            }
+        }
         event->accept();
-    else event->ignore();
+    }else{
+        QMessageBox messageBox(QMessageBox::Question, tr("QtDrive"), tr("Uscire dall'applicazione?"), QMessageBox::Yes | QMessageBox::No, this);
+        messageBox.setButtonText(QMessageBox::Yes, tr("Sì"));
+        messageBox.setButtonText(QMessageBox::No, tr("No"));
+        int ret = messageBox.exec();
+        if(ret == QMessageBox::Yes)
+            event->accept();
+        else event->ignore();
+    }
+
 }
 
 MainWindow::~MainWindow() {

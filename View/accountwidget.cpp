@@ -114,6 +114,7 @@ void AccountWidget::aggiungi() {
         password->clear();
         spazioFornito->setValue(0);
         controller->aggiungiAccount(nEmail, nPassword, nServizio, nSpazioFornito);
+        controller->setModificato(true);
         this->hide();
         emit accountAggiunto();
     }
