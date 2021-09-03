@@ -9,6 +9,7 @@
     <file>res/icons/menubar/info.png</file>
     <file>res/icons/menubar/guida.png</file>
     <file>res/icons/menubar/sovrascrivi.png</file>
+    <file>res/icons/menubar/nuovo.png</file>
 
     <!-- ICONE TABS -->
     <file>res/icons/tabs/tab1.png</file>
