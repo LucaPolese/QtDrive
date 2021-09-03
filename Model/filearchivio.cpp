@@ -36,7 +36,7 @@ FileArchivio* FileArchivio::clone() const {
 void FileArchivio::serializza(QXmlStreamWriter &scrittore) const{
     //Introduzione di ogni account
     scrittore.writeStartElement("file");
-    scrittore.writeAttribute("type",getInformazioniFile());
+    scrittore.writeAttribute("type",getTipoFile());
         //Aggiunta degli attributi:
         //Nome File
         scrittore.writeStartElement("nome");
