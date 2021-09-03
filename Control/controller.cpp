@@ -20,7 +20,7 @@ int Controller::getNumeroAccount() const {
 }
 
 void Controller::salvaModificaAccount(int indice, QString nuovaEmail, QString nuovaPassword) {
-    if(!checkNuoviDatiAccount(nuovaEmail,listaAccount[indice]->getHost(),indice)){
+    if(checkAccount(nuovaEmail,listaAccount[indice]->getHost())){
         listaAccount[indice]->setEmail(nuovaEmail);
         listaAccount[indice]->setPassword(nuovaPassword);
     }else{
@@ -42,16 +42,6 @@ bool Controller::checkAccount(QString email, Account::servizio host) const {
             return false;
     }
     return true;
-}
-
-bool Controller::checkNuoviDatiAccount(QString email, Account::servizio host, int pos) const {
-    for(unsigned int i = 0; i < listaAccount.size(); i++) {
-        if(i != pos){
-            if(email == listaAccount[i].getPuntatore()->getEmail() && host == listaAccount[i].getPuntatore()->getHost())
-                return true;
-        }
-    }
-    return false;
 }
 
 Container<Deepptr<Account>> Controller::getListaAccount() const{

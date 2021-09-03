@@ -22,7 +22,6 @@ public:
     void salvaModificaAccount(int, QString, QString);
     void eliminaAccount(int);
     bool checkAccount(QString, Account::servizio) const;
-    bool checkNuoviDatiAccount(QString, Account::servizio, int) const;
     Container<Deepptr<Account>> getListaAccount() const;
     Account* getAccount(int) const;
     void aggiornaAccount();
