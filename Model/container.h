@@ -484,6 +484,7 @@ void Container<T>::erase(const iterator& it) {
 template<class T>
 void Container<T>::clear() {
     distruggi(first);
+    first = last = nullptr;
 }
 
 //Operatore di subscripting
