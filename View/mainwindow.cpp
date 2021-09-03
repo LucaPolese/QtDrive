@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     layoutInfoAccount = new QVBoxLayout; // Layout per la visualizzazione delle informazioni dell'account
 
     // Contenuto testuale scheda 1
-    QLabel* informazioni1 = new QLabel("Da questa scheda è possibile visualizzare le informazioni relative agli account registrati.<br>Per cominciare, carica un file tramite <b>File > Apri</b> oppure inserisci un nuovo account tramite il pulsante <b>Aggiungi account</b>. <br> Per ulteriori informazioni, premi <b>Ctrl+H</b> per aprire la guida in linea.");
+    QLabel* informazioni1 = new QLabel("Da questa scheda è possibile visualizzare le informazioni relative agli account registrati.<br>Per cominciare, carica un file tramite <b>Profilo > Apri</b> oppure inserisci un nuovo account tramite il pulsante <b>Aggiungi account</b>. <br> Per ulteriori informazioni, premi <b>Ctrl+H</b> per aprire la guida in linea.");
     informazioni1->adjustSize();
 
     // Definizione tabella account
@@ -389,7 +389,7 @@ void MainWindow::visualizzaInfoAccount() {
 
     Account a = *controller->getAccount(i);
 
-    emailAccount->setText(a.getEmail()); emailAccount->setAlignment(Qt::AlignRight); emailAccount->setReadOnly(true);
+    emailAccount->setText(a.getEmail()); emailAccount->setAlignment(Qt::AlignRight);
     passwordAccount->setText(a.getPassword()); passwordAccount->setAlignment(Qt::AlignRight);
     float spazioOccupato = a.getSpazioOccupato() / 1024; // Spazio occupato in GB
     QString spazio = QString::number(spazioOccupato, 'f', 2)+"/"+QString::number(a.getSpazioFornito())+" GB";
@@ -583,6 +583,20 @@ void MainWindow::selezioneAltroAccount(){
 }
 
 void MainWindow::apriIlFile(){
+    //Se non ho aperto alcun file, ma ho aggiunto manualmente degli account
+    //oppure se il file che ho precedentemente aperto ha subito modifiche
+    //Allora l'utente potrebbe voler salvare l'informazione prima di aprire un nuovo profilo(.xml)
+    if((!controller->getListaAccount().empty() && controller->getXml().percorsoVuoto()) || controller->getModificato()){
+        QMessageBox profiloDaSalvare(QMessageBox::Question, tr("QtDrive"), tr("Il tuo profilo ha subito delle modifiche, vuoi salvarle?"), QMessageBox::Yes | QMessageBox::No, this);
+            profiloDaSalvare.setButtonText(QMessageBox::Yes, tr("Sì"));
+            profiloDaSalvare.setButtonText(QMessageBox::No, tr("No"));
+            if(profiloDaSalvare.exec() == QMessageBox::Yes) {
+                while(controller->getModificato()){
+                    if(controller->getXml().percorsoVuoto()) salvaIlNuovoFile();
+                    else salvaIlFile();
+                }
+            }
+    }
     QString fileScelto = QFileDialog::getOpenFileName(this, "Apri account", "./", "Account (*.xml)");
     if (fileScelto.isEmpty()){
         QMessageBox* alert = new QMessageBox(QMessageBox::Critical, "Errore",
@@ -596,6 +610,7 @@ void MainWindow::apriIlFile(){
         visualizzaAccountRidotto();
         visualizzaFileDrive();
     }
+
 }
 
 void MainWindow::salvaIlFile(){
@@ -610,10 +625,8 @@ void MainWindow::salvaIlFile(){
         if(controller->getXml().controllaSeXml()){
             try{
                 controller->salvataggioAccount();
-                QMessageBox* salvataggioOk = new QMessageBox(QMessageBox::Information, "Salvataggio",
-                                                     QString("Il file è stato salvato correttamente!"),
-                                                     QMessageBox::Ok);
-                salvataggioOk->exec();
+                //Il salvataggio è avvenuto correttamente, quindi non ci sono ulteriori modifiche da salvare
+                controller->setModificato(false);
             }catch(QString e){
                 QMessageBox* errore = new QMessageBox(QMessageBox::Critical, "Errore",
                                                      QString("Attenzione: il file selezionato per la scrittura non può essere salvato per un errore.").arg(e),
@@ -641,10 +654,8 @@ void MainWindow::salvaIlNuovoFile(){
         if(controller->getXml().controllaSeXml()){
             try{
                 controller->salvataggioAccount();
-                QMessageBox* salvataggioOk = new QMessageBox(QMessageBox::Information, "Salvataggio",
-                                                     QString("Il file è stato salvato correttamente!"),
-                                                     QMessageBox::Ok);
-                salvataggioOk->exec();
+                //Il salvataggio è avvenuto correttamente, quindi non ci sono ulteriori modifiche da salvare
+                controller->setModificato(false);
             }catch(QString e){
                 QMessageBox* errore = new QMessageBox(QMessageBox::Critical, "Errore",
                                                      QString("Attenzione: il file selezionato per la scrittura non può essere salvato per un errore.").arg(e),
