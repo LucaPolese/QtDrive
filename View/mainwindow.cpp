@@ -486,7 +486,6 @@ void MainWindow::ricerca(const QString input){
             ok = ok1 || ok2 || ok3;
             if(ok) {
                 QTreeWidgetItem* nuovo = new QTreeWidgetItem;
-                qDebug() << controller->getAccount(i)->getHost()<< " - "<<controller->getAccount(i)->getEmail();
                 nuovo->setIcon(1, it->getPuntatore()->getIcona());
                 nuovo->setText(2, it->getPuntatore()->getNome());
                 QString estensione = it->getPuntatore()->getEstensione();
@@ -510,7 +509,6 @@ void MainWindow::visualizzaAccount() {
     informazioniAccount->hide();
     tabellaAccount->setRowCount(0);
     QString servizio;
-    qDebug() << controller->getNumeroAccount();
     for(int i = 0; i < controller->getNumeroAccount(); i++) {
         tabellaAccount->insertRow(tabellaAccount->rowCount());
         Account* a = controller->getAccount(i);
@@ -609,11 +607,8 @@ void MainWindow::apriNuovoFile(){
     //Se non è stata effettuata alcuna modifica, oppure se il salvataggio è avvenuto con successo allora azzera il contenuto
     if(!controller->getModificato()){
        controller->azzeraContenutoAccount();
-       qDebug() << "completato";
        controller->aggiornaPercorso("");
-       qDebug() << "nuovoPercorso";
        visualizzaAccount();
-       qDebug() << "Account Visualizzato";
        visualizzaAccountRidotto();
        visualizzaFileDrive();
     }
@@ -632,12 +627,11 @@ void MainWindow::apriIlFile(){
                     salvaIlFile();
             }
     }
-    if(controller->getModificato()){
+    if(!controller->getModificato()){
         QString fileScelto = QFileDialog::getOpenFileName(this, "Apri account", "./", "Account (*.xml)");
         if (!fileScelto.isEmpty()){
             controller->aggiornaPercorso(fileScelto);
             controller->aggiornaAccount();
-            controller->setModificato(false);
             visualizzaAccount();
             visualizzaAccountRidotto();
             visualizzaFileDrive();
@@ -654,9 +648,10 @@ void MainWindow::salvaIlFile(){
         //Controllo se l'informazione
         if(controller->getXml().controllaSeXml()){
             try{
-                controller->salvataggioAccount();
-                //Il salvataggio è avvenuto correttamente, quindi non ci sono ulteriori modifiche da salvare
-                controller->setModificato(false);
+                if(controller->salvataggioAccount() == true){
+                    //Se il salvataggio è avvenuto correttamente,non ci sono ulteriori modifiche da salvare
+                    controller->setModificato(false);
+                }
             }catch(QString e){
                 QMessageBox* errore = new QMessageBox(QMessageBox::Critical, "Errore",
                                                      QString("Attenzione: il file selezionato per la scrittura ha subito un errore.").arg(e),
@@ -677,9 +672,11 @@ void MainWindow::salvaIlNuovoFile(){
     if (!controller->getXml().percorsoVuoto()){
         if(controller->getXml().controllaSeXml()){
             try{
-                controller->salvataggioAccount();
-                //Il salvataggio è avvenuto correttamente, quindi non ci sono ulteriori modifiche da salvare
-                controller->setModificato(false);
+                controller->aggiornaPercorso(fileSalvataggio);
+                if(controller->salvataggioAccount() == true){
+                    //Il salvataggio è avvenuto correttamente, quindi non ci sono ulteriori modifiche da salvare
+                    controller->setModificato(false);
+                }
             }catch(QString e){
                 QMessageBox* errore = new QMessageBox(QMessageBox::Critical, "Errore",
                                                      QString("Attenzione: il file selezionato per la scrittura ha subito un errore.").arg(e),
