@@ -90,7 +90,7 @@ void AccountWidget::aggiungi() {
         spazioFornito->setValue(0);
         ok = false;
     }
-    QString nEmail = email->text();
+    QString nEmail = email->text().toLower();
     QString nPassword = password->text();
     Account::servizio nServizio;
     switch(servizio->currentIndex()){
