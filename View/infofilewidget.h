@@ -26,6 +26,7 @@ private:
     QString descrizioneOriginale;
     QLabel* informazioniAggiuntive;
     File* fileAperto;
+    int indiceAccount;
 
 public:
     InfoFileWidget(Controller *controller_, QWidget *parent = nullptr);

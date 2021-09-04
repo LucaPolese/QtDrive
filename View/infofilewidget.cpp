@@ -1,7 +1,7 @@
 #include "infofilewidget.h"
 #include <QDebug>
 
-InfoFileWidget::InfoFileWidget(Controller *controller_, QWidget *parent): QWidget(parent), controller(controller_) {
+InfoFileWidget::InfoFileWidget(Controller *controller_, QWidget *parent): QWidget(parent), controller(controller_), indiceAccount(0) {
     setWindowTitle("Informazioni file");
 
     QVBoxLayout* layout = new QVBoxLayout;
@@ -50,13 +50,14 @@ InfoFileWidget::InfoFileWidget(Controller *controller_, QWidget *parent): QWidge
     });
 }
 
-void InfoFileWidget::visualizzaFile(int indiceAccount, int indiceFile) {
+void InfoFileWidget::visualizzaFile(int indiceAccount_, int indiceFile) {
+    indiceAccount = indiceAccount_;
     fileAperto = controller->getAccount(indiceAccount)->getListaFile()[indiceFile].getPuntatore();
     setWindowIcon(fileAperto->getIcona());
     nome->setText(fileAperto->getNome());
     nomeOriginale = QString(nome->text());
     QString stringaEstensione = fileAperto->getEstensione();
-    estensione->setText("." + stringaEstensione.remove('.'));
+    estensione->setText(stringaEstensione.remove('.'));
     float percentuale = (fileAperto->getDimensione()*100)/(controller->getAccount(indiceAccount)->getSpazioFornito()*1024);
     QString stringaDimensione = QString(QString::number(fileAperto->getDimensione())+" MB ("+QString::number(percentuale)+"% dello spazio a disposizione)");
     dimensione->setText(stringaDimensione);
@@ -75,14 +76,19 @@ void InfoFileWidget::controlloModifiche() {
         QMessageBox::warning(this, tr("Errore"), tr("Nome del file non valido."), QMessageBox::Ok);
     }
     else if(nomeOriginale != nome->text() || descrizioneOriginale != descrizione->text()) {
+        qDebug() << nome->text() << " " << estensione->text();
         QMessageBox messageBox(QMessageBox::Question, tr("Modifica file"), tr("Salvare le modifiche effettuate?"), QMessageBox::Yes | QMessageBox::No, this);
         messageBox.setButtonText(QMessageBox::Yes, tr("Sì"));
         messageBox.setButtonText(QMessageBox::No, tr("No"));
         int ret = messageBox.exec();
         if(ret == QMessageBox::Yes) {
-            fileAperto->setNome(nome->text());
-            fileAperto->setDescrizione(descrizione->text());
-            controller->setModificato(true);
+            if(!controller->getAccount(indiceAccount)->checkFile(nome->text(), estensione->text())) {
+                    QMessageBox::warning(this, tr("Errore"), tr("File già presente all'interno dell'account."), QMessageBox::Ok);
+            }else{
+                fileAperto->setNome(nome->text());
+                fileAperto->setDescrizione(descrizione->text());
+                controller->setModificato(true);
+            }
         }
     }
     descrizione->setText("");
