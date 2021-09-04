@@ -61,7 +61,7 @@ Xmlify Controller::getXml() const{
 }
 
 bool Controller::salvataggioAccount() const{
-    return xml.salvaAccount(getListaAccount());
+    return xml.salvaAccount(listaAccount);
 }
 
 void Controller::aggiornaPercorso(QString nuovoPercorso){
@@ -78,5 +78,4 @@ void Controller::setModificato(bool mod){
 
 void Controller::azzeraContenutoAccount(){
     listaAccount.clear();
-    qDebug() << listaAccount.numeroElementi();
 }
