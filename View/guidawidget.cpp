@@ -1,11 +1,12 @@
 #include "guidawidget.h"
+#include <QTextBrowser>
 
 GuidaWidget::GuidaWidget(QWidget *parent): QWidget(parent){
     setWindowTitle("Guida");
     setWindowIcon(QIcon(":res/icons/menubar/guida.png"));
     setMinimumSize(QSize(800, 600));
     setMaximumSize(QSize(1024, 720));
-
+/*
     QTextBrowser* testo = new QTextBrowser();
     testo->setText(tr(
         "<h1>QtDrive</h1><br>"
@@ -27,10 +28,16 @@ GuidaWidget::GuidaWidget(QWidget *parent): QWidget(parent){
         "L'utente che non volesse più gestire uno specifico account con questo applicativo può infine selezionare il pulsante <img src=\":res/icons/pulsanti/elimina.png\" style=\"width:16px\"/><b>Elimina</b> per rimuoverlo dalla lista."
 
 
-    ));
+    ));*/
+
+    QTextBrowser *tb = new QTextBrowser;
+    tb->setOpenExternalLinks(true);
+    tb->setSource(QUrl("qrc:res/guida.html"));
+
 
     QVBoxLayout* layout = new QVBoxLayout();
-    layout->addWidget(testo);
+    //layout->addWidget(testo);
+    layout->addWidget(tb);
     setLayout(layout);
 
     // Shortcut Ctrl+H per chiudere il widget

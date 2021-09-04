@@ -46,5 +46,14 @@
 
     <!-- ICONA APPLICAZIONE -->
     <file>res/icons/icon.ico</file>
+
+    <!-- GUIDA -->
+    <file>res/guida.html</file>
+    <file>res/images/infoaccount.png</file>
+    <file>res/images/informazionifile.png</file>
+    <file>res/images/inserimentoaccount.png</file>
+    <file>res/images/inserimentofile.png</file>
+    <file>res/images/modificaaccount.png</file>
+    <file>res/images/ricerca.png</file>
 </qresource>
 </RCC>
