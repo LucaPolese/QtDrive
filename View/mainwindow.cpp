@@ -625,7 +625,7 @@ void MainWindow::apriIlFile(){
             profiloDaSalvare.setButtonText(QMessageBox::No, tr("No"));
             if(profiloDaSalvare.exec() == QMessageBox::Yes) {
                     salvaIlFile();
-            }
+            }else controller->setModificato(false);
     }
     if(!controller->getModificato()){
         QString fileScelto = QFileDialog::getOpenFileName(this, "Apri account", "./", "Account (*.xml)");
@@ -668,7 +668,7 @@ void MainWindow::salvaIlFile(){
 }
 
 void MainWindow::salvaIlNuovoFile(){
-    QString fileSalvataggio = QFileDialog::getOpenFileName(this, "Salva account", "./", "Account (*.xml)");
+    QString fileSalvataggio = QFileDialog::getSaveFileName(this, "Salva account", "./", "Account (*.xml)");
     if (!controller->getXml().percorsoVuoto()){
         if(controller->getXml().controllaSeXml()){
             try{
