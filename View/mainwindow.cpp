@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Controller()), accountWidget(new AccountWidget(controller)), fileWidget(new NuovoFileWidget(controller)), modificaAccountWidget(new ModificaAccountWidget(controller)), infoFileWidget(new InfoFileWidget(controller)) {
     setWindowTitle("QtDrive");
@@ -203,7 +204,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     QVBoxLayout* layoutRicerca = new QVBoxLayout;
     QHBoxLayout* layoutCheckbox = new QHBoxLayout;
 
-    QLabel* informazioni3 = new QLabel("Da questa scheda è possibile effettuare una ricerca di file all'interno di tutti gli account registrati.");
+    QLabel* informazioni3 = new QLabel("Da questa scheda è possibile effettuare ricerche di file all'interno di tutti gli account registrati.<br>Inizia a digitare nell'apposita barra per filtrare i file. Per ulteriori informazioni, premi <b>Ctrl+H</b> per aprire la guida in linea.");
     layoutInfo3->addWidget(informazioni3);
 
     layoutRicerca->addWidget(new QLabel("Impostazioni ricerca:"));
@@ -222,7 +223,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     layoutRicerca->addWidget(inputRicerca);
 
     listaRicerca = new QTreeWidget;
-    listaRicerca->setHeaderLabels(headersFile<<""<<"");
+    listaRicerca->setHeaderLabels(headersFile<<""<<""<<"Informazioni aggiuntive");
     listaRicerca->hideColumn(0);
     listaRicerca->hideColumn(6);
     listaRicerca->hideColumn(7);
@@ -494,6 +495,7 @@ void MainWindow::ricerca(const QString input){
                 nuovo->setText(5, it->getPuntatore()->getDescrizione());
                 nuovo->setText(6, QString::number(controller->getAccount(i)->getHost()));
                 nuovo->setText(7, controller->getAccount(i)->getEmail());
+                nuovo->setText(8, it->getPuntatore()->getInformazioniFile().replace("\n", ". "));
                 listaRicerca->addTopLevelItem(nuovo);
             }
         }
@@ -576,6 +578,7 @@ void MainWindow::visualizzaFileDrive() {
             nuovo->setText(5, it->getPuntatore()->getDescrizione());
             nuovo->setText(6, QString::number(controller->getAccount(i)->getHost()));
             nuovo->setText(7, controller->getAccount(i)->getEmail());
+            nuovo->setText(8, it->getPuntatore()->getInformazioniFile().replace("\n", ". "));
             listaRicerca->addTopLevelItem(nuovo);
         }
     }
