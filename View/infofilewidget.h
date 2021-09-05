@@ -34,7 +34,7 @@ public:
     void closeEvent(QCloseEvent *event) override;
 
 signals:
-    void fileModificato();
+    void fileModificato() const;
 
 public slots:
     void visualizzaFile(int, int);

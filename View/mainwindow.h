@@ -13,7 +13,6 @@
 #include <QHeaderView>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
-#include <QDebug>
 
 #include "guidawidget.h"
 #include "infowidget.h"

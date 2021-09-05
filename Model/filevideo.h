@@ -17,20 +17,22 @@ class FileVideo: public FileMedia {
         FileVideo(QString = "", QString = "", unsigned int = 0, QDate = QDate(1970,1,1), QDate = QDate(1970,1,1), QString = "", compressione = compressione(), QString = "", unsigned int = 0, unsigned int = 0, unsigned int = 0, unsigned int = 0);
         ~FileVideo();
 
+        //Funzioni Getter
         const QString &getCodec() const;
         unsigned int getDurata() const;
         unsigned int getLarghezza() const;
         unsigned int getAltezza() const;
         unsigned int getFps() const;
 
+        //Funzioni Polimorfe
         QString getInformazioniFile() const override;
         FileVideo* clone() const override;
         void serializza(QXmlStreamWriter &scrittore) const override;
         FileVideo* deserializza(QXmlStreamReader &lettore) override;
-
         QString getTipoFile() const override;
         QIcon getIcona() const override;
 
+        //Funzione di Ricerca
         bool ricercaAvanzata(QString, Qt::CaseSensitivity) const override;
 };
 #endif // FILEVIDEO_H

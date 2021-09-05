@@ -15,10 +15,14 @@ private:
 public:
     Xmlify(const QString &);
     bool salvaAccount(const Container<Deepptr<Account>>& listaAccount) const;
+
+    //Funzioni Getter
     Container<Deepptr<Account>> acquisisciAccount() const;
+    bool percorsoVuoto() const;
+    bool controllaSeXml() const;
+
+    //Funzione Setter
     void setPercorso(QString percorso);
-    bool percorsoVuoto();
-    bool controllaSeXml();
 };
 
 #endif // XMLIFY_H

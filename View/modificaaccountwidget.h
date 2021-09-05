@@ -28,7 +28,7 @@ public:
     ~ModificaAccountWidget();
 
 signals:
-    void accountModificato();
+    void accountModificato() const;
 
 public slots:
     void salvaModifiche();

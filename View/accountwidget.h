@@ -35,11 +35,11 @@ public:
     void closeEvent (QCloseEvent *event);
 
 signals:
-    void accountAggiunto();
+    void accountAggiunto() const;
 
 public slots:
     void controlloEmail();
-            void aggiungi();
+    void aggiungi();
 };
 
 #endif // ACCOUNTWIDGET_H

@@ -24,6 +24,5 @@ InfoWidget::InfoWidget(QWidget *parent): QWidget(parent){
     });
 }
 
-InfoWidget::~InfoWidget(){
-}
+InfoWidget::~InfoWidget() = default;
 

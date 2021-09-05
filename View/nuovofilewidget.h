@@ -92,7 +92,7 @@ public:
     void closeEvent (QCloseEvent *event);
 
 signals:
-    void fileAggiunto();
+    void fileAggiunto() const;
 
 public slots:
     void aggiungiNuovoFile();

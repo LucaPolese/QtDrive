@@ -91,10 +91,10 @@ void Xmlify::setPercorso(QString percorso){
     account=percorso;
 }
 
-bool Xmlify::percorsoVuoto(){
+bool Xmlify::percorsoVuoto() const{
     return account == "";
 }
 
-bool Xmlify::controllaSeXml(){
+bool Xmlify::controllaSeXml() const{
     return account.endsWith(".xml", Qt::CaseInsensitive);
 }

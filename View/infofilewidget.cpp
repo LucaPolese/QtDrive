@@ -1,5 +1,4 @@
 #include "infofilewidget.h"
-#include <QDebug>
 
 InfoFileWidget::InfoFileWidget(Controller *controller_, QWidget *parent): QWidget(parent), controller(controller_), indiceAccount(0) {
     setWindowTitle("Informazioni file");
@@ -76,7 +75,6 @@ void InfoFileWidget::controlloModifiche() {
         QMessageBox::warning(this, tr("Errore"), tr("Nome del file non valido."), QMessageBox::Ok);
     }
     else if(nomeOriginale != nome->text() || descrizioneOriginale != descrizione->text()) {
-        qDebug() << nome->text() << " " << estensione->text();
         QMessageBox messageBox(QMessageBox::Question, tr("Modifica file"), tr("Salvare le modifiche effettuate?"), QMessageBox::Yes | QMessageBox::No, this);
         messageBox.setButtonText(QMessageBox::Yes, tr("Sì"));
         messageBox.setButtonText(QMessageBox::No, tr("No"));
