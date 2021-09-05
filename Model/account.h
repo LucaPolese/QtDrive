@@ -18,16 +18,22 @@ public:
     Account* clone() const;
     void serializza(QXmlStreamWriter& w) const;
     static Account* deserializza(QXmlStreamReader & reader);
+
+    //Funzioni Getter
+    const QString &getEmail() const;
     const QString &getPassword() const;
-    void setPassword(QString);
     servizio getHost() const;
     unsigned int getSpazioFornito() const;
     const Container<Deepptr<File>> &getListaFile() const;
-    const QString &getEmail() const;
+    float getSpazioOccupato() const;
+
+    //Funzioni Setter
     void setEmail(QString);
+    void setPassword(QString);
+
+    //Funzioni della Lista dei File
     void aggiungiFile(File*);
     void eliminaFile(int);
-    float getSpazioOccupato() const;
     template <class T>
     int contaFile() const{
         unsigned int contatore = 0;
@@ -37,6 +43,7 @@ public:
         return contatore;
     }
     bool checkFile(QString, QString) const;
+
 private:
     QString email;
     QString password;

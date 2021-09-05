@@ -18,27 +18,30 @@ class File {
         File(QString = "", QString = "", unsigned int = 0, QDate = QDate(1970,1,1), QDate = QDate(1970,1,1), QString = "");
         virtual ~File();
 
-
+        //Funzioni Getter
         const QString &getNome() const;
-        void setNome(QString);
         const QString &getEstensione() const;
-        const QString &getDescrizione() const;
-        void setDescrizione(QString);
         unsigned int getDimensione() const;
         QDate getDataCreazione() const;
         QDate getDataCaricamento() const;
+        const QString &getDescrizione() const;
 
+        //Funzioni Setter
+        void setNome(QString);
+        void setDescrizione(QString);
+
+        //Funzioni Polimorfe
         virtual QString getInformazioniFile() const =0;
         virtual File* clone() const =0;
         virtual void serializza(QXmlStreamWriter& scrittore) const = 0;
         virtual File* deserializza(QXmlStreamReader& lettore) = 0;
         virtual QString getTipoFile() const =0;
-
         virtual QIcon getIcona() const = 0;
 
+        //Funzioni di Ricerca
         bool ricercaNome(QString, Qt::CaseSensitivity) const;
         bool ricercaDescrizione(QString, Qt::CaseSensitivity) const;
-        virtual bool ricercaAvanzata(QString, Qt::CaseSensitivity) const =0;
+        virtual bool ricercaAvanzata(QString, Qt::CaseSensitivity) const = 0;
 };
 
 #endif // FILE_H

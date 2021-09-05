@@ -2,6 +2,8 @@
 
 Controller::Controller() : listaAccount(), modificato(false), xml(""){}
 
+Controller::~Controller() = default;
+
 void Controller::aggiungiAccount(QString email, QString password, Account::servizio host, unsigned int spazioFornito) {
     listaAccount.push_back(new Account(email, password, host, spazioFornito));
 }

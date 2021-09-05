@@ -1,5 +1,4 @@
 #include "account.h"
-#include <QDebug>
 std::vector<File*> tipiDiFile;
 
 Account::Account(QString email_, QString password_, servizio host_, unsigned int spazioFornito_, Container<Deepptr<File>> listaFile_):

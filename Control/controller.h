@@ -6,7 +6,6 @@
 #include "../Model/file.h"
 #include "../Model/account.h"
 #include "../Model/xmlify.h"
-#include <QDebug>
 
 class Controller {
 private:
@@ -15,22 +14,31 @@ private:
     bool modificato;
 public:
     Controller();
+    ~Controller();
+
+    //Funzioni Getter
+    Container<Deepptr<Account>> getListaAccount() const;
+    Xmlify getXml() const;
+    bool getModificato() const;
+    Account* getAccount(int) const;
+
+    //Funzioni Setter
+    void aggiornaPercorso(QString nuovoPercorso);
+    void setModificato(bool);
+    void aggiornaAccount();
+
+    //Funzioni Account
     void aggiungiAccount(QString, QString, Account::servizio, unsigned int);
-    void aggiungiFile(int, File*);
-    void eliminaFile(int indiceAccount, int indiceFile);
     int getNumeroAccount() const;
     void salvaModificaAccount(int, QString, QString);
     void eliminaAccount(int);
     bool checkAccount(QString, Account::servizio) const;
-    Container<Deepptr<Account>> getListaAccount() const;
-    Account* getAccount(int) const;
-    void aggiornaAccount();
-    Xmlify getXml() const;
     bool salvataggioAccount() const;
-    void aggiornaPercorso(QString nuovoPercorso);
-    bool getModificato() const;
-    void setModificato(bool);
     void azzeraContenutoAccount();
+
+    //Funzioni File
+    void aggiungiFile(int, File*);
+    void eliminaFile(int indiceAccount, int indiceFile);
 };
 
 #endif // CONTROLLER_H
