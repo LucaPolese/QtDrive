@@ -743,19 +743,27 @@ void MainWindow::controlloCheckbox() {
 void MainWindow::closeEvent (QCloseEvent *event) {
     QMessageBox* messaggio;
     if(controller->getModificato()){
-        messaggio = new QMessageBox(QMessageBox::Question, tr("QtDrive"), tr("Vuoi salvare le modifiche prima di uscire dall'applicazione"), QMessageBox::Yes | QMessageBox::No, this);
+        messaggio = new QMessageBox(QMessageBox::Question, tr("QtDrive"), tr("Vuoi salvare le modifiche prima di uscire dall'applicazione"),
+                        QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel, this);
         messaggio->setButtonText(QMessageBox::Yes, tr("Sì"));
         messaggio->setButtonText(QMessageBox::No, tr("No"));
+        messaggio->setButtonText(QMessageBox::Cancel, tr("Annulla"));
         messaggio->setWindowFlags(messaggio->windowFlags() & ~Qt::WindowCloseButtonHint);
+
         int ret = messaggio->exec();
-        if(ret == QMessageBox::Yes){
+
+        if(ret == QMessageBox::Yes) {
             salvaIlFile();
             //Se ho salvato effettivamente il file -> modificato sarà false.
             //Altrimenti modificato continua ad avere valore true
             //Se chiudessi perderei tutta l'informazione
             if(controller->getModificato()) event->ignore();
             else event->accept();
-        }else event->accept();
+        }else if(ret == QMessageBox::No) {
+            event->accept();
+        }else {
+            event->ignore();
+        }
     }else{
         QMessageBox messageBox(QMessageBox::Question, tr("QtDrive"), tr("Uscire dall'applicazione?"), QMessageBox::Yes | QMessageBox::No, this);
         messageBox.setButtonText(QMessageBox::Yes, tr("Sì"));
