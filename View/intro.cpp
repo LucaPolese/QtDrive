@@ -1,11 +1,13 @@
 #include "mainwindow.h"
-#include "splash.h"
+#include "intro.h"
 
-Splash::Splash() : QSplashScreen(){
-     setCursor(Qt::BusyCursor);
+Intro::Intro() : QSplashScreen(){
+    setCursor(Qt::BusyCursor);
 }
 
-void Splash::execute(QApplication& app, QWidget& w){
+Intro::~Intro() = default;
+
+void Intro::execute(QApplication& app, QWidget& w){
     QMovie* video = new QMovie(":res/icons/Intro.gif");
     QLabel* label = new QLabel;
 
@@ -18,6 +20,7 @@ void Splash::execute(QApplication& app, QWidget& w){
 
     app.processEvents(QEventLoop::AllEvents);
 
-    QTimer::singleShot(1000,label,SLOT(close()));
-    QTimer::singleShot(1000,&w,SLOT(show()));
+    QTimer::singleShot(3500,label,SLOT(close()));
+    QTimer::singleShot(3500,&w,SLOT(show()));
+
 }

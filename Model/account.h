@@ -10,7 +10,7 @@
 #include "filetesto.h"
 #include "filevideo.h"
 #include <QXmlStreamWriter>
-#include <iostream>
+
 class Account {
 public:
     enum servizio {AmazonDrive, Box, Dropbox, GDrive, iCloud, Mediafire, Mega, Next, OneDrive, Qihoo360};

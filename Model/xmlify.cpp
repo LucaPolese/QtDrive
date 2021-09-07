@@ -5,8 +5,7 @@ Xmlify::Xmlify(const QString& percorsoFile) : account(percorsoFile){}
 bool Xmlify::salvaAccount(const Container<Deepptr<Account>>& listaAccount) const {
 
     QFile file(account);
-
-    if(!file.open(QIODevice::WriteOnly)){
+    if(!file.open(QIODevice::WriteOnly | QFile::Truncate)){
         return false;
     }
 

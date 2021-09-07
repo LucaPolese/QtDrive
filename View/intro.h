@@ -1,5 +1,5 @@
-#ifndef SPLASH_H
-#define SPLASH_H
+#ifndef INTRO_H
+#define INTRO_H
 
 #include <QSplashScreen>
 #include <QMovie>
@@ -8,11 +8,12 @@
 #include <QStyle>
 #include <QDesktopWidget>
 #include <QTimer>
-class Splash: public QSplashScreen{
+
+class Intro: public QSplashScreen{
 public:
-    Splash();
-    ~Splash() = default;
+    Intro();
+    ~Intro();
     void execute(QApplication&, QWidget&);
 };
 
-#endif // SPLASH_H
+#endif // INTRO_H
