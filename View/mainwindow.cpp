@@ -735,7 +735,7 @@ void MainWindow::fileTrovato() {
 }
 
 void MainWindow::checkboxSelezionato(int state) {
-    if(state == 2) emit inputRicerca->textChanged(inputRicerca->text());
+    emit inputRicerca->textChanged(inputRicerca->text());
 }
 
 void MainWindow::controlloCheckbox() {

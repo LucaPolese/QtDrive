@@ -11,13 +11,13 @@ void Splash::execute(QApplication& app, QWidget& w){
 
     label->setMovie(video);
     label->setWindowFlags(Qt::FramelessWindowHint);
-    label->setFixedSize(1280,720);
+    label->setFixedSize(500,500);
     label->setGeometry(QStyle::alignedRect(Qt::LeftToRight,Qt::AlignCenter,label->size(),qApp->desktop()->availableGeometry()));
     video->start();
     label->show();
 
     app.processEvents(QEventLoop::AllEvents);
 
-    QTimer::singleShot(1000,label,SLOT(close()));
-    QTimer::singleShot(1000,&w,SLOT(show()));
+    QTimer::singleShot(5000,label,SLOT(close()));
+    QTimer::singleShot(5000,&w,SLOT(show()));
 }
