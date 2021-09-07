@@ -31,11 +31,11 @@ NuovoFileWidget::NuovoFileWidget(Controller *controller_, QWidget *parent): QWid
     formLayout->addRow(tr("Data creazione:"), dataCreazione);
 
     tipo = new QComboBox;
-    tipo->addItem("Archivio"); tipo->setItemIcon(0, QIcon(":res/icons/file/archivio.png"));
-    tipo->addItem("Testo"); tipo->setItemIcon(1, QIcon(":res/icons/file/testo.png"));
-    tipo->addItem("Audio"); tipo->setItemIcon(2, QIcon(":res/icons/file/audio.png"));
-    tipo->addItem("Immagine"); tipo->setItemIcon(3, QIcon(":res/icons/file/immagine.png"));
-    tipo->addItem("Video"); tipo->setItemIcon(4, QIcon(":res/icons/file/video.png"));
+    tipo->addItem("Archivio"); tipo->setItemIcon(0, QIcon(":res/icons/file/FileArchivio.png"));
+    tipo->addItem("Testo"); tipo->setItemIcon(1, QIcon(":res/icons/file/FileTesto.png"));
+    tipo->addItem("Audio"); tipo->setItemIcon(2, QIcon(":res/icons/file/FileAudio.png"));
+    tipo->addItem("Immagine"); tipo->setItemIcon(3, QIcon(":res/icons/file/FileImmagine.png"));
+    tipo->addItem("Video"); tipo->setItemIcon(4, QIcon(":res/icons/file/FileVideo.png"));
     formLayout->addRow(tr("Tipo file:"), tipo);
 
     layout->addLayout(formLayout);

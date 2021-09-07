@@ -24,7 +24,6 @@ public:
     void serializza(QXmlStreamWriter &scrittore) const override;
     FileArchivio* deserializza(QXmlStreamReader& lettore) override;
     QString getTipoFile() const override;
-    QIcon getIcona() const override;
 
     //Funzione di Ricerca
     bool ricercaAvanzata(QString, Qt::CaseSensitivity) const override;

@@ -52,7 +52,7 @@ InfoFileWidget::InfoFileWidget(Controller *controller_, QWidget *parent): QWidge
 void InfoFileWidget::visualizzaFile(int indiceAccount_, int indiceFile) {
     indiceAccount = indiceAccount_;
     fileAperto = controller->getAccount(indiceAccount)->getListaFile()[indiceFile].getPuntatore();
-    setWindowIcon(fileAperto->getIcona());
+    setWindowIcon(QIcon(":res/icons/file/"+fileAperto->getTipoFile()+".png"));
     nome->setText(fileAperto->getNome());
     nomeOriginale = QString(nome->text());
     QString stringaEstensione = fileAperto->getEstensione();

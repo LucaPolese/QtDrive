@@ -36,7 +36,6 @@ class File {
         virtual void serializza(QXmlStreamWriter& scrittore) const = 0;
         virtual File* deserializza(QXmlStreamReader& lettore) = 0;
         virtual QString getTipoFile() const =0;
-        virtual QIcon getIcona() const = 0;
 
         //Funzioni di Ricerca
         bool ricercaNome(QString, Qt::CaseSensitivity) const;

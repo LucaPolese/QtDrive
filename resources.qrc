@@ -29,12 +29,12 @@
     <file>res/icons/Qihoo360.ico</file>
 
     <!-- ICONE FILE -->
-    <file>res/icons/file/archivio.png</file>
-    <file>res/icons/file/audio.png</file>
+    <file>res/icons/file/FileArchivio.png</file>
+    <file>res/icons/file/FileAudio.png</file>
     <file>res/icons/file/file.png</file>
-    <file>res/icons/file/immagine.png</file>
-    <file>res/icons/file/testo.png</file>
-    <file>res/icons/file/video.png</file>
+    <file>res/icons/file/FileImmagine.png</file>
+    <file>res/icons/file/FileTesto.png</file>
+    <file>res/icons/file/FileVideo.png</file>
 
     <!-- ICONE PULSANTI -->
     <file>res/icons/pulsanti/modifica.png</file>

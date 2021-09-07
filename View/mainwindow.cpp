@@ -416,7 +416,7 @@ void MainWindow::visualizzaListaFile() {
     Container<Deepptr<File>> lista = controller->getAccount(tabellaFile->currentRow())->getListaFile();
     for(auto it = lista.begin(); it != lista.end(); ++it) {
         QTreeWidgetItem* nuovo = new QTreeWidgetItem;
-        nuovo->setIcon(1, it->getPuntatore()->getIcona()); nuovo->setTextAlignment(1, Qt::AlignCenter);
+        nuovo->setIcon(1, QIcon(":res/icons/file/"+it->getPuntatore()->getTipoFile()+".png")); nuovo->setTextAlignment(1, Qt::AlignCenter);
         nuovo->setText(2, it->getPuntatore()->getNome());
         QString estensione = it->getPuntatore()->getEstensione();
         nuovo->setText(3, "." + estensione.remove('.')); nuovo->setTextAlignment(3, Qt::AlignCenter);
@@ -487,7 +487,7 @@ void MainWindow::ricerca(const QString input){
             ok = ok1 || ok2 || ok3;
             if(ok) {
                 QTreeWidgetItem* nuovo = new QTreeWidgetItem;
-                nuovo->setIcon(1, it->getPuntatore()->getIcona());
+                nuovo->setIcon(1, QIcon(":res/icons/file/"+it->getPuntatore()->getTipoFile()+".png"));
                 nuovo->setText(2, it->getPuntatore()->getNome());
                 QString estensione = it->getPuntatore()->getEstensione();
                 nuovo->setText(3, "." + estensione.remove('.')); nuovo->setTextAlignment(3, Qt::AlignCenter);
@@ -570,7 +570,7 @@ void MainWindow::visualizzaFileDrive() {
         Container<Deepptr<File>> lista = controller->getAccount(i)->getListaFile();
         for(auto it = lista.begin(); it != lista.end(); ++it) {
             QTreeWidgetItem* nuovo = new QTreeWidgetItem;
-            nuovo->setIcon(1, it->getPuntatore()->getIcona());
+            nuovo->setIcon(1, QIcon(":res/icons/file/"+it->getPuntatore()->getTipoFile()+".png"));
             nuovo->setText(2, it->getPuntatore()->getNome());
             QString estensione = it->getPuntatore()->getEstensione();
             nuovo->setText(3, "." + estensione.remove('.')); nuovo->setTextAlignment(3, Qt::AlignCenter);
