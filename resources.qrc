@@ -36,6 +36,13 @@
     <file>res/icons/file/FileTesto.png</file>
     <file>res/icons/file/FileVideo.png</file>
 
+    <!-- ICONE FILE 16x16 -->
+    <file>res/icons/file/FileArchivio16.png</file>
+    <file>res/icons/file/FileAudio16.png</file>
+    <file>res/icons/file/FileImmagine16.png</file>
+    <file>res/icons/file/FileTesto16.png</file>
+    <file>res/icons/file/FileVideo16.png</file>
+
     <!-- ICONE PULSANTI -->
     <file>res/icons/pulsanti/modifica.png</file>
     <file>res/icons/pulsanti/elimina.png</file>

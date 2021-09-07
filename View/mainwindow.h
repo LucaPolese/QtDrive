@@ -13,6 +13,7 @@
 #include <QHeaderView>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
+#include <QProgressBar>
 
 #include "guidawidget.h"
 #include "infowidget.h"
@@ -29,17 +30,6 @@
 #include "Model/container.h"
 #include "Model/xmlify.h"
 
-// Classi per i grafici
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QMainWindow>
-#include <QtCharts/QChartView>
-#include <QtCharts/QBarSeries>
-#include <QtCharts/QBarSet>
-#include <QtCharts/QLegend>
-#include <QtCharts/QBarCategoryAxis>
-#include <QtCharts/QHorizontalPercentBarSeries>
-QT_CHARTS_USE_NAMESPACE
-
 class MainWindow : public QWidget{
     Q_OBJECT
 
@@ -53,14 +43,6 @@ private:
     QTableWidget* tabellaAccount;
     QVBoxLayout* layoutInfoAccount;
     QWidget* informazioniAccount;
-    QBarSet* set0;
-    QBarSet* set1;
-    QBarSet* set2;
-    QBarSet* set3;
-    QBarSet* set4;
-    QHorizontalPercentBarSeries *series;
-    QChart *chart;
-    QChartView *chartView;
     QLabel* emailAccount;
     QLabel* passwordAccount;
     QLabel* numeroFile;
@@ -70,6 +52,12 @@ private:
     QPushButton* chiudiAccount;
     AccountWidget* accountWidget;
     ModificaAccountWidget* modificaAccountWidget;
+    QLabel* numeroFileArchivio;
+    QLabel* numeroFileTesto;
+    QLabel* numeroFileImmagine;
+    QLabel* numeroFileAudio;
+    QLabel* numeroFileVideo;
+    QProgressBar* barraOccupazione;
 
     // Elementi seconda scheda
     QTableWidget* tabellaFile;

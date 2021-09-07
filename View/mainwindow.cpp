@@ -43,43 +43,6 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     layoutInfo1->addLayout(layoutAccount);
 
     // Elementi della finestra Informazioni account
-    set0 = new QBarSet("Archivio");
-    set1 = new QBarSet("Testo");
-    set2 = new QBarSet("Audio");
-    set3 = new QBarSet("Immagine");
-    set4 = new QBarSet("Video");
-    series = new QHorizontalPercentBarSeries();
-
-    series->append(set0);
-    series->append(set1);
-    series->append(set2);
-    series->append(set3);
-    series->append(set4);
-
-    chart = new QChart();
-    chart->addSeries(series);
-    chart->setAnimationOptions(QChart::SeriesAnimations);
-    chart->setBackgroundBrush(QBrush(QColor("white")));
-
-    QStringList categories;
-    categories << "";
-    QBarCategoryAxis *axis = new QBarCategoryAxis();
-    axis->append(categories);
-    chart->createDefaultAxes();
-    chart->setAxisY(axis, series);
-
-    chart->legend()->setVisible(true);
-    chart->axisX()->setLabelsVisible(false);
-    chart->axisX()->setGridLineVisible(false);
-    chart->axisX()->setLineVisible(false);
-    chart->axisY()->setGridLineVisible(false);
-    chart->axisY()->setLineVisible(false);
-    chart->legend()->setAlignment(Qt::AlignTop);
-
-    chartView = new QChartView(chart);
-    chartView->setFixedSize(QSize(400, 100));
-    chartView->setRenderHint(QPainter::Antialiasing);
-    layoutInfoAccount->addWidget(chartView);
 
     QFormLayout* layoutInformazioni = new QFormLayout;
     layoutInformazioni->addRow("", new QWidget); // Aggiunge spazio sotto al grafico
@@ -93,11 +56,49 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
     numeroFile = new QLabel; numeroFile->setAlignment(Qt::AlignRight);
     layoutInformazioni->addRow("File contenuti:", numeroFile);
 
-    spazioRimanente = new QLabel("spazio GB"); spazioRimanente->setAlignment(Qt::AlignRight);
-    layoutInformazioni->addRow("Spazio occupato:", spazioRimanente);
+    QLabel* lArchivio = new QLabel;
+    lArchivio->setPixmap(QPixmap(":res/icons/file/FileArchivio16.png"));
+    lArchivio->setAlignment(Qt::AlignRight);
+    QLabel* lTesto = new QLabel;
+    lTesto->setPixmap(QPixmap(":res/icons/file/FileTesto16.png"));
+    lTesto->setAlignment(Qt::AlignRight);
+    QLabel* lImmagine = new QLabel;
+    lImmagine->setPixmap(QPixmap(":res/icons/file/FileImmagine16.png"));
+    lImmagine->setAlignment(Qt::AlignRight);
+    QLabel* lAudio = new QLabel;
+    lAudio->setPixmap(QPixmap(":res/icons/file/FileAudio16.png"));
+    lAudio->setAlignment(Qt::AlignRight);
+    QLabel* lVideo = new QLabel;
+    lVideo->setPixmap(QPixmap(":res/icons/file/FileVideo16.png"));
+    lVideo->setAlignment(Qt::AlignRight);
+    numeroFileArchivio = new QLabel;
+    numeroFileTesto = new QLabel;
+    numeroFileImmagine = new QLabel;
+    numeroFileAudio = new QLabel;
+    numeroFileVideo = new QLabel;
+
+    QFormLayout* layoutNumero = new QFormLayout;
+    layoutNumero->addRow(lArchivio, numeroFileArchivio);
+    layoutNumero->addRow(lTesto, numeroFileTesto);
+    layoutNumero->addRow(lImmagine, numeroFileImmagine);
+    layoutNumero->addRow(lAudio, numeroFileAudio);
+    layoutNumero->addRow(lVideo, numeroFileVideo);
+    layoutInformazioni->addRow("", layoutNumero);
 
     layoutInformazioni->setVerticalSpacing(30);
     layoutInfoAccount->addLayout(layoutInformazioni);
+
+    QFormLayout* layoutSpazioOccupato = new QFormLayout;
+    spazioRimanente = new QLabel("spazio GB"); spazioRimanente->setAlignment(Qt::AlignRight);
+    layoutSpazioOccupato->addRow("Spazio occupato:", spazioRimanente);
+    layoutInfoAccount->addLayout(layoutSpazioOccupato);
+
+    barraOccupazione = new QProgressBar;
+    barraOccupazione->setRange(0, 100);
+    barraOccupazione->setStyleSheet("QProgressBar{border: 1px solid grey;text-align:center}"
+                                   "QProgressBar::chunk{background-color:lightblue;}");
+    layoutInfoAccount->addWidget(barraOccupazione);
+    layoutInfoAccount->addSpacing(300);
 
     QHBoxLayout* layoutPulsanti1 = new QHBoxLayout;
     modificaAccount = new QPushButton(QIcon(":res/icons/pulsanti/modifica.png"), "Modifica"); modificaAccount->setFixedSize(modificaAccount->sizeHint());
@@ -374,25 +375,6 @@ void MainWindow::chiusuraDellAccount(){
 
 void MainWindow::visualizzaInfoAccount() {
     int i = tabellaAccount->currentRow(); // indice account selezionato
-    series->clear();
-    set0 = new QBarSet("Archivio");
-    set1 = new QBarSet("Testo");
-    set2 = new QBarSet("Audio");
-    set3 = new QBarSet("Immagine");
-    set4 = new QBarSet("Video");
-    // Numero di file
-    *set0 << controller->getAccount(i)->contaFile<FileArchivio>();
-    *set1 << controller->getAccount(i)->contaFile<FileTesto>();
-    *set2 << controller->getAccount(i)->contaFile<FileAudio>();
-    *set3 << controller->getAccount(i)->contaFile<FileImmagine>();
-    *set4 << controller->getAccount(i)->contaFile<FileVideo>();
-
-    series->append(set0);
-    series->append(set1);
-    series->append(set2);
-    series->append(set3);
-    series->append(set4);
-    chartView->update();
 
     numeroFile->setText(QString::number(controller->getAccount(i)->getListaFile().numeroElementi()));
 
@@ -403,6 +385,12 @@ void MainWindow::visualizzaInfoAccount() {
     float spazioOccupato = a.getSpazioOccupato() / 1024; // Spazio occupato in GB
     QString spazio = QString::number(spazioOccupato, 'f', 2)+"/"+QString::number(a.getSpazioFornito())+" GB";
     spazioRimanente->setText(spazio);
+    numeroFileArchivio->setText(" File archivio: " + QString::number(a.contaFile<FileArchivio>()));
+    numeroFileTesto->setText(" File di testo: " + QString::number(a.contaFile<FileTesto>()));
+    numeroFileImmagine->setText(" Immagini: " + QString::number(a.contaFile<FileImmagine>()));
+    numeroFileAudio->setText(" Audio: " + QString::number(a.contaFile<FileAudio>()));
+    numeroFileVideo->setText(" Video: " + QString::number(a.contaFile<FileVideo>()));
+    barraOccupazione->setValue(spazioOccupato*100/a.getSpazioFornito());
 
     informazioniAccount->show();
 }

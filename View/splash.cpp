@@ -18,6 +18,6 @@ void Splash::execute(QApplication& app, QWidget& w){
 
     app.processEvents(QEventLoop::AllEvents);
 
-    QTimer::singleShot(5000,label,SLOT(close()));
-    QTimer::singleShot(5000,&w,SLOT(show()));
+    QTimer::singleShot(1000,label,SLOT(close()));
+    QTimer::singleShot(1000,&w,SLOT(show()));
 }
