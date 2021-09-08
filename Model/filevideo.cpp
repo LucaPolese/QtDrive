@@ -86,7 +86,7 @@ void FileVideo::serializza(QXmlStreamWriter &scrittore) const{
         //Informazioni specifiche di FileVideo:
         //Codec
         scrittore.writeStartElement("codec");
-        scrittore.writeCharacters(QString::number(getTipoCompressione()));
+        scrittore.writeCharacters(QString::number(codec.toInt()));
         scrittore.writeEndElement();
 
         //Durata
