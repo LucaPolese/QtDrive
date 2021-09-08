@@ -1,11 +1,11 @@
 #include "View/mainwindow.h"
-#include "View/splash.h"
+#include "View/intro.h"
 #include <QApplication>
 
 int main(int argc, char *argv[]){
     QApplication a(argc, argv);
     MainWindow view;
-    Splash splash;
-    splash.execute(a, view);
+    Intro intro;
+    intro.execute(a, view);
     return a.exec();
 }
