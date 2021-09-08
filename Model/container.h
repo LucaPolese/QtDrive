@@ -118,7 +118,7 @@ Container<T>::iterator::iterator() : nodo(nullptr), pastTheEnd(false) {}
 template <class T>
 Container<T>::iterator::iterator(const iterator& i) : nodo(i.nodo), pastTheEnd(i.pastTheEnd) {}
 
-//Operatori di redeferenziazione
+//Operatori di dereferenziazione
 template <class T>
 T& Container<T>::iterator::operator*() const{
     return nodo->info;
