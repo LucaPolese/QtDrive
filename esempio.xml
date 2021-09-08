@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listaAccount>
+    <account>
+        <email>prova@mail.it</email>
+        <password>password</password>
+        <host>0</host>
+        <spazioFornito>10</spazioFornito>
+        <listaFile>
+            <file type="FileTesto">
+                <nome>sample</nome>
+                <estensione>txt</estensione>
+                <dimensione>2</dimensione>
+                <dataCreazione>ven gen 1 2021</dataCreazione>
+                <dataCaricamento>mer set 8 2021</dataCaricamento>
+                <descrizione>File di esempio</descrizione>
+                <numeroCaratteri>100</numeroCaratteri>
+                <numeroParole>20</numeroParole>
+            </file>
+        </listaFile>
+    </account>
+    <account>
+        <email>mariorossi@libero.it</email>
+        <password>Mario2021!</password>
+        <host>3</host>
+        <spazioFornito>15</spazioFornito>
+        <listaFile>
+            <file type="FileImmagine">
+                <nome>FotoVacanze1</nome>
+                <estensione>jpeg</estensione>
+                <dimensione>5</dimensione>
+                <dataCreazione>gio ago 19 2021</dataCreazione>
+                <dataCaricamento>mer set 8 2021</dataCaricamento>
+                <descrizione>Vacanza al mare</descrizione>
+                <tipoCompressione>2</tipoCompressione>
+                <tipoImmagine>0</tipoImmagine>
+                <larghezza>1920</larghezza>
+                <altezza>1080</altezza>
+            </file>
+            <file type="FileImmagine">
+                <nome>FotoVacanze2</nome>
+                <estensione>jpeg</estensione>
+                <dimensione>5</dimensione>
+                <dataCreazione>gio lug 22 2021</dataCreazione>
+                <dataCaricamento>mer set 8 2021</dataCaricamento>
+                <descrizione>Vacanza al mare</descrizione>
+                <tipoCompressione>2</tipoCompressione>
+                <tipoImmagine>0</tipoImmagine>
+                <larghezza>1920</larghezza>
+                <altezza>1080</altezza>
+            </file>
+            <file type="FileImmagine">
+                <nome>FotoVacanze3</nome>
+                <estensione>jpeg</estensione>
+                <dimensione>5</dimensione>
+                <dataCreazione>gio lug 22 2021</dataCreazione>
+                <dataCaricamento>mer set 8 2021</dataCaricamento>
+                <descrizione>Vacanza al mare</descrizione>
+                <tipoCompressione>2</tipoCompressione>
+                <tipoImmagine>0</tipoImmagine>
+                <larghezza>1920</larghezza>
+                <altezza>1080</altezza>
+            </file>
+            <file type="FileVideo">
+                <nome>FilmatoVacanze</nome>
+                <estensione>mp4</estensione>
+                <dimensione>1024</dimensione>
+                <dataCreazione>gio lug 22 2021</dataCreazione>
+                <dataCaricamento>mer set 8 2021</dataCaricamento>
+                <descrizione>Vacanza al mare</descrizione>
+                <tipoCompressione>-3</tipoCompressione>
+                <codec>H264</codec>
+                <durata>92</durata>
+                <larghezza>1920</larghezza>
+                <altezza>1080</altezza>
+                <fps>24</fps>
+            </file>
+        </listaFile>
+    </account>
+    <account>
+        <email>pippo@pluto.com</email>
+        <password>Topolino</password>
+        <host>5</host>
+        <spazioFornito>5</spazioFornito>
+        <listaFile>
+            <file type="FileVideo">
+                <nome>Film</nome>
+                <estensione>mkv</estensione>
+                <dimensione>3000</dimensione>
+                <dataCreazione>mer gen 20 2021</dataCreazione>
+                <dataCaricamento>mer set 8 2021</dataCaricamento>
+                <descrizione></descrizione>
+                <tipoCompressione>-3</tipoCompressione>
+                <codec>H264</codec>
+                <durata>92</durata>
+                <larghezza>1920</larghezza>
+                <altezza>1080</altezza>
+                <fps>24</fps>
+            </file>
+            <file type="FileAudio">
+                <nome>Podcast_8-8-2021</nome>
+                <estensione>mp3</estensione>
+                <dimensione>90</dimensione>
+                <dataCreazione>dom ago 8 2021</dataCreazione>
+                <dataCaricamento>mer set 8 2021</dataCaricamento>
+                <descrizione></descrizione>
+                <tipoCompressione>1</tipoCompressione>
+                <bitrate>128</bitrate>
+                <durata>2200</durata>
+            </file>
+            <file type="FileImmagine">
+                <nome>SfondoPC</nome>
+                <estensione>jpeg</estensione>
+                <dimensione>4</dimensione>
+                <dataCreazione>dom lug 7 2002</dataCreazione>
+                <dataCaricamento>mer set 8 2021</dataCaricamento>
+                <descrizione>Sfondo di Windows XP</descrizione>
+                <tipoCompressione>1</tipoCompressione>
+                <tipoImmagine>0</tipoImmagine>
+                <larghezza>800</larghezza>
+                <altezza>600</altezza>
+            </file>
+        </listaFile>
+    </account>
+</listaAccount>
