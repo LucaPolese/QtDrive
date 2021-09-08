@@ -352,7 +352,6 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
 void MainWindow::modificaDellAccount(){
     modificaAccountWidget->show();
     modificaAccountWidget->visualizzaInfo(tabellaAccount->currentRow(), emailAccount->text(), passwordAccount->text());
-        controller->setModificato(true);
 }
 
 void MainWindow::eliminazioneDellAccount(){
@@ -679,6 +678,19 @@ void MainWindow::salvaIlNuovoFile(){
                                                  "Attenzione: il file che hai selezionato non è un file XML.",
                                                  QMessageBox::Ok);
             noXml->exec();
+        }
+    }else{
+        try{
+            controller->aggiornaPercorso(fileSalvataggio);
+            if(controller->salvataggioAccount() == true){
+                //Il salvataggio è avvenuto correttamente, quindi non ci sono ulteriori modifiche da salvare
+                controller->setModificato(false);
+            }
+        }catch(QString e){
+            QMessageBox* errore = new QMessageBox(QMessageBox::Critical, "Errore",
+                                                 QString("Attenzione: il file selezionato per la scrittura ha subito un errore.").arg(e),
+                                                 QMessageBox::Ok);
+            errore->exec();
         }
     }
 }
