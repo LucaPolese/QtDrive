@@ -301,11 +301,6 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Contro
         infoWidget->show();
     });
 
-    // Inizializzazione file di default, se non esiste viene creato
-    QFile file("account.xml");
-    file.open(QIODevice::ReadWrite | QIODevice::Text);
-    file.close();
-
     // Connessioni
     connect(modificaAccount, &QPushButton::pressed, this, &MainWindow::modificaDellAccount);
     connect(eliminaAccount, &QPushButton::pressed, this, &MainWindow::eliminazioneDellAccount);
