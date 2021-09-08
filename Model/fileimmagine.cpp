@@ -21,7 +21,7 @@ QString FileImmagine::getInformazioniFile() const {
     else if(tipoCompressione == lossless) informazioni = "Immagine lossless";
     if(tipoImmagine == raster) informazioni += " di tipo raster\n";
     else informazioni += " di tipo vettoriale\n";
-    return informazioni + "Risoluzione: " + QString::number(altezza) + "x" + QString::number(larghezza) + " pixels\n";
+    return informazioni + "Risoluzione: " + QString::number(larghezza) + "x" + QString::number(altezza) + " pixels\n";
 }
 
 QString FileImmagine::getTipoFile() const {
