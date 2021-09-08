@@ -22,19 +22,13 @@ SOURCES += \
     View/guidawidget.cpp \
     View/infofilewidget.cpp \
     View/infowidget.cpp \
+    View/intro.cpp \
     View/mainwindow.cpp \
     View/modificaaccountwidget.cpp \
     View/nuovofilewidget.cpp \
-    View/splash.cpp \
     main.cpp
 
 HEADERS += \
-    Model/xmlify.h \
-    View/accountwidget.h \
-    View/guidawidget.h \
-    View/infofilewidget.h \
-    View/infowidget.h \
-    View/mainwindow.h \
     Control/controller.h \
     Model/account.h \
     Model/container.h \
@@ -46,13 +40,15 @@ HEADERS += \
     Model/filemedia.h \
     Model/filetesto.h \
     Model/filevideo.h \
+    Model/xmlify.h \
     View/accountwidget.h \
     View/guidawidget.h \
+    View/infofilewidget.h \
     View/infowidget.h \
+    View/intro.h \
     View/mainwindow.h \
     View/modificaaccountwidget.h \
     View/nuovofilewidget.h \
-    View/splash.h
 
 RC_ICONS = res/icons/icon.ico
 
