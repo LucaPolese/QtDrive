@@ -3,7 +3,7 @@
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent), controller(new Controller()), accountWidget(new AccountWidget(controller)), fileWidget(new NuovoFileWidget(controller)), modificaAccountWidget(new ModificaAccountWidget(controller)), infoFileWidget(new InfoFileWidget(controller)) {
     setWindowTitle("QtDrive");
-    setMinimumSize(1024, 720);
+    setMinimumSize(1024, 800);
 
     //Layout Pagina Principale
     QVBoxLayout* pagina = new QVBoxLayout();
