@@ -56,6 +56,7 @@ void ModificaAccountWidget::salvaModifiche(){
                 messageBox.setButtonText(QMessageBox::No, tr("No"));
                 int ret = messageBox.exec();
                 if(ret == QMessageBox::Yes) {
+                    controller->setModificato(true);
                     controller->salvaModificaAccount(indiceAccountAperto, nuovaEmail->text(), nuovaPassword->text());
                     hide();
                     emit accountModificato();
