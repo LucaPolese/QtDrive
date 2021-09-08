@@ -96,7 +96,7 @@ FileTesto *FileTesto::deserializza(QXmlStreamReader &lettore){
     //Lettura Estensione File
     if(lettore.readNextStartElement() && lettore.name() == "estensione") _estensione = lettore.readElementText();
     //Lettura Dimensione File
-    if(lettore.readNextStartElement() && lettore.name() == "dimensione") _dimensione = lettore.readElementText().toUInt();
+    if(lettore.readNextStartElement() && lettore.name() == "dimensione") _dimensione = lettore.readElementText().toInt();
     //Lettura Data Creazione File
     if(lettore.readNextStartElement() && lettore.name() == "dataCreazione") _dataCreazione = QDate::fromString(lettore.readElementText());
     //Lettura Data Caricamento File

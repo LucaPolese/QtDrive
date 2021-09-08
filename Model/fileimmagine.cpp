@@ -114,7 +114,7 @@ FileImmagine *FileImmagine::deserializza(QXmlStreamReader &lettore){
     //Lettura Estensione File
     if(lettore.readNextStartElement() && lettore.name() == "estensione") _estensione = lettore.readElementText();
     //Lettura Dimensione File
-    if(lettore.readNextStartElement() && lettore.name() == "dimensione") _dimensione = lettore.readElementText().toUInt();
+    if(lettore.readNextStartElement() && lettore.name() == "dimensione") _dimensione = lettore.readElementText().toInt();
     //Lettura Data Creazione File
     if(lettore.readNextStartElement() && lettore.name() == "dataCreazione") _dataCreazione = QDate::fromString(lettore.readElementText());
     //Lettura Data Caricamento File
@@ -128,9 +128,9 @@ FileImmagine *FileImmagine::deserializza(QXmlStreamReader &lettore){
     //Lettura Bitrate
     if(lettore.readNextStartElement() && lettore.name() == "tipoImmagine") _tipoImmagine = tipo(lettore.readElementText().toInt());
     //Lettura Larghezza Immagine
-    if(lettore.readNextStartElement() && lettore.name() == "larghezza") _larghezza = lettore.readElementText().toUInt();
+    if(lettore.readNextStartElement() && lettore.name() == "larghezza") _larghezza = lettore.readElementText().toInt();
     //Lettura Dimensione Immagine
-    if(lettore.readNextStartElement() && lettore.name() == "altezza") _altezza = lettore.readElementText().toUInt();
+    if(lettore.readNextStartElement() && lettore.name() == "altezza") _altezza = lettore.readElementText().toInt();
 
     //Fine della lettura del singolo file
     lettore.skipCurrentElement();

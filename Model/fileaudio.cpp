@@ -106,7 +106,7 @@ FileAudio* FileAudio::deserializza(QXmlStreamReader & lettore){
     //Lettura Estensione File
     if(lettore.readNextStartElement() && lettore.name() == "estensione") _estensione = lettore.readElementText();
     //Lettura Dimensione File
-    if(lettore.readNextStartElement() && lettore.name() == "dimensione") _dimensione = lettore.readElementText().toUInt();
+    if(lettore.readNextStartElement() && lettore.name() == "dimensione") _dimensione = lettore.readElementText().toInt();
     //Lettura Data Creazione File
     if(lettore.readNextStartElement() && lettore.name() == "dataCreazione") _dataCreazione = QDate::fromString(lettore.readElementText());
     //Lettura Data Caricamento File
@@ -118,9 +118,9 @@ FileAudio* FileAudio::deserializza(QXmlStreamReader & lettore){
     if(lettore.readNextStartElement() && lettore.name() == "tipoCompressione") _tipoCompressione = compressione(lettore.readElementText().toInt());
 
     //Lettura Bitrate Audio
-    if(lettore.readNextStartElement() && lettore.name() == "bitrate") _bitrate = lettore.readElementText().toUInt();
+    if(lettore.readNextStartElement() && lettore.name() == "bitrate") _bitrate = lettore.readElementText().toInt();
     //Lettura Durata Audio
-    if(lettore.readNextStartElement() && lettore.name() == "durata") _durata = lettore.readElementText().toUInt();
+    if(lettore.readNextStartElement() && lettore.name() == "durata") _durata = lettore.readElementText().toInt();
 
     //Fine della lettura del singolo file
     lettore.skipCurrentElement();

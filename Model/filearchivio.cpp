@@ -107,7 +107,7 @@ FileArchivio* FileArchivio::deserializza(QXmlStreamReader & lettore){
     //Lettura Estensione File
     if(lettore.readNextStartElement() && lettore.name() == "estensione") _estensione = lettore.readElementText();
     //Lettura Dimensione File
-    if(lettore.readNextStartElement() && lettore.name() == "dimensione") _dimensione = lettore.readElementText().toUInt();
+    if(lettore.readNextStartElement() && lettore.name() == "dimensione") _dimensione = lettore.readElementText().toInt();
     //Lettura Data Creazione File
     if(lettore.readNextStartElement() && lettore.name() == "dataCreazione") _dataCreazione = QDate::fromString(lettore.readElementText());
     //Lettura Data Caricamento File
@@ -116,9 +116,9 @@ FileArchivio* FileArchivio::deserializza(QXmlStreamReader & lettore){
     if(lettore.readNextStartElement() && lettore.name() == "descrizione") _descrizione = lettore.readElementText();
 
     //Lettura Dimensione File
-    if(lettore.readNextStartElement() && lettore.name() == "dimensioneOriginale") _dimensioneOriginale = lettore.readElementText().toUInt();
+    if(lettore.readNextStartElement() && lettore.name() == "dimensioneOriginale") _dimensioneOriginale = lettore.readElementText().toInt();
     //Lettura Dimensione File
-    if(lettore.readNextStartElement() && lettore.name() == "numeroDiFile") _numeroDiFile = lettore.readElementText().toUInt();
+    if(lettore.readNextStartElement() && lettore.name() == "numeroDiFile") _numeroDiFile = lettore.readElementText().toInt();
     //Lettura Dimensione File
     if(lettore.readNextStartElement() && lettore.name() == "protetto") _protetto = lettore.readElementText() == "si" ? 1 : 0;
 

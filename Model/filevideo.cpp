@@ -136,7 +136,7 @@ FileVideo *FileVideo::deserializza(QXmlStreamReader &lettore){
     //Lettura Estensione File
     if(lettore.readNextStartElement() && lettore.name() == "estensione") _estensione = lettore.readElementText();
     //Lettura Dimensione File
-    if(lettore.readNextStartElement() && lettore.name() == "dimensione") _dimensione = lettore.readElementText().toUInt();
+    if(lettore.readNextStartElement() && lettore.name() == "dimensione") _dimensione = lettore.readElementText().toInt();
     //Lettura Data Creazione File
     if(lettore.readNextStartElement() && lettore.name() == "dataCreazione") _dataCreazione = QDate::fromString(lettore.readElementText());
     //Lettura Data Caricamento File
@@ -148,15 +148,15 @@ FileVideo *FileVideo::deserializza(QXmlStreamReader &lettore){
     if(lettore.readNextStartElement() && lettore.name() == "tipoCompressione") _tipoCompressione = compressione(lettore.readElementText().toInt());
 
     //Lettura Codec Video
-    if(lettore.readNextStartElement() && lettore.name() == "codec") _codec = lettore.readElementText().toUInt();
+    if(lettore.readNextStartElement() && lettore.name() == "codec") _codec = lettore.readElementText().toInt();
     //Lettura Durata Video
-    if(lettore.readNextStartElement() && lettore.name() == "durata") _durata = lettore.readElementText().toUInt();
+    if(lettore.readNextStartElement() && lettore.name() == "durata") _durata = lettore.readElementText().toInt();
     //Lettura Larghezza Video
-    if(lettore.readNextStartElement() && lettore.name() == "larghezza") _larghezza = lettore.readElementText().toUInt();
+    if(lettore.readNextStartElement() && lettore.name() == "larghezza") _larghezza = lettore.readElementText().toInt();
     //Lettura Altezza Video
-    if(lettore.readNextStartElement() && lettore.name() == "altezza") _altezza = lettore.readElementText().toUInt();
+    if(lettore.readNextStartElement() && lettore.name() == "altezza") _altezza = lettore.readElementText().toInt();
     //Lettura FPS Video
-    if(lettore.readNextStartElement() && lettore.name() == "fps") _fps = lettore.readElementText().toUInt();
+    if(lettore.readNextStartElement() && lettore.name() == "fps") _fps = lettore.readElementText().toInt();
 
     //Fine della lettura del singolo file
     lettore.skipCurrentElement();
