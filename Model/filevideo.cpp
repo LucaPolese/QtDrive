@@ -86,7 +86,7 @@ void FileVideo::serializza(QXmlStreamWriter &scrittore) const{
         //Informazioni specifiche di FileVideo:
         //Codec
         scrittore.writeStartElement("codec");
-        scrittore.writeCharacters(QString::number(codec.toInt()));
+        scrittore.writeCharacters(codec);
         scrittore.writeEndElement();
 
         //Durata
@@ -148,7 +148,7 @@ FileVideo *FileVideo::deserializza(QXmlStreamReader &lettore){
     if(lettore.readNextStartElement() && lettore.name() == "tipoCompressione") _tipoCompressione = compressione(lettore.readElementText().toInt());
 
     //Lettura Codec Video
-    if(lettore.readNextStartElement() && lettore.name() == "codec") _codec = lettore.readElementText().toInt();
+    if(lettore.readNextStartElement() && lettore.name() == "codec") _codec = lettore.readElementText();
     //Lettura Durata Video
     if(lettore.readNextStartElement() && lettore.name() == "durata") _durata = lettore.readElementText().toInt();
     //Lettura Larghezza Video
