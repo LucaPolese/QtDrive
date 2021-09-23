@@ -1,5 +1,4 @@
 Feedback Progetto di Programmazione ad Oggetti
-Studente: Poloni Alessandro
 
 Vincoli obbligatori
 + Soddisfatti
