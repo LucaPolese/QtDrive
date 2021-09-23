@@ -1,0 +1,30 @@
+Feedback Progetto di Programmazione ad Oggetti
+Studente: Poloni Alessandro
+
+Vincoli obbligatori
++ Soddisfatti
+
+Orientamento ad oggetti
++ Separazione tra modelli, controller e viste enfatizzata dalla struttura
+  delle cartelle del progetto
++ Incapsulamento
++ Modularità (modello logico e la GUI sono separati)
++ Estensibilità ed evolvibilità, polimorfismo
++ Efficienza e robustezza
+
+Funzionalità
++ Ricerca avanzata di files
++ Manuale di aiuto a disposizione dell'utente completo e di facile comprensione
++ Gestione file XML
+
+GUI
++ Visualizza i diversi tipi di dato in maniera opportuna
++ Usabile e intuitiva
++ Robusta, gestisce ridimensionamento
++ Ottimo uso di icone ed elementi grafici
+
+Relazione
++ Adeguata
+
+Suggerimenti non collegati alla valutazione
+Nessuno.
