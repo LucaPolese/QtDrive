@@ -4,13 +4,21 @@ compiler: g++
 sudo: required
 
 before_install:
-  - sudo add-apt-repository ppa:beineri/opt-qt551-trusty -y
-  - sudo apt-get update
+  - sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
+  - sudo apt-get update -qq
 
-install:
-  - sudo apt-get install qt55base
-  - source /opt/qt55/bin/qt55-env.sh
+install: 
+  - sudo apt-get install -qq g++-5
+  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 90
+  - sudo apt-get install -qq libqt5webkit5-dev qtdeclarative5-dev
+  - export QMAKE=/usr/lib/x86_64-linux-gnu/qt5/bin/qmake
+  
+before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
 
-script:
-  - /opt/qt55/bin/qmake PREFIX=/usr
+script: 
+  - qmake -qt=qt5
   - make
+  - ./travis_qmake_gcc_cpp14_qt5
