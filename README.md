@@ -29,7 +29,7 @@ Il Prof. *Ranzato*, docente del corso, ha dato carta bianca relativamente alla t
 * Realizzare una gerarchia di tipi, con numero di livelli \>= 2
 * Sviluppare un contenitore con le sue funzioni. 
 
-IL risultato dovrà perciò essere un applicativo che permetta di collegare i punti sopra citati: un software funzionante che permetta di interagire con la struttura dati e con la gerarchia permettendo di aggiungere, modificare, cancellare e ricercare i relativi oggetti.
+Il risultato dovrà perciò essere un applicativo che permetta di collegare i punti sopra citati: un software funzionante che permetta di interagire con la struttura dati e con la gerarchia permettendo di aggiungere, modificare, cancellare e ricercare i relativi oggetti.
 
 ### Obiettivi dell'applicazione
 Con il recente avvento della rivoluzione 4.0, sempre più aziende hanno offerto, al pubblico e al privato, vari servizi tecnologici che hanno così permesso di diffondere rapidamente l’innovazione digitale.
