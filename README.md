@@ -6,7 +6,7 @@
 ![GitHub top language](https://img.shields.io/github/languages/top/LucaPolese/QtDrive)
 ![GitHub issues](https://img.shields.io/github/issues/LucaPolese/QtDrive)
 ![GitHub pull request](https://img.shields.io/github/issues-pr/LucaPolese/QtDrive)
-![GitHub](https://img.shields.io/github/license/LucaPolese/QtDrive)
+![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)
 ![GitHub last commit](https://img.shields.io/github/last-commit/LucaPolese/QtDrive)
 
 Progetto di **Programmazione ad Oggetti** dell'A.A **2020/2021**
