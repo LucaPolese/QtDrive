@@ -25,11 +25,11 @@ Lo scopo di sviluppare questo genere di progetti è quello di familiarizzare con
 Il Prof. *Ranzato*, docente del corso, ha dato carta bianca relativamente alla tematica del progetto, imponendo però alcuni vincoli progettuali (varianti di anno in anno).
 
 ### Scopi del progetto
-* Comprendere sul campo, come adottare il polimorfismo, perchè è necessario nel contesto della oop, 
-* Realizzare una gerarchia di tipi, con numero di livelli \>= 2
-* Sviluppare un contenitore con le sue funzioni. 
+* Comprendere sul campo, come adottare il polimorfismo e perchè risulta necessario nel contesto della Programmazione ad Oggetti
+* Realizzare una gerarchia di tipi, con numero di livelli >= 2
+* Sviluppare un contenitore con le sue funzioni 
 
-Il risultato dovrà perciò essere un applicativo che permetta di collegare i punti sopra citati: un software funzionante che permetta di interagire con la struttura dati e con la gerarchia permettendo di aggiungere, modificare, cancellare e ricercare i relativi oggetti.
+Il risultato dovrà perciò essere un applicativo che permetta di collegare i punti sopra citati: un software funzionante che consenta l'interazione con la struttura dati e con la gerarchia, per mezzo delle funzioni di aggiunta, modifica, cancellazione e ricerca dei relativi oggetti.
 
 ### Obiettivi dell'applicazione
 Con il recente avvento della rivoluzione 4.0, sempre più aziende hanno offerto, al pubblico e al privato, vari servizi tecnologici che hanno così permesso di diffondere rapidamente l’innovazione digitale.
@@ -62,8 +62,9 @@ Il progetto è stato valutato come **Eccellente**, progetto **da lode**.
 ### Licenza ed informazioni per l'uso
 
 Questo software è stato pubblicato con una licenza di tipo **GNU General Public License v3.0**. 
-> Allo studente è severamente vietato riutilizzare questo progetto, che sia solo per qualche file o nella sua integrità, poichè andrebbe contro lo *spirito* del progetto, ma anche contro le regole dello stesso: ogni violazione verrà punita severamente con sanzioni molto pesanti.\
-Il nostro progetto è stato pubblicato, così da permettere ai futuri studenti del corso di prendere ispirazione per la gestione delle informazioni e in modo da comprendere il meccanismo del MV di Qt.\
-Chiunque verrà sorpreso a copiare da questo progetto, verrà **immediatamente** segnalato al Prof.Ranzato, perciò ogni richiesta di copiatura non verrà in alcun modo autorizzata.
+
+> La pubblicazione di questo lavoro, vuole consentire ai futuri studenti del corso di prendere ispirazione per quanto riguarda la gestione delle informazioni o per la comprensione del meccanismo del pattern Model-View-Controller adottato con Qt.\
+Allo studente è severamente vietato riutilizzare questo progetto, parzialmente o integralmente, poichè andrebbe contro lo *spirito* dell'assignment, ma anche contro le suw regole: ogni violazione verrà punita severamente con sanzioni molto importanti da parte dell'Ateneo.\
+Chiunque verrà sorpreso a copiare da questo progetto, verrà **immediatamente** segnalato al Prof.Ranzato: ogni richiesta di copiatura non verrà in alcun modo autorizzata e nemmeno presa in considerazione.
 
 **Buono Sviluppo Coders!**
